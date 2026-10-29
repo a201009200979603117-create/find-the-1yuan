@@ -5,7 +5,8 @@
 
 **👉 線上直接玩：https://a201009200979603117-create.github.io/find-the-1yuan/**
 
-電腦和手機都能玩，不用安裝。手機請橫著拿。
+電腦和手機都能玩，不用安裝。手機請橫著拿，進遊戲會自動全螢幕（Android）。
+iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面」，從主畫面的圖示打開就是全螢幕。
 
 ![主選單](docs/menu.jpg)
 ![手機版畫面](docs/mobile.jpg)
