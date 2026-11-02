@@ -59,6 +59,13 @@
   #tPick button{width:60px;height:60px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10.5px;font-weight:700}
   #tPick button b{font-size:22px;font-weight:400;line-height:1}
   #tPick button.sel{border-color:var(--gold);background:rgba(232,185,49,.18);color:#ffe9a8}
+  #tPick .ph2{width:100%;font-size:11px;color:#bbb;text-align:center;margin:4px 0 -2px}
+  /* 建造時：拆除模式大按鈕寫「拆」，拉輸送帶時拆除鍵變「取消」；看著建築才出現「複製」 */
+  #touchUI:not(.rmMode) .rb,#touchUI.rmMode .nb,#touchUI:not(.beltOn) .cc,#touchUI.beltOn .nc,#touchUI:not(.canCopy) [data-t="copy"]{display:none!important}
+  /* 手機版的按鍵提示：寫成按鈕上的字 */
+  .tkey{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:26px;padding:0 10px;border-radius:13px;background:var(--gold);color:#141414;font:800 13px "Microsoft JhengHei","PingFang TC",sans-serif;white-space:nowrap}
+  .key.tkp{background:var(--gold);color:#141414;font:800 18px/44px "Microsoft JhengHei","PingFang TC",sans-serif;border-radius:22px;padding:0 16px;box-shadow:0 2px 0 #9a7a1c}
+  body.touch .card{-webkit-touch-callout:none}
   @media (max-height:340px),(max-width:600px){#tAct{transform:scale(.78)}#tStick{transform:scale(.88)}body.touch #prompt{top:calc(50% - 94px)}body.touch #obj{transform:scale(.68)}}
   @media (min-height:440px) and (min-width:700px){#tAct{transform:scale(1.12)}}
   #rotateMsg{position:fixed;inset:0;z-index:90;background:#000e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800}
@@ -69,6 +76,7 @@
   body.touch #stam{left:50%;transform:translateX(-50%);bottom:58px;width:110px;height:4px;border-radius:2px;overflow:hidden}
   body.touch #jet{left:50%;transform:translateX(-50%);bottom:64px;width:110px;height:3px;border-radius:2px;overflow:hidden}
   body.touch #meter{bottom:72px;width:220px}
+  body.touch #mtip{right:auto;left:calc(12px + env(safe-area-inset-left));top:150px;bottom:auto;width:min(280px,42vw);pointer-events:none}
   body.touch #buildHint{bottom:72px;max-width:calc(100% - 440px);min-width:220px;white-space:normal}
   @media (max-width:900px),(max-height:520px){
     #obj{transform:scale(.78);transform-origin:top left}
@@ -373,19 +381,27 @@
     <button data-t="tech"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5l-5.3 5.3M12 11.5l5.3 5.3"/></svg>科技</button>
     <button data-t="build"><svg viewBox="0 0 24 24"><path d="M4.5 19.5l9-9M10.5 7.5l4-4 6 6-4 4z"/></svg>建造</button>
     <button data-t="map"><svg viewBox="0 0 24 24"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg>俯瞰</button>
-    <button data-t="lamp"><svg viewBox="0 0 24 24"><path d="M7 3h10l-2 5.5V20a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V8.5zM8.2 8.5h7.6M12 12v3"/></svg>照明</button>
-    <button data-t="photo"><svg viewBox="0 0 24 24"><path d="M3.5 8h3.5l2-3h6l2 3h3.5v11.5h-17z"/><circle cx="12" cy="13.5" r="3.5"/></svg>拍照</button>
-    <button data-t="stats"><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5v1A3.5 3.5 0 0 0 8 10.5M16 6h3.5v1a3.5 3.5 0 0 1-3.5 3.5M12 13v4M10 17h4v3.5h-4zM8 20.5h8"/></svg>成就</button>
+    <button data-t="up" class="bOnly"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M4 20h16M7 16.5h10"/></svg>架高</button>
+    <button data-t="down" class="bOnly"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M4 20h16"/></svg>降低</button>
+    <button data-t="grid" class="bOnly"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg>方格</button>
+    <button data-t="undo" class="bOnly"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>復原</button>
+    <button data-t="bp" class="bOnly"><svg viewBox="0 0 24 24"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M9 9h6v6H9z"/></svg>藍圖</button>
+    <button data-t="lamp" class="pOnly"><svg viewBox="0 0 24 24"><path d="M7 3h10l-2 5.5V20a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V8.5zM8.2 8.5h7.6M12 12v3"/></svg>照明</button>
+    <button data-t="photo" class="pOnly"><svg viewBox="0 0 24 24"><path d="M3.5 8h3.5l2-3h6l2 3h3.5v11.5h-17z"/><circle cx="12" cy="13.5" r="3.5"/></svg>拍照</button>
+    <button data-t="stats" class="pOnly"><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5v1A3.5 3.5 0 0 0 8 10.5M16 6h3.5v1a3.5 3.5 0 0 1-3.5 3.5M12 13v4M10 17h4v3.5h-4zM8 20.5h8"/></svg>成就</button>
   </div>
   <div id="tAct">
-    <button data-t="grab" class="big" style="--r:76px;--b:76px;--d:88px"><svg class="pOnly" viewBox="0 0 24 24"><path d="M7 12.5V6.5a1.5 1.5 0 0 1 3 0V11M10 10.5V4.5a1.5 1.5 0 0 1 3 0v6M13 10.5V5.5a1.5 1.5 0 0 1 3 0V11M16 11V8a1.5 1.5 0 0 1 3 0v6.5A6.5 6.5 0 0 1 12.5 21h-1a6 6 0 0 1-5-2.5l-2.8-4.2a1.5 1.5 0 0 1 2.5-1.7L7 14"/></svg><svg class="bOnly" viewBox="0 0 24 24"><path d="M4.5 19.5l9-9M10.5 7.5l4-4 6 6-4 4z"/></svg><span class="pOnly">撿</span><span class="bOnly">蓋</span></button>
+    <button data-t="grab" class="big" style="--r:76px;--b:76px;--d:88px"><svg class="pOnly" viewBox="0 0 24 24"><path d="M7 12.5V6.5a1.5 1.5 0 0 1 3 0V11M10 10.5V4.5a1.5 1.5 0 0 1 3 0v6M13 10.5V5.5a1.5 1.5 0 0 1 3 0V11M16 11V8a1.5 1.5 0 0 1 3 0v6.5A6.5 6.5 0 0 1 12.5 21h-1a6 6 0 0 1-5-2.5l-2.8-4.2a1.5 1.5 0 0 1 2.5-1.7L7 14"/></svg><svg class="bOnly" viewBox="0 0 24 24"><path d="M4.5 19.5l9-9M10.5 7.5l4-4 6 6-4 4z"/></svg><span class="pOnly">撿</span><span class="bOnly nb">蓋</span><span class="bOnly rb">拆</span></button>
     <button data-t="throw" class="pOnly" style="--r:178px;--b:54px;--d:62px"><svg viewBox="0 0 24 24"><path d="M4 19.5c1.5-7 7-12 14.5-12M14.5 3.5l4 4-4 4"/></svg>丟</button>
-    <button data-t="rm" class="bOnly" style="--r:178px;--b:54px;--d:62px"><svg viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg>拆除</button>
+    <button data-t="rm" class="bOnly" style="--r:178px;--b:54px;--d:62px"><svg viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg><span class="nc">拆除</span><span class="cc">取消</span></button>
     <button data-t="jump" style="--r:62px;--b:178px;--d:62px"><svg viewBox="0 0 24 24"><path d="M12 17.5V5M6.5 10.5L12 5l5.5 5.5M5 21h14"/></svg>跳</button>
     <button data-t="use" class="pOnly" style="--r:162px;--b:152px;--d:54px"><b class="kE">E</b>互動</button>
     <button data-t="rot" class="bOnly" style="--r:162px;--b:152px;--d:54px"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4v4.5H15"/></svg>旋轉</button>
-    <button data-t="crouch" class="sm" style="--r:150px;--b:240px;--d:48px"><svg viewBox="0 0 24 24"><path d="M6 5.5l6 6 6-6M6 12.5l6 6 6-6"/></svg>蹲</button>
+    <button data-t="crouch" class="sm pOnly" style="--r:150px;--b:240px;--d:48px"><svg viewBox="0 0 24 24"><path d="M6 5.5l6 6 6-6M6 12.5l6 6 6-6"/></svg>蹲</button>
     <button data-t="drop" class="sm pOnly" style="--r:60px;--b:256px;--d:46px"><svg viewBox="0 0 24 24"><path d="M12 3.5v10M7.5 9.5l4.5 4.5 4.5-4.5M4.5 16.5v3.5h15v-3.5"/></svg>放下</button>
+    <button data-t="near" class="sm bOnly" style="--r:150px;--b:240px;--d:48px"><svg viewBox="0 0 24 24"><path d="M12 4v13M6.5 11.5L12 17l5.5-5.5"/></svg>拉近</button>
+    <button data-t="far" class="sm bOnly" style="--r:60px;--b:256px;--d:46px"><svg viewBox="0 0 24 24"><path d="M12 20V7M6.5 12.5L12 7l5.5 5.5"/></svg>推遠</button>
+    <button data-t="copy" class="sm pOnly" style="--r:250px;--b:126px;--d:46px"><svg viewBox="0 0 24 24"><path d="M9 9h10v11H9zM5 15V4h10"/></svg>複製</button>
   </div>
   <button id="tTool" data-t="tool"><span class="tci">✋</span><span class="tcn">雙手</span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
   <div id="tPick" class="hidden"></div>
@@ -394,7 +410,7 @@
 <div id="clickPlay" class="hidden">🖱 點一下畫面繼續</div>
 <div id="hud" class="hidden">
   <div id="obj"><div class="st" id="objN"></div><div class="t" id="objT"></div><span class="kb" id="objK"></span><div class="d" id="objD"></div><div class="rw" id="objR"></div><div class="bar" id="objBarW"><i id="objBar"></i></div><div class="p"><span id="objP"></span><span id="objL"></span></div></div>
-  <div id="ver"><div class="a">Find The 1元 Demo V2</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
+  <div id="ver"><div class="a">Find The 1元 Demo V2.1</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
   <div id="tips"><div class="h">提示</div><div id="tipTxt"></div></div>
   <div id="mon"><div class="m" id="money">$0.00</div><div class="l" id="left"></div><div class="l" id="rate"></div><div class="l" id="clock"></div><div class="l hidden" id="chal" style="color:#7fd1ff"></div><div class="l hidden" id="warnN"></div><div id="pin" class="hidden"></div></div>
   <div id="combo"></div><div id="floats"></div><div id="record"></div>
@@ -3076,7 +3092,7 @@ function updateObjective(){
   }
   if(!s){$('objN').textContent='';$('objT').textContent='全部完成';$('objD').textContent='教學都做完了，繼續把 1 元找出來吧。';$('objR').textContent='';$('objBarW').style.display='none';$('objP').textContent='';$('objL').textContent='';$('objK').innerHTML='';return}
   $('objN').textContent=G.step?'第'+G.step+'步':'開始';$('objT').textContent=s.t;$('objD').textContent=s.d;
-  $('objK').innerHTML=s.k==='LMB'||s.k==='RMB'?mouseSvg(s.k==='RMB',22):s.k?'<span class="kc">'+(s.k==='TAB'?'TAB':s.k)+'</span>':'';
+  $('objK').innerHTML=TTON&&s.k?'<span class="tkey">'+(TKEY[s.k]||s.k)+'</span>':s.k==='LMB'||s.k==='RMB'?mouseSvg(s.k==='RMB',22):s.k?'<span class="kc">'+(s.k==='TAB'?'TAB':s.k)+'</span>':'';
   $('objR').textContent=s.rw||s.rwText?'獎勵：'+[s.rw?money(s.rw):'',s.rwText||''].filter(Boolean).join(' + '):'';
   if(s.p){const[v,g,u]=s.p(),f=Math.max(0,Math.min(1,v/g));$('objBarW').style.display='block';$('objBar').style.width=f*100+'%';
     if(u==='$'){$('objP').textContent=money(Math.min(v,g))+' / '+money(g);$('objL').textContent=v<g?'還差'+money(g-v):''}
@@ -3085,10 +3101,10 @@ function updateObjective(){
 }
 
 // ================= HUD =================
-function toast(msg,cls){const box=$('toasts');for(const o of box.children)if(o.textContent===msg){o.style.animation='none';void o.offsetWidth;o.style.animation='';clearTimeout(o._t);o._t=setTimeout(()=>o.remove(),3200);return}
+function toast(msg,cls){msg=TT(msg);const box=$('toasts');for(const o of box.children)if(o.textContent===msg){o.style.animation='none';void o.offsetWidth;o.style.animation='';clearTimeout(o._t);o._t=setTimeout(()=>o.remove(),3200);return}
   const e=document.createElement('div');e.textContent=msg;if(cls)e.className=cls;box.appendChild(e);e._t=setTimeout(()=>e.remove(),3200);while(box.children.length>4)box.firstChild.remove()}
 function mouseSvg(right,h=40){return '<svg viewBox="0 0 26 38" width="'+(h*.68)+'" height="'+h+'"><rect x="1.5" y="1.5" width="23" height="35" rx="11.5" fill="#fff" stroke="#222" stroke-width="2"/><path d="M13 1.5v14M1.5 15.5h23" stroke="#222" stroke-width="2"/><path d="'+(right?'M23.5 14.5a11 11 0 0 0-9.5-12v12z':'M2.5 14.5a11 11 0 0 1 9.5-12v12z')+'" fill="#e33"/></svg>'}
-function setPrompt(k,l,s){const p=$('prompt');if(!l){p.classList.add('hidden');return}p.classList.remove('hidden');const K=$('pKey');K.style.display=k?'':'none';if(k==='LMB'||k==='RMB'){K.className='key mouse';K.innerHTML=mouseSvg(k==='RMB')}else{K.className='key';K.textContent=k}$('pLbl').textContent=l;$('pSub').textContent=s||''}
+function setPrompt(k,l,s){const p=$('prompt');if(!l){p.classList.add('hidden');return}p.classList.remove('hidden');const K=$('pKey');K.style.display=k?'':'none';if(TTON&&k){K.className='key tkp';K.textContent=TKEY[k]||k}else if(k==='LMB'||k==='RMB'){K.className='key mouse';K.innerHTML=mouseSvg(k==='RMB')}else{K.className='key';K.textContent=k}$('pLbl').textContent=l;$('pSub').textContent=s||''}
 function renderHotbar(){
   $('hotbar').innerHTML=TOOLS.filter(t=>toolOwned(t.id)).map(t=>'<div class="hb'+(G.tool===t.id&&!G.build?' on':'')+'"><span class="k">'+t.key+'</span>'+t.icon+'</div>').join('')+
     (G.favs||[]).map((id,k)=>'<div class="hb'+(G.build&&G.build.item===id?' on':'')+'" style="border-color:#c9a03a66"><span class="k">⇧'+(k+1)+'</span>'+BIT[id].icon+'</div>').join('');
@@ -3391,7 +3407,8 @@ document.addEventListener('click',e=>{
 });
 $('buildSearch').addEventListener('input',renderPanel);$('buildSort').addEventListener('change',renderPanel);
 // 右鍵：把建築加到快捷欄（最多 9 個，Shift+數字或滾輪選）
-$('buildList').addEventListener('contextmenu',e=>{e.preventDefault();const c=e.target.closest('[data-build]');if(!c||!G)return;G.favs=G.favs||[];const id=c.dataset.build,k=G.favs.indexOf(id);if(k>=0)G.favs.splice(k,1);else if(G.favs.length<9)G.favs.push(id);else{toast('快捷欄最多 9 個建築');return}renderPanel();renderHotbar()});
+$('buildList').addEventListener('contextmenu',e=>{e.preventDefault();const c=e.target.closest('[data-build]');if(!c||!G)return;toggleFav(c.dataset.build)});
+function toggleFav(id){G.favs=G.favs||[];const k=G.favs.indexOf(id);if(k>=0){G.favs.splice(k,1);toast('從快捷欄拿掉「'+BIT[id].name+'」')}else if(G.favs.length<9){G.favs.push(id);toast('加到快捷欄：'+BIT[id].name)}else{toast('快捷欄最多 9 個建築');return}renderPanel();renderHotbar()}
 $('buildList').addEventListener('mouseover',e=>{const c=e.target.closest('[data-build]');if(!c)return;const b=BIT[c.dataset.build];$('buildFoot').textContent=b.req&&!lv(b.req)?b.name+'要用「'+TECHD[b.req].name+'」解鎖，點一下到科技樹查看。':b.desc})
 
 // ================= 存檔 =================
@@ -3502,8 +3519,8 @@ $('menu').addEventListener('click',e=>{
   else if(m==='rank')showMenu('rank');
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
-  else if(m==='help')dialog('操作說明',HELP,[['知道了','gold']]);
-  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
+  else if(m==='help')dialog('操作說明',TTON?HELP_T:HELP,[['知道了','gold']]);
+  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
   else if(m==='bug')dialog('回報問題','<p>遇到問題的話，把畫面截圖和你做了什麼告訴開發者就可以了。</p>',[['好','gold']]);
   else if(t.dataset.ren!==undefined){e.stopPropagation();const k=+t.dataset.ren,a=loadSlots(),n=prompt('存檔名稱',a[k].name||'');if(n){a[k].name=n.slice(0,20);writeSlots(a);renderSlots()}}
   else if(t.dataset.del!==undefined){e.stopPropagation();const k=+t.dataset.del;if(loadSlots()[k].locked){toast('這個存檔鎖定了，先解鎖才能刪除');return}dialog('刪除存檔','<p>確定要刪除「'+(loadSlots()[k].name||'存檔欄位'+(k+1))+'」嗎？刪掉就救不回來了。</p>',[['先不要'],['刪除','gold',()=>{const a=loadSlots();a[k]=null;writeSlots(a);renderSlots()}]])}
@@ -3572,7 +3589,7 @@ addEventListener('keydown',e=>{
   if(C==='Tab'){if(G.build)exitBuild();openPanel('techPanel')}
   if(C==='KeyB'){if(G.build)exitBuild();else openPanel('buildPanel')}
   if(e.shiftKey&&/^Digit[1-9]$/.test(C)){const id=(G.favs||[])[+C.slice(5)-1];if(id)selectBuild(id);return}
-  if(G.build){if(C==='KeyN'){G.build.bp=G.build.bp==='select'&&G.clip?'paste':'select';bpA=null;bpGhost.visible=false;toast(G.build.bp==='select'?'藍圖：點兩個角框選要複製的機器':'藍圖：貼上')}
+  if(G.build){if(C==='KeyN'){const m=G.build.bp;G.build.bp=m==='paste'?'select':m==='select'?null:G.clip?'paste':'select';bpA=null;bpGhost.visible=false;toast(G.build.bp==='select'?'藍圖：點兩個角框選要複製的機器':G.build.bp==='paste'?'藍圖：貼上':'離開藍圖')}
     if(C==='KeyR'&&G.build.bp==='paste'&&G.clip){bpRotate(G.clip);return}
     if(C==='KeyR'){if(beltStart&&LINES[G.build.item])G.build.flip=!G.build.flip;else{G.build.dir=(G.build.dir+1)%4;G.flags.rotated=true}}if(C==='KeyG'){G.showGrid=!G.showGrid;G.flags.grid=true;toast(G.showGrid?'顯示方格':'關掉方格')}if(C==='PageUp')buildLevel(1);if(C==='PageDown')buildLevel(-1);if(C==='KeyC')buildNear(-.5);if(C==='KeyV')buildNear(.5);if(C==='KeyF'){G.build.free=!G.build.free;toast(G.build.free?'不吸附：照你轉的方向放':'吸附：機器會自動順著輸送帶')}if(C==='KeyX'){G.build.remove=!G.build.remove;beltStart=null}return}
   if(C==='KeyP'){enterPhoto();return}
@@ -3593,6 +3610,38 @@ if(TOUCH){document.body.classList.add('touch');if(SET.res==null)SET.res='auto';i
 const tState={stick:null,look:null,lookX:0,lookY:0};
 function tKey(code,down){padKey(code,down)}
 const TSHORT={det:'探測器',vac:'吸塵器',hscan:'掃描器'};
+// 手機版：教學、提示、說明裡的鍵盤說法換成畫面上按鈕的名字（電腦版不動）
+var TTON=false;
+var TKEY={LMB:'撿',RMB:'丟',E:'E',TAB:'科技',B:'建造',Q:'放下',R:'旋轉',X:'拆除',G:'方格',SHIFT:'跑','1':'工具'};
+const TTR=[
+  ['俯瞰模式：WASD 移動、滾輪拉近拉遠、B 建造、M 回去','俯瞰模式：拖曳畫面移動地圖，點「建造」可以直接點地上蓋，再點「俯瞰」回去'],
+  ['拍照模式：WASD 飛、空白鍵／C 上下、Enter 存圖、P 離開','拍照模式：搖桿飛、「跳」「蹲」上下、按「撿」存圖，再點「拍照」離開'],
+  ['按 1 把鏟子換回徒手，再按 2 把鏟子拿出來','點下方中間的工具鍵，先換成雙手，再換回玩具鏟'],['放在快捷欄第 2 格，就在徒手旁邊','下方中間的工具鍵裡選得到'],
+  ['再點一下設定','再按一次「蓋」設定'],
+  ['按 Q 放到地上，或按 F 丟出去','按「放下」放到地上'],
+  ['滑鼠上就會出現預覽','畫面中間就會出現預覽'],['轉動滑鼠滾輪，或按 C 和 V','按右下的「拉近」和「推遠」'],
+  ['按滑鼠中鍵','按右下的「複製」'],['中鍵複製','可以按「複製」'],['中鍵','「複製」'],
+  ['再按一次 Tab 就能關掉','點面板右上的 ✕ 就能關掉'],['按 Tab','點左上的「科技」'],
+  ['再按一次 G','再點一次「方格」'],['按 G','點左上的「方格」'],
+  ['再按 B','再點左上的「建造」'],['按 B','點左上的「建造」'],
+  ['點一下地上的位置','對準地上按「蓋」'],['點一下定起點，再點一下定終點','按「蓋」定起點，再按一次「蓋」定終點'],
+  ['點一下就拆掉','對準要拆的東西按「拆」'],['左鍵拆掉','按「拆」拆掉'],['X 切回建造・B／Esc 離開','「拆除」切回建造・點「建造」離開'],
+  ['再點一下確定・右鍵取消','再按一次「蓋」確定・「取消」重來'],['再點一下定','再按一次「蓋」定'],['點一下定','按「蓋」定'],
+  ['點第一個角','按「蓋」定第一個角'],['先點平台的邊','先對準平台的邊按「蓋」'],['點兩個角','用「蓋」點兩個角'],
+  ['・F 吸附：開',''],['・F 吸附：關',''],['（或按住拖到終點）',''],['左鍵放置','按「蓋」放置'],['B／Esc 離開','點「建造」離開'],['X 切回建造','「拆除」切回建造'],['X 拆除','「拆除」'],['按 X 切換拆除','按「拆除」切換拆除'],['R 旋轉','「旋轉」'],
+  ['R 轉方向','「旋轉」轉方向'],['N 離開藍圖','再點「藍圖」離開'],['左鍵貼上','按「蓋」貼上'],['N 重新','點「藍圖」重新'],
+  ['按 R','按「旋轉」'],['按 X','按「拆除」'],['按 Q','按「放下」'],
+  ['PageUp／PageDown','左上的「架高」「降低」'],
+  ['按住 Shift','把搖桿推到底'],['左下的黃條','下方中間的黃條'],['按住 C','按「蹲」'],
+  ['按住左鍵','按住「撿」'],['按左鍵','按「撿」'],['左鍵','「撿」'],
+  ['按住右鍵','按住「丟」'],['按右鍵','按「丟」'],['右鍵','「丟」'],['空白鍵','「跳」'],
+  ['按住 E','按住「E」'],['按 E','按「E」']];
+function TT(s){if(!TTON||typeof s!=='string')return s;const o=s;for(const[a,b]of TTR)if(s.indexOf(a)>=0)s=s.split(a).join(b);
+  return s===o?s:s.replace(/([」一-鿿]) (?=[一-鿿「（])/g,'$1')}
+// 遊戲寫進這些地方的字，手機版先翻成按鈕說法
+function hookText(id,prop){const el=$(id);if(!el)return;const P=prop==='innerHTML'?Element.prototype:Node.prototype,d=Object.getOwnPropertyDescriptor(P,prop);
+  Object.defineProperty(el,prop,{configurable:true,get(){return d.get.call(this)},set(v){d.set.call(this,TT(String(v)))}})}
+const HELP_T='<p style="text-align:left"><b>左下</b>：手指按哪裡搖桿就在哪裡，推到底會跑<br><b>右半邊畫面</b>：拖曳轉視角<br><b>撿</b>：按住拿硬幣　<b>丟</b>：丟硬幣（對準收購站進料口就是賣）<br><b>E</b>：開門、五金行、訂單板、收藏櫃、機器設定；看著輸送帶按住 E 把它反過來<br><b>跳</b>（有噴射背包就按住往上飛）、<b>蹲</b>（手上的硬幣不會灑）、<b>放下</b>（把工具放到地上）<br>看著建築時右下會出現<b>複製</b><br><b>下方中間</b>：點一下選工具，也能選快捷欄的建築<br><b>左上</b>：選單、科技樹、建造、俯瞰、手電筒、拍照、成就<br><b>建造時</b>：蓋、旋轉、拆除、拉近、推遠；左上換成架高、降低、方格、復原、藍圖<br>建造目錄裡<b>長按</b>建築可以加到快捷欄</p>';
 // 手機進遊戲就全螢幕，把網址列藏起來，順便鎖成橫向；離開全螢幕後在遊戲裡點一下會再進去
 const isStandalone=()=>!!(navigator.standalone||window.matchMedia&&matchMedia('(display-mode: fullscreen),(display-mode: standalone)').matches);
 function goFull(){
@@ -3612,10 +3661,14 @@ function toolChip(){
   const b=G.build&&BIT[G.build.item],t=TOOLS.find(t=>t.id===G.tool)||TOOLS[0],k=b?'b'+G.build.item:G.build?'b':'t'+t.id;if(k===tChipK)return;tChipK=k;
   const c=$('tTool');c.querySelector('.tci').textContent=b?b.icon:G.build?'🔨':t.icon;c.querySelector('.tcn').textContent=b?b.name:G.build?'建造':TSHORT[t.id]||t.name;
   if(!$('tPick').classList.contains('hidden'))fillPick()}
-function fillPick(){$('tPick').innerHTML=TOOLS.filter(t=>toolOwned(t.id)).map(t=>'<button data-tool="'+t.id+'"'+(t.id===G.tool?' class="sel"':'')+'><b>'+t.icon+'</b>'+(TSHORT[t.id]||t.name)+'</button>').join('')}
+function fillPick(){const f=(G.favs||[]).filter(id=>BIT[id]);
+  $('tPick').innerHTML=TOOLS.filter(t=>toolOwned(t.id)).map(t=>'<button data-tool="'+t.id+'"'+(t.id===G.tool&&!G.build?' class="sel"':'')+'><b>'+t.icon+'</b>'+(TSHORT[t.id]||t.name)+'</button>').join('')+
+    (f.length?'<div class="ph2">快捷欄的建築</div>'+f.map(id=>'<button data-fav="'+id+'"'+(G.build&&G.build.item===id?' class="sel"':'')+'><b>'+BIT[id].icon+'</b>'+BIT[id].name.slice(0,5)+'</button>').join(''):'')}
 function showPick(on){const p=$('tPick');if(on){fillPick();p.classList.remove('hidden')}else p.classList.add('hidden');$('tTool').classList.toggle('on',on)}
 function touchInit(){
   if(!TOUCH)return;const ui=$('touchUI');iosHint();ui.addEventListener('pointerup',goFull,true);
+  TTON=true;[['buildHint','innerHTML'],['techInfo','innerHTML'],['shopList','innerHTML'],['mtip','innerHTML'],['buildFoot','textContent'],['meterTxt','textContent'],['objD','textContent'],['pLbl','textContent'],['pSub','textContent']].forEach(([id,pr])=>hookText(id,pr));
+  for(const sp of document.querySelectorAll('#buildTop span'))if(sp.textContent.indexOf('左鍵裝備')>=0)sp.textContent='👆 點一下裝備・長按加到快捷欄';
   const stick=$('tStick'),knob=$('tKnob'),zone=$('tZone'),look=$('tLook');
   // 搖桿：手指按下的地方就是搖桿中心，放開回到左下角
   const stickMove=e=>{const s=tState.stick;if(!s||s.id!==e.pointerId)return;let dx=(e.clientX-s.cx)/52,dy=(e.clientY-s.cy)/52;const l=Math.hypot(dx,dy);if(l>1){dx/=l;dy/=l}
@@ -3634,24 +3687,38 @@ function touchInit(){
     if(topV&&G&&G.build&&Math.hypot(e.clientX-s.sx,e.clientY-s.sy)<8){mouseNDC.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);aimTile=buildAim();buildClick()}};
   look.addEventListener('pointerup',lookEnd);look.addEventListener('pointercancel',lookEnd);
   // 選工具
-  $('tPick').addEventListener('pointerup',e=>{const b=e.target.closest('[data-tool]');if(!b||!G)return;setTool(b.dataset.tool);showPick(false)});
+  $('tPick').addEventListener('pointerup',e=>{const b=e.target.closest('[data-tool],[data-fav]');if(!b||!G)return;if(b.dataset.fav)selectBuild(b.dataset.fav);else{if(G.build)exitBuild();setTool(b.dataset.tool)}showPick(false)});
+  // 建造目錄：長按把建築加到快捷欄（iPhone 沒有右鍵選單），放開時不要順便裝備
+  let lpT=0,lpFired=false;const bl=$('buildList');
+  bl.addEventListener('pointerdown',e=>{const c=e.target.closest('[data-build]');lpFired=false;clearTimeout(lpT);if(!c||!G)return;const x=e.clientX,y=e.clientY;
+    lpT=setTimeout(()=>{lpFired=true;toggleFav(c.dataset.build);if(navigator.vibrate)navigator.vibrate(15)},480);
+    const cancel=ev=>{if(ev.type!=='pointermove'||Math.hypot(ev.clientX-x,ev.clientY-y)>10){clearTimeout(lpT);bl.removeEventListener('pointermove',cancel);bl.removeEventListener('pointerup',cancel);bl.removeEventListener('pointercancel',cancel)}};
+    bl.addEventListener('pointermove',cancel);bl.addEventListener('pointerup',cancel);bl.addEventListener('pointercancel',cancel)});
+  bl.addEventListener('click',e=>{if(lpFired){e.stopPropagation();e.preventDefault();lpFired=false}},true);
+  // Android 長按也會跳右鍵選單：手機版一律在這裡處理，只切換一次
+  bl.addEventListener('contextmenu',e=>{e.preventDefault();e.stopImmediatePropagation();const c=e.target.closest('[data-build]');if(c&&G&&!lpFired){lpFired=true;clearTimeout(lpT);toggleFav(c.dataset.build)}},true);
   // 按鈕
   ui.querySelectorAll('[data-t]').forEach(b=>{
     const down=e=>{e.preventDefault();b.classList.add('on');const t=b.dataset.t;if(t!=='tool')showPick(false);
-      if(t==='grab'){lmb=true;if(G&&G.build)buildClick()}else if(t==='throw')rmb=true;else if(t==='jump')tKey('Space',true);else if(t==='use')tKey('KeyE',true);
+      if(t==='grab'){if(mode==='photo'){savePhoto();return}lmb=true;if(G&&G.build)buildClick()}else if(t==='throw')rmb=true;else if(t==='jump')tKey('Space',true);else if(t==='use')tKey('KeyE',true);
       else if(t==='crouch'){tState.crouch=!tState.crouch;tKey('KeyC',tState.crouch)}
       else if(t==='menu'){if(mode==='play')openPause()}else if(t==='tool'){if(G&&G.build)openPanel('buildPanel');else showPick($('tPick').classList.contains('hidden'))}else if(t==='tech')openPanel('techPanel');else if(t==='build'){if(G&&G.build)exitBuild();else openPanel('buildPanel')}
-      else if(t==='map')toggleTop();else if(t==='stats')openPanel('statPanel');else if(t==='rot')tKey('KeyR',true);else if(t==='rm')tKey('KeyX',true);else if(t==='photo'){if(mode==='photo')exitPhoto();else enterPhoto()}
-      else if(t==='lamp')tKey('KeyL',true);else if(t==='drop')tKey('KeyQ',true)};
+      else if(t==='map')toggleTop();else if(t==='stats')openPanel('statPanel');else if(t==='rot')tKey('KeyR',true);else if(t==='rm'){if(beltStart)beltStart=null;else tKey('KeyX',true)}else if(t==='photo'){if(mode==='photo')exitPhoto();else enterPhoto()}
+      else if(t==='lamp')tKey('KeyL',true);else if(t==='drop')tKey('KeyQ',true)
+      else if(t==='up')tKey('PageUp',true);else if(t==='down')tKey('PageDown',true);else if(t==='grid')tKey('KeyG',true);else if(t==='bp')tKey('KeyN',true);else if(t==='undo'){if(G&&G.build)undo()}
+      else if(t==='near')tKey('KeyC',true);else if(t==='far')tKey('KeyV',true);else if(t==='copy'){if(G&&!G.build&&mode==='play')copyBuilding()}};
     const up=e=>{if(b.dataset.t!=='tool')b.classList.remove('on');const t=b.dataset.t;if(t==='grab')lmb=false;else if(t==='throw')rmb=false;else if(t==='jump')tKey('Space',false);else if(t==='use')tKey('KeyE',false);
-      else if(t==='rot')tKey('KeyR',false);else if(t==='rm')tKey('KeyX',false);else if(t==='lamp')tKey('KeyL',false);else if(t==='drop')tKey('KeyQ',false)};
+      else if(t==='rot')tKey('KeyR',false);else if(t==='rm')tKey('KeyX',false);else if(t==='lamp')tKey('KeyL',false);else if(t==='drop')tKey('KeyQ',false);else if(t==='up')tKey('PageUp',false);else if(t==='down')tKey('PageDown',false);else if(t==='grid')tKey('KeyG',false);else if(t==='bp')tKey('KeyN',false);else if(t==='near')tKey('KeyC',false);else if(t==='far')tKey('KeyV',false)};
     b.addEventListener('pointerdown',down);b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('pointerleave',up)});
 }
 // 每一格：介面開關、建造模式換按鍵、開著的功能亮金色
 function updateTouchUI(){if(!TOUCH)return;const ui=$('touchUI'),show=(mode==='play'||mode==='photo')&&!panel;ui.classList.toggle('hidden',!show);if(!show)showPick(false);
   ui.classList.toggle('building',!!(G&&G.build));$('rotateMsg').classList.toggle('hidden',innerHeight<=innerWidth||mode==='menu');
   if(show){const q=t=>ui.querySelector('[data-t="'+t+'"]');q('lamp').classList.toggle('lock',headlamp.intensity>0);q('map').classList.toggle('lock',!!topV);q('build').classList.toggle('lock',!!(G&&G.build));
-    q('photo').classList.toggle('lock',mode==='photo');q('crouch').classList.toggle('lock',!!tState.crouch);toolChip()}}
+    q('photo').classList.toggle('lock',mode==='photo');q('crouch').classList.toggle('lock',!!tState.crouch);toolChip();
+    const B=G&&G.build;ui.classList.toggle('rmMode',!!(B&&B.remove));ui.classList.toggle('beltOn',!!(B&&beltStart));q('rm').classList.toggle('lock',!!(B&&B.remove));
+    q('grid').classList.toggle('lock',!!(G&&G.showGrid));q('bp').classList.toggle('lock',!!(B&&B.bp));
+    const n=performance.now();if(n-(tState.cpT||0)>150){tState.cpT=n;ui.classList.toggle('canCopy',!!(G&&!B&&mode==='play'&&!topV&&(machineLooked()||lookBelt())))}}}
 
 // ================= 操作：自訂按鍵、手把、備份和匯出匯入、第一次看到機器的說明 =================
 // 自訂按鍵：遊戲裡用的是「預設按鍵」的代號，玩家改過的按鍵在這裡翻譯回去
@@ -4038,6 +4105,8 @@ function updateMovers(dt){
   }
 }
 menuScene();showMenu('main');touchInit();if(TOUCH)applySet();
+// 離線玩：存下遊戲和 three.js（只有網址是 http/https 才能用）
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 linColors(scene);scene.fog.color.convertSRGBToLinear();scene.background.convertSRGBToLinear();
 window.__g={get G(){return G},get pl(){return pl},get tiles(){return tiles},get items(){return items},get oneObjs(){return oneObjs},get anchors(){return anchors},
   st:()=>({M,Rp,H,mode,panel,locked,hover:hover&&hover.k,vis:mcount.reduce((a,b)=>a+b,0),power}),
