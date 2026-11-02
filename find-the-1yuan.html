@@ -342,6 +342,89 @@
   .coin3d .cb{transform:rotateY(180deg)}
   @keyframes coinSpin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
   .drawer .lab{background:#efe8d6;color:#222;padding:3px 6px;font-weight:700;margin-bottom:6px}
+  /* ================= 手機版介面：面板全螢幕、標題列薄、按鈕大，每個面板照手機重新排 ================= */
+  body.touch .panel{left:0;top:0;transform:none;width:100%!important;height:100%!important;max-height:none!important;border:0;background:#121214;padding:0 env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+  body.touch .panel:not(.hidden){animation:fadeIn .14s ease-out}
+  body.touch .panel .hd{padding:4px 8px 4px 14px;min-height:46px;gap:10px}
+  body.touch .panel .hd .tt{font-size:16px!important}
+  body.touch .panel .hd span[style*="color:#aaa"]{display:none}
+  body.touch .xbtn{width:42px;height:36px;border-radius:10px;font-size:16px;background:#2a2a30;border-color:#ffffff30}
+  body.touch .panel .bd{padding:6px 12px 12px;flex:1;min-height:0}
+  body.touch .panel .sub{padding:6px 14px}
+  body.touch .ob{min-height:34px;padding:6px 12px;font-size:13px;border-radius:8px}
+  body.touch .btn{min-height:42px;border-radius:10px}
+  /* 科技樹：左邊類別、中間小卡片、右邊說明和購買 */
+  body.touch #techAxis{display:none}
+  body.touch #techTree{display:flex;overflow:hidden}
+  .tmL{width:120px;flex:none;overflow-y:auto;border-right:1px solid var(--line);padding:4px 0;overscroll-behavior:contain}
+  .tmL div{padding:8px 8px 8px 10px;font-size:13px;border-left:3px solid transparent;display:flex;justify-content:space-between;align-items:center;gap:4px;color:#ddd}
+  .tmL div.on{border-left-color:var(--gold);background:#ffffff10;color:#fff;font-weight:700}
+  .tmL span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tmL small{display:block;font-size:10px;color:#999;font-weight:400}
+  .tmL,.tmG,body.touch .side,body.touch .grid{scrollbar-width:thin}
+  .tmL i{font-style:normal;background:#2e7d32;color:#fff;border-radius:9px;font-size:11px;min-width:18px;height:18px;line-height:18px;text-align:center;padding:0 5px}
+  .tmG{flex:1;overflow-y:auto;padding:8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;align-content:start;overscroll-behavior:contain}
+  .tmG .tier{grid-column:1/-1;font-size:11px;color:#9a9a9a;margin:4px 0 -2px}
+  .tc{position:relative;display:flex;align-items:center;gap:8px;padding:6px 8px;height:52px;background:#1d1d21;border:1px solid #ffffff1c;border-radius:8px;cursor:pointer}
+  .tc b{font-size:20px;width:34px;height:34px;display:grid;place-items:center;background:#26262a;border-radius:6px;flex:none;font-weight:400}
+  .tc .n{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tc .s{font-size:11px;color:#bbb;display:flex;gap:6px;margin-top:2px}
+  .tc .s>span:first-child{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .tc .pr{color:var(--gold);font-weight:700}.tc .pr.no{color:#e08a7a}
+  .tc.own{border-color:#c9a03a88}.tc.lock{opacity:.45}.tc.sel{outline:2px solid #fff;outline-offset:-1px}
+  .tc .ok{position:absolute;right:6px;top:6px;width:8px;height:8px;border-radius:50%;background:#4caf50}
+  body.touch #techInfo{width:230px;padding:12px 14px;overflow-y:auto;line-height:1.6}
+  body.touch #techInfo h2{font-size:18px}
+  body.touch #techInfo .btn{width:100%;min-height:46px;font-size:15px;margin-top:4px}
+  /* 建造目錄：卡片變小，一次看得到三排 */
+  body.touch #buildTop{padding:6px 12px;gap:8px}
+  body.touch #buildTop input{width:130px;padding:6px 8px}
+  body.touch #buildTop span:not(#buildCash):not(.sp):not(.bhint){display:none}
+  body.touch #buildFoot{display:none}
+  body.touch .side{width:108px;padding-top:4px;overflow-y:auto}
+  body.touch .side div{padding:9px 8px;font-size:13px}
+  body.touch .grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;padding-top:4px;overflow-y:auto}
+  body.touch .card{padding:6px;border-radius:8px}
+  body.touch .card .ic{font-size:24px;height:40px;line-height:40px;margin-bottom:4px;border-radius:6px}
+  body.touch .card .nm{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.touch .card .pr{font-size:11px;margin-top:1px}
+  body.touch #buildPanel .bd{overflow:hidden}
+  /* 商店 */
+  body.touch .row2{gap:10px;padding:7px 0}
+  body.touch .row2 .ic{width:40px;height:40px;border-radius:8px;font-size:22px}
+  /* 訂單板：標題變小，三張單子排一排 */
+  body.touch #boardBd{padding:8px 12px}
+  body.touch #boardBd .hd3{font-size:18px}
+  body.touch #boardBd .left{margin:2px auto 8px}
+  body.touch .ords{gap:10px}
+  body.touch .ords .paper{width:calc((100% - 20px)/3);min-width:170px}
+  /* 收藏櫃：一排六格 */
+  body.touch .drawers{grid-template-columns:repeat(6,1fr);gap:6px;padding-top:4px}
+  body.touch .drawer{min-height:0;padding:6px 4px;font-size:11px}
+  body.touch .drawer .lab{font-size:11px;padding:2px 4px;margin-bottom:4px}
+  body.touch .coin3d{width:36px;height:36px;margin:1px auto 3px}
+  body.touch .coin3d.big{width:110px;height:110px}
+  /* 成就 */
+  body.touch .achs{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+  body.touch .ach{padding:6px 8px}
+  /* 暫停：兩排大按鈕 */
+  body.touch #pausePanel .bd{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:center;width:min(560px,100%);margin:0 auto}
+  body.touch #pausePanel .bd .btn{min-height:52px;font-size:16px}
+  body.touch #pausePanel #pResume{grid-column:1/-1}
+  /* 設定：兩欄，按鍵設定在手機上用不到 */
+  body.touch #setPanel .bd{display:grid;grid-template-columns:1fr 1fr;gap:4px 28px;align-content:start;max-height:none;padding:8px 16px 16px}
+  body.touch #setPanel .setrow{min-height:42px}
+  body.touch #setPanel .setrow input[type=range]{width:min(180px,22vw);height:28px}
+  body.touch #setPanel .setrow input[type=checkbox]{width:22px;height:22px}
+  body.touch #setPanel .setsel{min-height:32px}
+  body.touch #keyList,body.touch #setPanel .setrow:has(+#keyList){display:none}
+  /* 機器設定：選項少，做成下方半版，看得到機器 */
+  body.touch #cfgPanel{top:auto;bottom:0;height:auto!important;max-height:72%!important;border-top:1px solid #ffffff2a;border-radius:14px 14px 0 0;box-shadow:0 -6px 24px #0009}
+  body.touch #cfgPanel:not(.hidden){animation:sheetUp .18s ease-out}
+  @keyframes sheetUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  /* 遊戲結束：還是置中的小卡片 */
+  body.touch #endPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,90vw)!important;height:auto!important;border:1px solid #ffffff2a}
+  @media (max-width:720px){body.touch #techInfo{width:200px}.tmL{width:104px}body.touch .side{width:96px}}
 </style>
 </head>
 <body>
@@ -3330,10 +3413,27 @@ function techState(t){
   if(req)return{cls:'lock',a:'已鎖定',b:l+'/'+t.max};
   return{cls:'',a:'',b:l+'/'+t.max,price:t.cost(l)};
 }
+// 手機版科技樹：左邊選類別（最上面是「買得起」），中間是小卡片照層數排，右邊是說明和購買
+let techLane=null,techSeen=null;
+function renderTechM(){
+  const depth={},dep=t=>depth[t.id]!=null?depth[t.id]:(depth[t.id]=t.req?dep(TECHD[t.req])+1:0);TECH.forEach(dep);
+  const canBuy=t=>{const s=techState(t);return s.cls!=='lock'&&s.price!=null&&G.money>=s.price};
+  const lanes=[...new Set(TECH.map(t=>t.lane))],afford=TECH.filter(canBuy),inLane=l=>l==='★'?afford:TECH.filter(t=>t.lane===l);
+  if(techSel!==techSeen){techSeen=techSel;if(!techLane||!inLane(techLane).includes(TECHD[techSel]))techLane=TECHD[techSel].lane}
+  const tr=$('techTree'),oG=tr.querySelector('.tmG'),oL=tr.querySelector('.tmL'),sg=oG?oG.scrollTop:0,sl=oL?oL.scrollTop:0;
+  let h='<div class="tmL"><div data-tlane="★" class="'+(techLane==='★'?'on':'')+'"><span>買得起</span>'+(afford.length?'<i>'+afford.length+'</i>':'')+'</div>'+
+    lanes.map(l=>{const ts=inLane(l),b=ts.filter(canBuy).length;return '<div data-tlane="'+l+'" class="'+(l===techLane?'on':'')+'"><span>'+l+'<small>'+ts.filter(techOwned).length+' / '+ts.length+'</small></span>'+(b?'<i>'+b+'</i>':'')+'</div>'}).join('')+'</div><div class="tmG">';
+  const list=inLane(techLane).slice().sort((a,b)=>depth[a.id]-depth[b.id]),d0=list.length?Math.min(...list.map(t=>depth[t.id])):0;let last=null;
+  if(!list.length)h+='<div class="tier">現在沒有買得起的，多賣一點硬幣再來。</div>';
+  list.forEach(t=>{const d=depth[t.id];if(techLane!=='★'&&d!==last){h+='<div class="tier">'+(d===d0?'一開始就能買':'第 '+(d-d0+1)+' 層')+'</div>';last=d}
+    const s=techState(t),st=s.price!=null?'<span class="pr'+(G.money<s.price?' no':'')+'">'+money(s.price)+'</span>':s.cls==='lock'?'🔒 先解鎖「'+TECHD[t.req].name+'」':s.a;
+    h+='<div class="tc '+s.cls+(t.id===techSel?' sel':'')+'" data-tech="'+t.id+'"><b>'+t.icon+'</b><div style="min-width:0;flex:1"><div class="n">'+t.name+'</div><div class="s"><span>'+st+'</span><span>'+(t.max>1?s.b:'')+'</span></div></div>'+(canBuy(t)?'<span class="ok"></span>':'')+'</div>'});
+  tr.innerHTML=h+'</div>';tr.querySelector('.tmG').scrollTop=sg;tr.querySelector('.tmL').scrollTop=sl}
 function techOwned(t){if(!t)return true;if(t.shop)return!!G.tools[t.shop];if(t.auto)return true;return lv(t.id)>0}
 function techBuy(t){const s=techState(t);if(t.shop||t.auto||s.cls==='lock'||s.price==null)return;if(G.money<s.price){toast('錢不夠');return}G.money-=s.price;G.ups[t.id]=lv(t.id)+1;tone(1000,.12);if(t.id==='expand'){buildWorld();shadowDirty=true;toast('院子往西邊擴建了 5 公尺','gold')}drawPrice();showTool();renderPanel()}
 function renderTech(){
   $('techCash').textContent='可用：'+money(G.money);
+  if(TTON)renderTechM();else{
   const lanes=[...new Set(TECH.map(t=>t.lane))],depth={};
   const dep=t=>depth[t.id]!=null?depth[t.id]:(depth[t.id]=t.req?dep(TECHD[t.req])+1:0);TECH.forEach(dep);
   let html='<div id="techAxis">'+[0,1,2,3,4].map(k=>'<span style="left:'+(170+k*200+60)+'px">'+(k?k+'分':'開始')+'</span>').join('')+'</div>',y=36,pos={},lines='';
@@ -3347,7 +3447,7 @@ function renderTech(){
   });
   TECH.forEach(t=>{if(t.req&&pos[t.req]){const a=pos[t.req],b=pos[t.id],x1=a.x+170,y1=a.y+33,x2=b.x,y2=b.y+33,mx=(x1+x2)/2;lines+='<path d="M'+x1+' '+y1+' H'+mx+' V'+y2+' H'+x2+'" stroke="'+(techOwned(TECHD[t.req])?'#c9a03a':'#555')+'" stroke-width="2" fill="none"/>'}});
   const W=Math.max(1300,...Object.values(pos).map(q=>q.x+200));
-  $('techTree').innerHTML=html+'<svg id="techLines" width="'+W+'" height="'+y+'">'+lines+'</svg>';
+  $('techTree').innerHTML=html+'<svg id="techLines" width="'+W+'" height="'+y+'">'+lines+'</svg>';}
   const t=TECHD[techSel],s=techState(t);
   $('techInfo').innerHTML='<div class="c">'+t.lane+'</div><h2>'+t.icon+' '+t.name+'</h2><div class="st">'+(s.cls==='own'?'解鎖・已擁有':s.cls==='lock'?'已鎖定：要先解鎖「'+TECHD[t.req].name+'」':t.shop?'解鎖・五金行有賣':lv(t.id)?'解鎖・已擁有':'解鎖・還沒買')+(t.max>1?'　等級 '+lv(t.id)+'/'+t.max:'')+'</div><p>'+t.desc+'</p>'+
     (s.price!=null&&s.cls!=='lock'?'<button class="btn gold" data-techbuy="'+t.id+'" '+(G.money<s.price?'disabled':'')+'>'+(lv(t.id)?'升級':'解鎖')+' '+money(s.price)+'</button>':'');
@@ -3520,7 +3620,7 @@ $('menu').addEventListener('click',e=>{
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
   else if(m==='help')dialog('操作說明',TTON?HELP_T:HELP,[['知道了','gold']]);
-  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
+  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
   else if(m==='bug')dialog('回報問題','<p>遇到問題的話，把畫面截圖和你做了什麼告訴開發者就可以了。</p>',[['好','gold']]);
   else if(t.dataset.ren!==undefined){e.stopPropagation();const k=+t.dataset.ren,a=loadSlots(),n=prompt('存檔名稱',a[k].name||'');if(n){a[k].name=n.slice(0,20);writeSlots(a);renderSlots()}}
   else if(t.dataset.del!==undefined){e.stopPropagation();const k=+t.dataset.del;if(loadSlots()[k].locked){toast('這個存檔鎖定了，先解鎖才能刪除');return}dialog('刪除存檔','<p>確定要刪除「'+(loadSlots()[k].name||'存檔欄位'+(k+1))+'」嗎？刪掉就救不回來了。</p>',[['先不要'],['刪除','gold',()=>{const a=loadSlots();a[k]=null;writeSlots(a);renderSlots()}]])}
@@ -3668,7 +3768,9 @@ function showPick(on){const p=$('tPick');if(on){fillPick();p.classList.remove('h
 function touchInit(){
   if(!TOUCH)return;const ui=$('touchUI');iosHint();ui.addEventListener('pointerup',goFull,true);
   TTON=true;[['buildHint','innerHTML'],['techInfo','innerHTML'],['shopList','innerHTML'],['mtip','innerHTML'],['buildFoot','textContent'],['meterTxt','textContent'],['objD','textContent'],['pLbl','textContent'],['pSub','textContent']].forEach(([id,pr])=>hookText(id,pr));
-  for(const sp of document.querySelectorAll('#buildTop span'))if(sp.textContent.indexOf('左鍵裝備')>=0)sp.textContent='👆 點一下裝備・長按加到快捷欄';
+  for(const sp of document.querySelectorAll('#buildTop span'))if(sp.textContent.indexOf('左鍵裝備')>=0){sp.textContent='點一下裝備・長按加快捷欄';sp.className='bhint'}
+  $('pSave').textContent='存檔';$('pStat').textContent='成就與統計';$('sSens').previousElementSibling.textContent='視角靈敏度';
+  $('techTree').addEventListener('click',e=>{const l=e.target.closest('[data-tlane]');if(!l)return;techLane=l.dataset.tlane;renderTech();const g=$('techTree').querySelector('.tmG');if(g)g.scrollTop=0});
   const stick=$('tStick'),knob=$('tKnob'),zone=$('tZone'),look=$('tLook');
   // 搖桿：手指按下的地方就是搖桿中心，放開回到左下角
   const stickMove=e=>{const s=tState.stick;if(!s||s.id!==e.pointerId)return;let dx=(e.clientX-s.cx)/52,dy=(e.clientY-s.cy)/52;const l=Math.hypot(dx,dy);if(l>1){dx/=l;dy/=l}
