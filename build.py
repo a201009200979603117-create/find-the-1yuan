@@ -29,6 +29,7 @@ def parts():
 def en_dict():
     d = {}
     for line in read('lang/en.tsv').split('\n'):
+        line = line.rstrip('\r')  # Windows 的 git 可能把換行改成 CRLF
         if not line or line.startswith('#'):
             continue
         k, _, v = line.partition('\t')
