@@ -96,6 +96,7 @@
   /* 手機畫面小：遊戲中的提示最多放大到「大」，金額本來就夠大不放大，免得蓋到按鍵 */
   body.touch #obj,body.touch #tips,body.touch #toasts,body.touch #mtip,body.touch #prompt,body.touch #meter,body.touch #buildHint{zoom:min(var(--fz),1.15)}
   body.touch #mon{zoom:1}
+  body.touch #ultraRow{display:none}
   #loading small{display:block;margin-top:10px;font-size:14px;font-weight:400;color:#999}
   body.touch #upd{top:auto;bottom:calc(68px + env(safe-area-inset-bottom));font-size:13px;padding:6px 14px}
   body.touch #statShare{height:36px;padding:0 12px;border-radius:10px;font-size:14px}
@@ -510,7 +511,7 @@
 <div id="clickPlay" class="hidden">🖱 點一下畫面繼續</div>
 <div id="hud" class="hidden">
   <div id="obj"><div class="st" id="objN"></div><div class="t" id="objT"></div><span class="kb" id="objK"></span><div class="d" id="objD"></div><div class="rw" id="objR"></div><div class="bar" id="objBarW"><i id="objBar"></i></div><div class="p"><span id="objP"></span><span id="objL"></span></div></div>
-  <div id="ver"><div class="a">Find The 1元 Demo V2.5</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
+  <div id="ver"><div class="a">Find The 1元 Demo V2.6</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
   <div id="tips"><div class="h">提示</div><div id="tipTxt"></div></div>
   <div id="mon"><div class="m" id="money">$0.00</div><div class="l" id="left"></div><div class="l" id="rate"></div><div class="l" id="clock"></div><div class="l hidden" id="chal" style="color:#7fd1ff"></div><div class="l hidden" id="warnN"></div><div id="pin" class="hidden"></div></div>
   <div id="combo"></div><div id="floats"></div><div id="record"></div>
@@ -553,6 +554,7 @@
   <div class="setrow"><span>顯示每秒畫面數（FPS）</span><input type="checkbox" id="sFps"></div>
   <div class="setrow"><span>震動（手機）</span><input type="checkbox" id="sVib"></div>
   <div class="setrow"><span>省電模式（每秒 30 格）</span><input type="checkbox" id="sEco"></div>
+  <div class="setrow" id="ultraRow"><span>極高畫質（電腦，很吃效能）</span><input type="checkbox" id="sUltra"></div>
   <div class="setrow"><span>字體大小</span><select id="sFz" class="setsel"><option value="1">標準</option><option value="1.15">大</option><option value="1.3">特大</option></select></div>
   <div class="setrow"><span>觸控操作（手機）</span><select id="sTouch" class="setsel"><option value="auto">自動</option><option value="on">開</option><option value="off">關</option></select></div>
   <div class="setrow" style="margin-top:8px;color:var(--gold)"><b>按鍵（點一下再按新的鍵）</b></div><div id="keyList"></div>
@@ -1285,9 +1287,9 @@ const SET={sens:1,vol:.7,fov:72,music:.35,res:'auto',shadowQ:2,coinQ:1,fps:false
 try{Object.assign(SET,JSON.parse(localStorage.getItem('ft1y_settings')||'{}'))}catch(e){}
 if(SET.shadow===false&&SET.shadowQ==null)SET.shadowQ=0;delete SET.shadow;
 // 畫質：解析度（自動會依卡不卡調整）、陰影品質、硬幣幾何的細緻度
-const BASE_PR=Math.min(devicePixelRatio,1.5);let dynScale=1,curShadowQ=-1,curCoinQ=-1;
+const BASE_PR=Math.min(devicePixelRatio,1.5),ultraOn=()=>!!SET.ultra&&!TTON,basePR=()=>ultraOn()?Math.min(devicePixelRatio,2):BASE_PR;let dynScale=1,curShadowQ=-1,curCoinQ=-1;
 function applyQuality(){
-  renderer.setPixelRatio(BASE_PR*(SET.res==='auto'?dynScale:+SET.res));
+  renderer.setPixelRatio(basePR()*(SET.res==='auto'?dynScale:+SET.res));
   const sq=+SET.shadowQ;if(sq!==curShadowQ){curShadowQ=sq;renderer.shadowMap.enabled=sq>0;if(sq>0){const n=[0,1024,2048,4096][sq];sun.shadow.mapSize.set(n,n);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null}}shadowDirty=true;scene.traverse(o=>{if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true)})}
   const cq=+SET.coinQ;if(cq!==curCoinQ&&typeof coinGeo!=='undefined'){curCoinQ=cq;const g=share(new THREE.CylinderGeometry(1,1,1,[8,14,24][cq]));const old=coinGeo;coinGeo=g;
     [...(typeof meshes!=='undefined'?meshes:[]),...(typeof detMeshes!=='undefined'?detMeshes:[])].forEach(m=>m.geometry=g);if(old!==g)old.dispose()}
@@ -2541,6 +2543,36 @@ function updateVM(dt){
   VA.shT-=dt;if(VA.shT<=0){VA.shT=.25;let s=1;if(Math.abs(pl.x)<1.8&&pl.z>H+.3)s=.12;
     else if(structRoot.children.length){_sd.copy(sun.position).sub(sun.target.position).normalize();_rc.set(camera.position,_sd);_rc.far=60;if(_rc.intersectObject(structRoot,true).length)s=.15}VA.shTarget=s}
   VA.shade+=(VA.shTarget-VA.shade)*Math.min(1,dt*4)}
+// 極高畫質（電腦）：環境光遮蔽。先只畫一次深度，算出哪裡被周圍擋住，
+// 模糊之後乘到畫面上，硬幣之間、機器腳邊和牆角會有自然的暗影
+let aoRT=null,aoRT2,aoRT3,aoScene,aoCam,aoQuad,aoMat,aoBlur,aoMul,aoDepthM;
+function aoInit(){const w=1,h=1,vs='varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}';
+  aoRT=new THREE.WebGLRenderTarget(w,h,{depthBuffer:true});aoRT.depthTexture=new THREE.DepthTexture(w,h);aoRT.depthTexture.type=THREE.UnsignedIntType;
+  aoRT2=new THREE.WebGLRenderTarget(w,h);aoRT3=new THREE.WebGLRenderTarget(w,h);aoDepthM=new THREE.MeshBasicMaterial({colorWrite:false});
+  aoScene=new THREE.Scene();aoCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);aoQuad=new THREE.Mesh(new THREE.PlaneGeometry(2,2));aoQuad.frustumCulled=false;aoScene.add(aoQuad);
+  aoMat=new THREE.ShaderMaterial({uniforms:{tD:{value:aoRT.depthTexture},pInv:{value:new THREE.Matrix4()},proj:{value:new THREE.Matrix4()},res:{value:new THREE.Vector2(w,h)}},vertexShader:vs,depthTest:false,depthWrite:false,
+    fragmentShader:`uniform sampler2D tD;uniform mat4 pInv,proj;uniform vec2 res;varying vec2 vUv;
+      vec3 vp(vec2 uv){float d=texture2D(tD,uv).x;vec4 p=pInv*vec4(uv*2.-1.,d*2.-1.,1.);return p.xyz/p.w;}
+      float rnd(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+      void main(){if(texture2D(tD,vUv).x>=.99999){gl_FragColor=vec4(1.);return;}vec3 P=vp(vUv);
+        vec3 N=normalize(cross(vp(vUv+vec2(1./res.x,0.))-P,vp(vUv+vec2(0.,1./res.y))-P));
+        float R=.4,sr=min(.06,R*proj[1][1]*.5/(-P.z)),a0=rnd(vUv*res)*6.2832,occ=0.;
+        for(int i=0;i<12;i++){float t=(float(i)+.5)/12.;float a=a0+t*31.4;vec2 o=vec2(cos(a),sin(a))*sr*t;o.x*=res.y/res.x;
+          vec3 v=vp(vUv+o)-P;float vv=dot(v,v);occ+=max(0.,dot(v,N)-.01*(-P.z))/(vv+.02)*max(0.,1.-vv/(R*R*4.));}
+        float ao=clamp(1.-occ*.075,0.,1.);gl_FragColor=vec4(vec3(mix(ao,1.,smoothstep(25.,70.,-P.z))),1.);}`});
+  aoBlur=new THREE.ShaderMaterial({uniforms:{t:{value:null},res:{value:new THREE.Vector2(w,h)}},vertexShader:vs,depthTest:false,depthWrite:false,
+    fragmentShader:'uniform sampler2D t;uniform vec2 res;varying vec2 vUv;void main(){float s=0.;for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)s+=texture2D(t,vUv+vec2(x,y)/res).r;gl_FragColor=vec4(vec3(s/9.),1.);}'});
+  // 乘到畫面上：畫面顏色 × 遮蔽量
+  aoMul=new THREE.ShaderMaterial({uniforms:{t:{value:null}},vertexShader:vs,depthTest:false,depthWrite:false,transparent:true,blending:THREE.CustomBlending,blendEquation:THREE.AddEquation,blendSrc:THREE.ZeroFactor,blendDst:THREE.SrcColorFactor,
+    fragmentShader:'uniform sampler2D t;varying vec2 vUv;void main(){gl_FragColor=vec4(vec3(mix(1.,texture2D(t,vUv).r,.7)),1.);}'})}
+function renderAO(){if(!aoRT)aoInit();const sz=renderer.getDrawingBufferSize(_aoV),w=Math.max(1,sz.x),h=Math.max(1,sz.y);
+  if(aoRT.width!==w||aoRT.height!==h){aoRT.setSize(w,h);aoRT2.setSize(w,h);aoRT3.setSize(w,h);aoMat.uniforms.res.value.set(w,h);aoBlur.uniforms.res.value.set(w,h)}
+  const bg=scene.background;scene.background=null;scene.overrideMaterial=aoDepthM;renderer.setRenderTarget(aoRT);renderer.clear();renderer.render(scene,camera);scene.overrideMaterial=null;scene.background=bg;
+  aoMat.uniforms.proj.value.copy(camera.projectionMatrix);aoMat.uniforms.pInv.value.copy(camera.projectionMatrixInverse);
+  aoQuad.material=aoMat;renderer.setRenderTarget(aoRT2);renderer.render(aoScene,aoCam);
+  aoQuad.material=aoBlur;aoBlur.uniforms.t.value=aoRT2.texture;renderer.setRenderTarget(aoRT3);renderer.render(aoScene,aoCam);
+  aoQuad.material=aoMul;aoMul.uniforms.t.value=aoRT3.texture;renderer.setRenderTarget(null);renderer.autoClear=false;renderer.render(aoScene,aoCam);renderer.autoClear=true}
+const _aoV=new THREE.Vector2();
 function renderVM(){
   if(!G||mode!=='play'||topV||G.build)return;
   vmRoot.matrix.copy(camera.matrixWorld);vmRoot.matrixWorldNeedsUpdate=true;
@@ -3761,9 +3793,9 @@ function renderSlots(){
 }
 function dialog(title,body,btns){$('dlgT').textContent=title;$('dlgB').innerHTML=body;$('dlgR').innerHTML='';btns.forEach(([t,cls,fn])=>{const b=document.createElement('button');b.className='btn '+(cls||'');b.textContent=t;b.onclick=()=>{$('dialog').classList.add('hidden');fn&&fn()};$('dlgR').appendChild(b)});$('dialog').classList.remove('hidden')}
 const HELP='<p style="text-align:left"><b>W A S D</b> 移動、<b>Shift</b> 跑、<b>C</b> 蹲著走（手上的硬幣不會灑）、<b>空白鍵</b> 跳（有噴射背包就按住往上飛）、滑鼠轉視角<br>挖硬幣會耗體力，拿著硬幣跑步或跳起來落地會灑出來<br><b>左鍵</b> 按住拿硬幣　<b>右鍵</b> 丟硬幣（對準收購站進料口就是賣）<br><b>E</b> 開門、五金行、訂單板、一元收藏櫃<br><b>1～0</b> 換工具、<b>Q</b> 把工具放到地上、<b>F</b> 丟出去、<b>E</b> 撿回來<br><b>Tab</b> 科技樹、<b>B</b> 建造目錄（R 旋轉、X 拆除、滾輪或 C／V 拉近推遠、PageUp／PageDown 架高、F 吸附）<br><b>滑鼠中鍵</b> 複製看著的建築、看著輸送帶<b>按住 E</b> 把它反過來、看著機器按 <b>E</b> 開設定<br><b>L</b> 手電筒、<b>P</b> 拍照模式、<b>M</b> 俯瞰模式、<b>O</b> 機器狀態、<b>J</b> 成就與統計、<b>Ctrl+Z</b> 復原、建造時 <b>N</b> 藍圖（框選整組複製）、<b>F4</b> 隱藏介面、<b>F5</b> 存檔、<b>Esc</b> 暫停</p>';
-function openSettings(){$('sMus').value=SET.music;$('sAmb').value=SET.amb??.6;$('sSens').value=SET.sens;$('sVol').value=SET.vol;$('sFov').value=SET.fov;$('sRes').value=String(SET.res);$('sShadowQ').value=String(SET.shadowQ);$('sCoinQ').value=String(SET.coinQ);$('sFps').checked=!!SET.fps;$('sVib').checked=SET.vib!==false;$('sEco').checked=!!SET.eco;$('sFz').value=String(SET.fz||1);$('sVib').closest('.setrow').style.display=TTON&&navigator.vibrate?'':'none';$('sDay').checked=SET.daynight!==false;$('sMusS').value=SET.musicStyle||'soft';$('sTouch').value=SET.touch||'auto';keyWait=null;renderKeys();$('sWx').checked=SET.weather!==false;$('setPanel').classList.remove('hidden')}
+function openSettings(){$('sMus').value=SET.music;$('sAmb').value=SET.amb??.6;$('sSens').value=SET.sens;$('sVol').value=SET.vol;$('sFov').value=SET.fov;$('sRes').value=String(SET.res);$('sShadowQ').value=String(SET.shadowQ);$('sCoinQ').value=String(SET.coinQ);$('sFps').checked=!!SET.fps;$('sVib').checked=SET.vib!==false;$('sEco').checked=!!SET.eco;$('sFz').value=String(SET.fz||1);$('sUltra').checked=!!SET.ultra;$('sVib').closest('.setrow').style.display=TTON&&navigator.vibrate?'':'none';$('sDay').checked=SET.daynight!==false;$('sMusS').value=SET.musicStyle||'soft';$('sTouch').value=SET.touch||'auto';keyWait=null;renderKeys();$('sWx').checked=SET.weather!==false;$('setPanel').classList.remove('hidden')}
 $('sTouch').addEventListener('change',()=>{SET.touch=$('sTouch').value;applySet();dialog('觸控操作','<p>重新整理頁面之後才會套用。</p>',[['現在重新整理','gold',()=>{if(G)saveGame(true);location.reload()}],['等一下']])});
-['sSens','sVol','sAmb','sMus','sMusS','sFov','sRes','sShadowQ','sCoinQ','sFps','sDay','sWx','sVib','sEco','sFz'].forEach(id=>$(id).addEventListener('input',()=>{SET.vib=$('sVib').checked;SET.eco=$('sEco').checked;SET.fz=+$('sFz').value;SET.musicStyle=$('sMusS').value;musT=0;SET.daynight=$('sDay').checked;SET.weather=$('sWx').checked;SET.music=+$('sMus').value;SET.sens=+$('sSens').value;SET.vol=+$('sVol').value;SET.amb=+$('sAmb').value;SET.fov=+$('sFov').value;SET.res=$('sRes').value==='auto'?'auto':+$('sRes').value;SET.shadowQ=+$('sShadowQ').value;SET.coinQ=+$('sCoinQ').value;SET.fps=$('sFps').checked;applySet()}));
+['sSens','sVol','sAmb','sMus','sMusS','sFov','sRes','sShadowQ','sCoinQ','sFps','sDay','sWx','sVib','sEco','sFz','sUltra'].forEach(id=>$(id).addEventListener('input',()=>{SET.ultra=$('sUltra').checked;SET.vib=$('sVib').checked;SET.eco=$('sEco').checked;SET.fz=+$('sFz').value;SET.musicStyle=$('sMusS').value;musT=0;SET.daynight=$('sDay').checked;SET.weather=$('sWx').checked;SET.music=+$('sMus').value;SET.sens=+$('sSens').value;SET.vol=+$('sVol').value;SET.amb=+$('sAmb').value;SET.fov=+$('sFov').value;SET.res=$('sRes').value==='auto'?'auto':+$('sRes').value;SET.shadowQ=+$('sShadowQ').value;SET.coinQ=+$('sCoinQ').value;SET.fps=$('sFps').checked;applySet()}));
 $('setClose').onclick=()=>$('setPanel').classList.add('hidden');
 $('menu').addEventListener('click',e=>{
   const t=e.target.closest('[data-m],[data-slot],[data-newslot],[data-size],[data-ren],[data-del],[data-lock],[data-export],[data-bk],[data-import]');if(!t)return;
@@ -3782,7 +3814,7 @@ $('menu').addEventListener('click',e=>{
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
   else if(m==='help')dialog('操作說明',TTON?HELP_T:HELP,[['知道了','gold']]);
-  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.5：建造目錄多了「裝飾」：盆栽、小花圃、長椅、紅燈籠、招財貓，不用解鎖；坐在長椅上可以休息，體力回得比較快；玩一陣子會有貓跑進院子，可以摸摸牠；晚上偶爾有流星，白天雨停之後會出現彩虹；多了 6 個成就。<br>V2.4：挑戰朋友（挑戰成功後產生連結，朋友打開就是同一座硬幣堆，完成時比較誰快）；每日挑戰記錄連續天數，多兩個連續天數的成就；設定多了字體大小（標準、大、特大）。<br>V2.3：遊戲出錯時畫面上會跳「點這裡回報」，可以一鍵複製錯誤資訊；「回報問題」也能複製裝置和遊戲資訊、直接到 GitHub 回報；一格畫面出錯不會再讓整個遊戲卡住；設定多了省電模式（每秒 30 格，手機比較不會燙）；打開時會顯示載入中，3D 引擎下載失敗會自動換一個來源，真的載入不了會說明原因。<br>V2.2：每日挑戰（每天一座一樣的硬幣堆，計時找出所有的 1 元，紀錄記在排行榜）；成績分享圖（挑戰成功、挖完硬幣堆、成就與統計都能分享）；手機找到 1 元、完成訂單、買到科技、拿到成就會震動（設定可以關）；網頁版更新了會提示，點一下就換新版。<br>V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
+  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.6：電腦版設定多了「極高畫質」：用螢幕原本的解析度，硬幣之間、機器腳邊和牆角多了環境光遮蔽的暗影，畫面更有立體感（很吃效能）。<br>V2.5：建造目錄多了「裝飾」：盆栽、小花圃、長椅、紅燈籠、招財貓，不用解鎖；坐在長椅上可以休息，體力回得比較快；玩一陣子會有貓跑進院子，可以摸摸牠；晚上偶爾有流星，白天雨停之後會出現彩虹；多了 6 個成就。<br>V2.4：挑戰朋友（挑戰成功後產生連結，朋友打開就是同一座硬幣堆，完成時比較誰快）；每日挑戰記錄連續天數，多兩個連續天數的成就；設定多了字體大小（標準、大、特大）。<br>V2.3：遊戲出錯時畫面上會跳「點這裡回報」，可以一鍵複製錯誤資訊；「回報問題」也能複製裝置和遊戲資訊、直接到 GitHub 回報；一格畫面出錯不會再讓整個遊戲卡住；設定多了省電模式（每秒 30 格，手機比較不會燙）；打開時會顯示載入中，3D 引擎下載失敗會自動換一個來源，真的載入不了會說明原因。<br>V2.2：每日挑戰（每天一座一樣的硬幣堆，計時找出所有的 1 元，紀錄記在排行榜）；成績分享圖（挑戰成功、挖完硬幣堆、成就與統計都能分享）；手機找到 1 元、完成訂單、買到科技、拿到成就會震動（設定可以關）；網頁版更新了會提示，點一下就換新版。<br>V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
   else if(m==='bug')openReport();
   else if(t.dataset.ren!==undefined){e.stopPropagation();const k=+t.dataset.ren,a=loadSlots(),n=prompt('存檔名稱',a[k].name||'');if(n){a[k].name=n.slice(0,20);writeSlots(a);renderSlots()}}
   else if(t.dataset.del!==undefined){e.stopPropagation();const k=+t.dataset.del;if(loadSlots()[k].locked){toast('這個存檔鎖定了，先解鎖才能刪除');return}dialog('刪除存檔','<p>確定要刪除「'+(loadSlots()[k].name||'存檔欄位'+(k+1))+'」嗎？刪掉就救不回來了。</p>',[['先不要'],['刪除','gold',()=>{const a=loadSlots();a[k]=null;writeSlots(a);renderSlots()}]])}
@@ -4387,7 +4419,7 @@ let perfAcc=0,perfN=0,perfT=0;
 let fpsNow=0;
 function perfWatch(ms){perfAcc+=ms;perfN++;perfT+=ms;if(perfT<2000)return;const avg=perfAcc/perfN;perfAcc=perfN=perfT=0;fpsNow=Math.round(1000/avg);
   if(SET.fps)$('fps').textContent=Math.round(1000/avg)+' FPS・'+avg.toFixed(1)+' ms'+(SET.res==='auto'?'・解析度 '+Math.round(dynScale*100)+'%':'');
-  if(SET.res==='auto'&&mode==='play'){const o=dynScale,hi=SET.eco?40:24,lo=SET.eco?36:15;if(avg>hi&&dynScale>.55)dynScale=Math.max(.55,dynScale-.1);else if(avg<lo&&dynScale<1)dynScale=Math.min(1,dynScale+.05);if(o!==dynScale)renderer.setPixelRatio(BASE_PR*dynScale)}}
+  if(SET.res==='auto'&&mode==='play'){const o=dynScale,hi=SET.eco?40:24,lo=SET.eco?36:15;if(avg>hi&&dynScale>.55)dynScale=Math.max(.55,dynScale-.1);else if(avg<lo&&dynScale<1)dynScale=Math.min(1,dynScale+.05);if(o!==dynScale)renderer.setPixelRatio(basePR()*dynScale)}}
 function frame(now){requestAnimationFrame(frame);if(SET.eco&&now-last<30)return;const ms=now-last,dt=Math.min(.05,ms/1000);last=now;
   try{tick(dt,now)}catch(e){logErr(e&&e.message||e,'tick',e&&e.stack)}perfWatch(ms)}
 const clickPlayEl=$('clickPlay');
@@ -4423,7 +4455,7 @@ function tick(dt,now){
   dirty.forEach((r,m)=>{const a=m.instanceMatrix;a.updateRange.offset=r[0]*16;a.updateRange.count=(r[1]-r[0]+1)*16;a.needsUpdate=true});dirty.clear();
   colorDirty.forEach(m=>{if(m.instanceColor)m.instanceColor.needsUpdate=true});colorDirty.clear();
   if(shadowDirty&&now-lastShadow>250){renderer.shadowMap.needsUpdate=true;shadowDirty=false;lastShadow=now}
-  renderer.render(scene,camera);renderVM();
+  renderer.render(scene,camera);if(ultraOn())renderAO();renderVM();
 }
 let beepT=0;
 // 手持硬幣掃描器：綠圈裡有 1 元的硬幣堆會被標出來
@@ -4517,6 +4549,8 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
     const p=cat.g.position;pl.x=p.x+.6;pl.z=p.z;pl.y=p.y;if(!nearCat())return'靠不近';const n=G.catPets||0;petCat();const pet=G.catPets===n+1;cat.stay=0;for(let i=0;i<600&&cat;i++)updateCat(.1,now+i*100);return pet&&!cat||'貓沒離開'});
   await run('流星',()=>{if(SET.daynight===false)return{skip:'日夜循環關掉了，略過'};const tod=G.tod;G.tod=23;meteorT=0;updateMeteor(.1);const ok=!!meteor;for(let i=0;i<30;i++)updateMeteor(.1);G.tod=tod;return ok&&!meteor||'流星沒出現或沒消失'});
   await run('彩虹',()=>{if(G.wx)G.wx.rain=0;rainbowG=G;rainbowT=100;updateRainbow(20);const ok=rainbow&&rainbow.visible&&rainbow.material.uniforms.op.value>.5;rainbowT=0;updateRainbow(.1);return ok&&!rainbow.visible||'彩虹沒出現'});
+  await run('極高畫質',()=>{if(TTON)return{skip:'手機不提供，略過'};const u=SET.ultra,gl=renderer.getContext();SET.ultra=true;gl.getError();renderer.render(scene,camera);renderAO();renderVM();const e=gl.getError();
+    const px=new Uint8Array(4);renderer.readRenderTargetPixels(aoRT3,aoRT3.width>>1,aoRT3.height>>1,1,1,px);SET.ultra=u;return e===0&&px[0]>20||'WebGL 錯誤 '+e+'、遮蔽值 '+px[0]});
   giveFile=f=>{file=f};
   await run('成績分享圖',()=>{file=null;shareScore('自我檢查');return!!(file&&file.type==='image/png'&&file.size>5000)||'沒產生圖片'});
   await run('拍照',()=>{file=null;enterPhoto();savePhoto();exitPhoto();return!!(file&&file.size>5000)||'沒產生照片'});
