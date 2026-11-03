@@ -85,7 +85,7 @@ function checkChallenge(){if(G.gmode!=='challenge'||G.chalDone)return;$('chal').
   if(anchors.size===0&&G.onesHand===0){G.chalDone=true;const t=G.chalTime=Math.round(G.play);buzz([100,60,200]);
     const share=['分享成績','',()=>shareScore((G.daily?'每日挑戰 ':G.vs?'朋友挑戰 ':'挑戰成功 ')+fmtT(t))],vs=['挑戰朋友','',()=>sendVs(t)];
     if(G.daily){const d=dailyRec(),prev=d[G.daily];d[G.daily]=prev?Math.min(prev,t):t;saveDaily(d);const sk=dailyStreak();
-      dialog('每日挑戰成功！','<p>找出今天所有的 1 元，用了 <b>'+fmtT(t)+'</b>。</p>'+(prev?'<p>今天的最佳紀錄：'+fmtT(d[G.daily])+'</p>':'')+(sk>1?'<p>已經連續 <b>'+sk+'</b> 天完成每日挑戰！</p>':'')+'<p>明天會換一座新的硬幣堆。</p>',[vs,share,['好','gold']]);return}
+      dialog('每日挑戰成功！','<p>找出今天所有的 1 元，用了 <b>'+fmtT(t)+'</b>。</p>'+(prev?'<p>今天的最佳紀錄：'+fmtT(d[G.daily])+'</p>':'')+(sk>1?'<p>已經連續 <b>'+sk+'</b> 天完成每日挑戰！</p>':'')+'<p>明天會換一座新的硬幣堆。</p>',(onlineOn()?[['上傳排行榜','gold',()=>uploadDaily(G.daily,t)],vs,share,['好']]:[vs,share,['好','gold']]));return}
     const b=chalBest(),list=b[G.size]||[];list.push(t);list.sort((a,c)=>a-c);b[G.size]=list.slice(0,5);try{localStorage.setItem(CHKEY,JSON.stringify(b))}catch(e){}
     if(G.vs){const d=t-G.vs;
       dialog(d<0?'你贏了！':d>0?'差一點！':'平手！','<p>你用了 <b>'+fmtT(t)+'</b>，朋友用了 <b>'+fmtT(G.vs)+'</b>。</p><p>'+(d<0?'比朋友快了 <b>'+fmtT(-d)+'</b>。':d>0?'比朋友慢了 '+fmtT(d)+'，再挑戰一次也可以。':'跟朋友一樣快。')+'</p>',[['回傳挑戰','',()=>sendVs(t)],share,['好','gold']]);return}

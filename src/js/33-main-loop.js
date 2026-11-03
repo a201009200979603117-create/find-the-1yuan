@@ -148,6 +148,7 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
     const sim=(hz,eco)=>{SET.eco=eco;n=0;for(let i=0;i<hz;i++){t+=1000/hz;frame(t)}return n};
     const r=[sim(60,true),sim(120,true),sim(60,false)];SET.eco=e0;tick=tk;window.requestAnimationFrame=raf;last=performance.now();
     return r[0]===30&&r[1]===30&&r[2]===60||'60Hz 省電 '+r[0]+' 格、120Hz 省電 '+r[1]+' 格、一般 '+r[2]+' 格'});
+  await run('線上排行榜（只讀）',async()=>{if(!onlineOn())return{skip:'還沒設定 Supabase，略過'};const r=await onlineTop(dailyKey(),1);return Array.isArray(r)||'讀不到排行榜'});
   await run('回主選單',async()=>{toMenu();await w(800);return mode==='menu'});
   await run('最後沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m+'（'+e.at+'）').join('；'):true);
   sk.forEach(k=>bk[k]==null?localStorage.removeItem(k):localStorage.setItem(k,bk[k]));showMenu('main');

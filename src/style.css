@@ -146,6 +146,8 @@
   #dialog h3{margin:0 0 12px;color:var(--gold);font-size:19px}
   #dialog p{font-size:14px;line-height:1.75;margin:8px 0;color:#ddd}
   #dialog .row{display:flex;gap:14px;justify-content:center;margin-top:18px}
+  #dialog .row{flex-wrap:wrap}
+  #dialog input{display:block;width:100%;box-sizing:border-box;margin-top:8px;padding:8px 10px;background:#000;color:#eee;border:1px solid var(--line);border-radius:6px;font-size:16px}
   #dialog textarea{display:block;width:100%;box-sizing:border-box;height:64px;margin-top:8px;padding:6px 8px;background:#000;color:#ddd;border:1px solid var(--line);border-radius:6px;font:12px/1.4 monospace;resize:none}
   .btn{background:#17171a;border:1px solid #777;color:#eee;padding:8px 24px;font-size:14px;cursor:pointer}
   .btn.gold{background:var(--gold);border-color:var(--gold);color:#111;font-weight:700}
