@@ -142,7 +142,7 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   await run('拍照',()=>{file=null;enterPhoto();savePhoto();exitPhoto();return!!(file&&file.size>5000)||'沒產生照片'});
   giveFile=gf;
   await run('匯入存檔',()=>{importData(JSON.parse(JSON.stringify(loadSlots()[0])));return!!loadSlots()[1]});
-  await run('挑戰完成',()=>{anchors.clear();G.onesHand=0;checkChallenge();const ok=$('dlgT').textContent==='挑戰成功！'&&G.chalDone;$('dialog').classList.add('hidden');return ok});
+  await run('挑戰完成',()=>{anchors.clear();G.onesHand=0;checkChallenge();const ok=$('dlgT').textContent===L('挑戰成功！')&&G.chalDone;$('dialog').classList.add('hidden');return ok});
   // 用假的時間跑主迴圈：60Hz 和 120Hz 的螢幕，省電模式都應該剛好每秒 30 格
   await run('省電模式每秒 30 格',()=>{const raf=window.requestAnimationFrame,tk=tick,e0=SET.eco;let n=0,t=last;window.requestAnimationFrame=()=>0;tick=()=>{n++};
     const sim=(hz,eco)=>{SET.eco=eco;n=0;for(let i=0;i<hz;i++){t+=1000/hz;frame(t)}return n};

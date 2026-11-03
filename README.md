@@ -8,6 +8,8 @@
 電腦和手機都能玩，不用安裝。手機請橫著拿，進遊戲會自動全螢幕（Android）。
 iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面」，從主畫面的圖示打開就是全螢幕。
 
+> **English:** A cozy 3D game about digging through a giant pile of Taiwanese coins to find every NT$1 coin — dig, sell, buy tools, and build conveyor-belt factories. Play in your browser on PC or phone: **https://a201009200979603117-create.github.io/find-the-1yuan/** The game switches to English automatically when your browser isn't set to Chinese (Settings → Language to change).
+
 ![主選單](docs/menu.jpg)
 ![手機版畫面](docs/mobile.jpg)
 
@@ -62,6 +64,7 @@ iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面
 - 網頁版更新了，畫面會跳出「有新版本」，點一下就換成新版
 - 設定裡的「省電模式」會把畫面限制在每秒 30 格，玩久了手機比較不會燙
 - 字太小的話，設定裡的「字體大小」可以調成大或特大
+- 有英文版：瀏覽器不是中文的話會自動用英文，設定裡的「語言 Language」可以切換
 - 匯出存檔時按「複製存檔碼」，再到另一邊的「匯入存檔」貼上，就能把存檔搬到別台裝置，或在 iPhone 的 Safari 和主畫面 App 之間搬
 
 ## 在自己電腦上跑
@@ -82,6 +85,7 @@ iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面
 - `src/style.css`：畫面樣式
 - `src/page-head.html`、`src/page-body.html`、`src/page-end.html`：網頁的骨架和介面
 - `src/js/00-boot.js`～`33-main-loop.js`：遊戲程式，照功能分段（設定、場景、硬幣山、玩家、機器、建造、面板、存檔、手機操作、主迴圈……），檔名前面的數字是接起來的順序
+- `src/lang/en.tsv`：英文版字典，每行「中文<TAB>英文」。遊戲程式裡還是寫中文，顯示到畫面上的時候才查這個字典換成英文（`src/js/00c-i18n.js`）。新增中文字之後，`python build.py --missing` 會列出還沒翻的
 
 改完 `src/` 之後執行：
 

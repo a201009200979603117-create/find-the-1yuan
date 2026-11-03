@@ -30,7 +30,7 @@ const TTR=[
   ['按住左鍵','按住「撿」'],['按左鍵','按「撿」'],['左鍵','「撿」'],
   ['按住右鍵','按住「丟」'],['按右鍵','按「丟」'],['右鍵','「丟」'],['空白鍵','「跳」'],
   ['按住 E','按住「E」'],['按 E','按「E」']];
-function TT(s){if(!TTON||typeof s!=='string')return s;const o=s;for(const[a,b]of TTR)if(s.indexOf(a)>=0)s=s.split(a).join(b);
+function TT(s){if(!TTON||typeof s!=='string')return s;if(EN_ON)return TTEN(Lh(s));const o=s;for(const[a,b]of TTR)if(s.indexOf(a)>=0)s=s.split(a).join(b);
   return s===o?s:s.replace(/([」一-鿿]) (?=[一-鿿「（])/g,'$1')}
 // 遊戲寫進這些地方的字，手機版先翻成按鈕說法
 function hookText(id,prop){const el=$(id);if(!el)return;const P=prop==='innerHTML'?Element.prototype:Node.prototype,d=Object.getOwnPropertyDescriptor(P,prop);
