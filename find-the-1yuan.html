@@ -90,6 +90,12 @@
   #upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:85;background:#1d4f8f;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #0008}
   #errBar{position:fixed;top:52px;left:50%;transform:translateX(-50%);z-index:85;background:#a8322a;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #0008}
   body.touch #errBar{top:auto;bottom:calc(104px + env(safe-area-inset-bottom));font-size:13px;padding:6px 14px}
+  /* 字體大小：設定裡選大、特大時把文字區塊整個放大，版面會跟著重排 */
+  body{--fz:1}
+  .panel .hd,.panel .bd,#buildTop,#dialog h3,#dlgB,#dlgR,#obj,#tips,#mon,#toasts,#mtip,#prompt,#meter,#buildHint,#slotList,#sizeList,#rankList,.lp .ph{zoom:var(--fz)}
+  /* 手機畫面小：遊戲中的提示最多放大到「大」，金額本來就夠大不放大，免得蓋到按鍵 */
+  body.touch #obj,body.touch #tips,body.touch #toasts,body.touch #mtip,body.touch #prompt,body.touch #meter,body.touch #buildHint{zoom:min(var(--fz),1.15)}
+  body.touch #mon{zoom:1}
   #loading small{display:block;margin-top:10px;font-size:14px;font-weight:400;color:#999}
   body.touch #upd{top:auto;bottom:calc(68px + env(safe-area-inset-bottom));font-size:13px;padding:6px 14px}
   body.touch #statShare{height:36px;padding:0 12px;border-radius:10px;font-size:14px}
@@ -504,7 +510,7 @@
 <div id="clickPlay" class="hidden">🖱 點一下畫面繼續</div>
 <div id="hud" class="hidden">
   <div id="obj"><div class="st" id="objN"></div><div class="t" id="objT"></div><span class="kb" id="objK"></span><div class="d" id="objD"></div><div class="rw" id="objR"></div><div class="bar" id="objBarW"><i id="objBar"></i></div><div class="p"><span id="objP"></span><span id="objL"></span></div></div>
-  <div id="ver"><div class="a">Find The 1元 Demo V2.3</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
+  <div id="ver"><div class="a">Find The 1元 Demo V2.4</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
   <div id="tips"><div class="h">提示</div><div id="tipTxt"></div></div>
   <div id="mon"><div class="m" id="money">$0.00</div><div class="l" id="left"></div><div class="l" id="rate"></div><div class="l" id="clock"></div><div class="l hidden" id="chal" style="color:#7fd1ff"></div><div class="l hidden" id="warnN"></div><div id="pin" class="hidden"></div></div>
   <div id="combo"></div><div id="floats"></div><div id="record"></div>
@@ -547,6 +553,7 @@
   <div class="setrow"><span>顯示每秒畫面數（FPS）</span><input type="checkbox" id="sFps"></div>
   <div class="setrow"><span>震動（手機）</span><input type="checkbox" id="sVib"></div>
   <div class="setrow"><span>省電模式（每秒 30 格）</span><input type="checkbox" id="sEco"></div>
+  <div class="setrow"><span>字體大小</span><select id="sFz" class="setsel"><option value="1">標準</option><option value="1.15">大</option><option value="1.3">特大</option></select></div>
   <div class="setrow"><span>觸控操作（手機）</span><select id="sTouch" class="setsel"><option value="auto">自動</option><option value="on">開</option><option value="off">關</option></select></div>
   <div class="setrow" style="margin-top:8px;color:var(--gold)"><b>按鍵（點一下再按新的鍵）</b></div><div id="keyList"></div>
 </div></div>
@@ -1281,7 +1288,7 @@ function applyQuality(){
     [...(typeof meshes!=='undefined'?meshes:[]),...(typeof detMeshes!=='undefined'?detMeshes:[])].forEach(m=>m.geometry=g);if(old!==g)old.dispose()}
   $('fps').classList.toggle('hidden',!SET.fps);
 }
-function applySet(){try{applyVol()}catch(e){}camera.fov=SET.fov;camera.updateProjectionMatrix();try{applyQuality()}catch(e){}try{localStorage.setItem('ft1y_settings',JSON.stringify(SET))}catch(e){}}
+function applySet(){document.body.style.setProperty('--fz',SET.fz||1);try{applyVol()}catch(e){}camera.fov=SET.fov;camera.updateProjectionMatrix();try{applyQuality()}catch(e){}try{localStorage.setItem('ft1y_settings',JSON.stringify(SET))}catch(e){}}
 applySet();
 function allowed(x,z){
   const inYard=x>-H-EXT+.45&&x<H-.45&&z<H-.4&&z>-H+.6;
@@ -3583,7 +3590,7 @@ function startGame(slot,data){
         const cmp=FP[ty]&&fpCells(ty,gx,gz,dir).some(([x,z])=>{const k=tkey(x,z,L);return k!==own&&resv.has(k)});addTile(ty,gx,gz,dir,paid,cmp?{...ex,cmp:true}:ex)}
       for(const[type,gx,gz,dir,paid]of data.pipes||[])addPipe(type,gx,gz,dir,paid)
       for(const x of data.structs||[])addStruct(x)}
-    else{G=newG(data.name,data.size,data.seed);G.gmode=data.gmode||'normal';if(data.daily)G.daily=data.daily;if(!SIZES[data.size].hf)G.H=Math.max(14,Math.ceil(.21*Math.cbrt(SIZES[data.size].inst)+8))+8;setupLevel(data.seed,data.size,null)}
+    else{G=newG(data.name,data.size,data.seed);G.gmode=data.gmode||'normal';if(data.daily)G.daily=data.daily;if(data.vs)G.vs=data.vs;if(!SIZES[data.size].hf)G.H=Math.max(14,Math.ceil(.21*Math.cbrt(SIZES[data.size].inst)+8))+8;setupLevel(data.seed,data.size,null)}
     doorOpenAmt=G.doorOpen?1:0;door.position.y=1.35+doorOpenAmt*2.6;
     Object.assign(pl,G.doorOpen?{x:0,z:H-3,yaw:0}:{x:0,z:H+2.4,yaw:0},{y:0,vy:0,pitch:-.05,stam:1,jet:10,air:0});
     $('loading').classList.add('hidden');$('menu').classList.add('hidden');
@@ -3623,9 +3630,9 @@ function renderSlots(){
 }
 function dialog(title,body,btns){$('dlgT').textContent=title;$('dlgB').innerHTML=body;$('dlgR').innerHTML='';btns.forEach(([t,cls,fn])=>{const b=document.createElement('button');b.className='btn '+(cls||'');b.textContent=t;b.onclick=()=>{$('dialog').classList.add('hidden');fn&&fn()};$('dlgR').appendChild(b)});$('dialog').classList.remove('hidden')}
 const HELP='<p style="text-align:left"><b>W A S D</b> 移動、<b>Shift</b> 跑、<b>C</b> 蹲著走（手上的硬幣不會灑）、<b>空白鍵</b> 跳（有噴射背包就按住往上飛）、滑鼠轉視角<br>挖硬幣會耗體力，拿著硬幣跑步或跳起來落地會灑出來<br><b>左鍵</b> 按住拿硬幣　<b>右鍵</b> 丟硬幣（對準收購站進料口就是賣）<br><b>E</b> 開門、五金行、訂單板、一元收藏櫃<br><b>1～0</b> 換工具、<b>Q</b> 把工具放到地上、<b>F</b> 丟出去、<b>E</b> 撿回來<br><b>Tab</b> 科技樹、<b>B</b> 建造目錄（R 旋轉、X 拆除、滾輪或 C／V 拉近推遠、PageUp／PageDown 架高、F 吸附）<br><b>滑鼠中鍵</b> 複製看著的建築、看著輸送帶<b>按住 E</b> 把它反過來、看著機器按 <b>E</b> 開設定<br><b>L</b> 手電筒、<b>P</b> 拍照模式、<b>M</b> 俯瞰模式、<b>O</b> 機器狀態、<b>J</b> 成就與統計、<b>Ctrl+Z</b> 復原、建造時 <b>N</b> 藍圖（框選整組複製）、<b>F4</b> 隱藏介面、<b>F5</b> 存檔、<b>Esc</b> 暫停</p>';
-function openSettings(){$('sMus').value=SET.music;$('sAmb').value=SET.amb??.6;$('sSens').value=SET.sens;$('sVol').value=SET.vol;$('sFov').value=SET.fov;$('sRes').value=String(SET.res);$('sShadowQ').value=String(SET.shadowQ);$('sCoinQ').value=String(SET.coinQ);$('sFps').checked=!!SET.fps;$('sVib').checked=SET.vib!==false;$('sEco').checked=!!SET.eco;$('sVib').closest('.setrow').style.display=TTON&&navigator.vibrate?'':'none';$('sDay').checked=SET.daynight!==false;$('sMusS').value=SET.musicStyle||'soft';$('sTouch').value=SET.touch||'auto';keyWait=null;renderKeys();$('sWx').checked=SET.weather!==false;$('setPanel').classList.remove('hidden')}
+function openSettings(){$('sMus').value=SET.music;$('sAmb').value=SET.amb??.6;$('sSens').value=SET.sens;$('sVol').value=SET.vol;$('sFov').value=SET.fov;$('sRes').value=String(SET.res);$('sShadowQ').value=String(SET.shadowQ);$('sCoinQ').value=String(SET.coinQ);$('sFps').checked=!!SET.fps;$('sVib').checked=SET.vib!==false;$('sEco').checked=!!SET.eco;$('sFz').value=String(SET.fz||1);$('sVib').closest('.setrow').style.display=TTON&&navigator.vibrate?'':'none';$('sDay').checked=SET.daynight!==false;$('sMusS').value=SET.musicStyle||'soft';$('sTouch').value=SET.touch||'auto';keyWait=null;renderKeys();$('sWx').checked=SET.weather!==false;$('setPanel').classList.remove('hidden')}
 $('sTouch').addEventListener('change',()=>{SET.touch=$('sTouch').value;applySet();dialog('觸控操作','<p>重新整理頁面之後才會套用。</p>',[['現在重新整理','gold',()=>{if(G)saveGame(true);location.reload()}],['等一下']])});
-['sSens','sVol','sAmb','sMus','sMusS','sFov','sRes','sShadowQ','sCoinQ','sFps','sDay','sWx','sVib','sEco'].forEach(id=>$(id).addEventListener('input',()=>{SET.vib=$('sVib').checked;SET.eco=$('sEco').checked;SET.musicStyle=$('sMusS').value;musT=0;SET.daynight=$('sDay').checked;SET.weather=$('sWx').checked;SET.music=+$('sMus').value;SET.sens=+$('sSens').value;SET.vol=+$('sVol').value;SET.amb=+$('sAmb').value;SET.fov=+$('sFov').value;SET.res=$('sRes').value==='auto'?'auto':+$('sRes').value;SET.shadowQ=+$('sShadowQ').value;SET.coinQ=+$('sCoinQ').value;SET.fps=$('sFps').checked;applySet()}));
+['sSens','sVol','sAmb','sMus','sMusS','sFov','sRes','sShadowQ','sCoinQ','sFps','sDay','sWx','sVib','sEco','sFz'].forEach(id=>$(id).addEventListener('input',()=>{SET.vib=$('sVib').checked;SET.eco=$('sEco').checked;SET.fz=+$('sFz').value;SET.musicStyle=$('sMusS').value;musT=0;SET.daynight=$('sDay').checked;SET.weather=$('sWx').checked;SET.music=+$('sMus').value;SET.sens=+$('sSens').value;SET.vol=+$('sVol').value;SET.amb=+$('sAmb').value;SET.fov=+$('sFov').value;SET.res=$('sRes').value==='auto'?'auto':+$('sRes').value;SET.shadowQ=+$('sShadowQ').value;SET.coinQ=+$('sCoinQ').value;SET.fps=$('sFps').checked;applySet()}));
 $('setClose').onclick=()=>$('setPanel').classList.add('hidden');
 $('menu').addEventListener('click',e=>{
   const t=e.target.closest('[data-m],[data-slot],[data-newslot],[data-size],[data-ren],[data-del],[data-lock],[data-export],[data-bk],[data-import]');if(!t)return;
@@ -3644,7 +3651,7 @@ $('menu').addEventListener('click',e=>{
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
   else if(m==='help')dialog('操作說明',TTON?HELP_T:HELP,[['知道了','gold']]);
-  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.3：遊戲出錯時畫面上會跳「點這裡回報」，可以一鍵複製錯誤資訊；「回報問題」也能複製裝置和遊戲資訊、直接到 GitHub 回報；一格畫面出錯不會再讓整個遊戲卡住；設定多了省電模式（每秒 30 格，手機比較不會燙）；打開時會顯示載入中，3D 引擎下載失敗會自動換一個來源，真的載入不了會說明原因。<br>V2.2：每日挑戰（每天一座一樣的硬幣堆，計時找出所有的 1 元，紀錄記在排行榜）；成績分享圖（挑戰成功、挖完硬幣堆、成就與統計都能分享）；手機找到 1 元、完成訂單、買到科技、拿到成就會震動（設定可以關）；網頁版更新了會提示，點一下就換新版。<br>V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
+  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.4：挑戰朋友（挑戰成功後產生連結，朋友打開就是同一座硬幣堆，完成時比較誰快）；每日挑戰記錄連續天數，多兩個連續天數的成就；設定多了字體大小（標準、大、特大）。<br>V2.3：遊戲出錯時畫面上會跳「點這裡回報」，可以一鍵複製錯誤資訊；「回報問題」也能複製裝置和遊戲資訊、直接到 GitHub 回報；一格畫面出錯不會再讓整個遊戲卡住；設定多了省電模式（每秒 30 格，手機比較不會燙）；打開時會顯示載入中，3D 引擎下載失敗會自動換一個來源，真的載入不了會說明原因。<br>V2.2：每日挑戰（每天一座一樣的硬幣堆，計時找出所有的 1 元，紀錄記在排行榜）；成績分享圖（挑戰成功、挖完硬幣堆、成就與統計都能分享）；手機找到 1 元、完成訂單、買到科技、拿到成就會震動（設定可以關）；網頁版更新了會提示，點一下就換新版。<br>V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
   else if(m==='bug')openReport();
   else if(t.dataset.ren!==undefined){e.stopPropagation();const k=+t.dataset.ren,a=loadSlots(),n=prompt('存檔名稱',a[k].name||'');if(n){a[k].name=n.slice(0,20);writeSlots(a);renderSlots()}}
   else if(t.dataset.del!==undefined){e.stopPropagation();const k=+t.dataset.del;if(loadSlots()[k].locked){toast('這個存檔鎖定了，先解鎖才能刪除');return}dialog('刪除存檔','<p>確定要刪除「'+(loadSlots()[k].name||'存檔欄位'+(k+1))+'」嗎？刪掉就救不回來了。</p>',[['先不要'],['刪除','gold',()=>{const a=loadSlots();a[k]=null;writeSlots(a);renderSlots()}]])}
@@ -4025,6 +4032,8 @@ const ACH=[
   {id:'photo',n:'攝影師',d:'在拍照模式拍一張照片',rw:5,c:()=>G.flags.photo},
   {id:'sky',n:'飛高高',d:'飛到 15 公尺高',rw:20,c:()=>(G.maxY||0)>=15},
   {id:'peak',n:'攻頂',d:'爬上 The Mountain 40 公尺高的地方',rw:200,c:()=>SIZES[G.size].hf&&(G.maxY||0)>=40},
+  {id:'streak3',n:'每天來撈一下',d:'每日挑戰連續完成 3 天',rw:30,c:()=>dailyStreak()>=3},
+  {id:'streak7',n:'天天報到',d:'每日挑戰連續完成 7 天',rw:150,c:()=>dailyStreak()>=7},
   {id:'allOnes',n:'大海撈一元',d:'找出這個院子所有的 1 元',rw:1000,c:()=>anchors.size===0&&G.onesHand===0&&G.onesFound>0},
   {id:'special3',n:'有求必應',d:'完成 3 張特別訂單',rw:200,c:()=>(G.specialDone||0)>=3},
   {id:'chal',n:'挑戰成功',d:'在挑戰模式找出所有的 1 元',rw:300,c:()=>G.chalDone}
@@ -4077,32 +4086,48 @@ function updateSpecial(){if(G.specialNext==null)G.specialNext=G.play+360;
 // 挑戰模式：計時找出所有 1 元，最佳紀錄記在這台電腦；無盡模式：硬幣堆挖完再倒一車
 const CHKEY='ft1y_challenge';
 function chalBest(){try{return JSON.parse(localStorage.getItem(CHKEY)||'{}')}catch(e){return{}}}
-function checkChallenge(){if(G.gmode!=='challenge'||G.chalDone)return;$('chal').classList.remove('hidden');$('chal').textContent='⏱ '+(G.daily?'每日挑戰':'挑戰')+' '+fmtT(G.play)+'・還有 '+(anchors.size+G.onesHand)+' 枚 1 元';
+function checkChallenge(){if(G.gmode!=='challenge'||G.chalDone)return;$('chal').classList.remove('hidden');$('chal').textContent='⏱ '+(G.daily?'每日挑戰':G.vs?'朋友挑戰':'挑戰')+' '+fmtT(G.play)+(G.vs?'／朋友 '+fmtT(G.vs):'')+'・還有 '+(anchors.size+G.onesHand)+' 枚 1 元';
   if(anchors.size===0&&G.onesHand===0){G.chalDone=true;const t=G.chalTime=Math.round(G.play);buzz([100,60,200]);
-    if(G.daily){const d=dailyRec(),prev=d[G.daily];d[G.daily]=prev?Math.min(prev,t):t;saveDaily(d);
-      dialog('每日挑戰成功！','<p>找出今天所有的 1 元，用了 <b>'+fmtT(t)+'</b>。</p>'+(prev?'<p>今天的最佳紀錄：'+fmtT(d[G.daily])+'</p>':'')+'<p>明天會換一座新的硬幣堆。</p>',[['分享成績','',()=>shareScore('每日挑戰 '+fmtT(t))],['好','gold']]);return}
+    const share=['分享成績','',()=>shareScore((G.daily?'每日挑戰 ':G.vs?'朋友挑戰 ':'挑戰成功 ')+fmtT(t))],vs=['挑戰朋友','',()=>sendVs(t)];
+    if(G.daily){const d=dailyRec(),prev=d[G.daily];d[G.daily]=prev?Math.min(prev,t):t;saveDaily(d);const sk=dailyStreak();
+      dialog('每日挑戰成功！','<p>找出今天所有的 1 元，用了 <b>'+fmtT(t)+'</b>。</p>'+(prev?'<p>今天的最佳紀錄：'+fmtT(d[G.daily])+'</p>':'')+(sk>1?'<p>已經連續 <b>'+sk+'</b> 天完成每日挑戰！</p>':'')+'<p>明天會換一座新的硬幣堆。</p>',[vs,share,['好','gold']]);return}
     const b=chalBest(),list=b[G.size]||[];list.push(t);list.sort((a,c)=>a-c);b[G.size]=list.slice(0,5);try{localStorage.setItem(CHKEY,JSON.stringify(b))}catch(e){}
-    dialog('挑戰成功！','<p>找出所有的 1 元，用了 <b>'+fmtT(t)+'</b>。</p><p>'+SIZES[G.size].name+' 的最佳紀錄：'+b[G.size].map(fmtT).join('、')+'</p>',[['分享成績','',()=>shareScore('挑戰成功 '+fmtT(t))],['好','gold']])}}
+    if(G.vs){const d=t-G.vs;
+      dialog(d<0?'你贏了！':d>0?'差一點！':'平手！','<p>你用了 <b>'+fmtT(t)+'</b>，朋友用了 <b>'+fmtT(G.vs)+'</b>。</p><p>'+(d<0?'比朋友快了 <b>'+fmtT(-d)+'</b>。':d>0?'比朋友慢了 '+fmtT(d)+'，再挑戰一次也可以。':'跟朋友一樣快。')+'</p>',[['回傳挑戰','',()=>sendVs(t)],share,['好','gold']]);return}
+    dialog('挑戰成功！','<p>找出所有的 1 元，用了 <b>'+fmtT(t)+'</b>。</p><p>'+SIZES[G.size].name+' 的最佳紀錄：'+b[G.size].map(fmtT).join('、')+'</p>',[vs,share,['好','gold']])}}
 // 每日挑戰：用日期當種子，同一天每個人拿到同一座「小」硬幣堆，計時找出所有的 1 元
 const DKEY='ft1y_daily';
 function dailyKey(d=new Date()){const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
 function dailySeed(k){let h=2166136261;for(const c of'ft1y-daily-'+k){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0)&0x7fffffff}
 function dailyRec(){try{return JSON.parse(localStorage.getItem(DKEY)||'{}')}catch(e){return{}}}
-function saveDaily(d){const ks=Object.keys(d).sort().slice(-30),o={};ks.forEach(k=>o[k]=d[k]);try{localStorage.setItem(DKEY,JSON.stringify(o))}catch(e){}}
+function saveDaily(d){const ks=Object.keys(d).sort().slice(-400),o={};ks.forEach(k=>o[k]=d[k]);try{localStorage.setItem(DKEY,JSON.stringify(o))}catch(e){}}
+// 連續天數：今天還沒玩的話從昨天往回算，中斷就重算
+let streakC=null;
+function dailyStreak(){const raw=localStorage.getItem(DKEY)||'',k=dailyKey();if(streakC&&streakC.raw===raw&&streakC.k===k)return streakC.n;
+  const d=dailyRec(),day=new Date();let n=0;if(!d[dailyKey(day)])day.setDate(day.getDate()-1);while(d[dailyKey(day)]){n++;day.setDate(day.getDate()-1)}streakC={raw,k,n};return n}
 const dayLbl=k=>+k.slice(5,7)+'/'+ +k.slice(8);
 function dailyRow(){const d=dailyRec(),ks=Object.keys(d).sort().reverse().slice(0,7);if(!ks.length)return'';
-  return'<div class="slot"><div><b>📅 每日挑戰</b><div class="meta">'+ks.map(k=>dayLbl(k)+' '+fmtT(d[k])).join('、')+'</div></div></div>'}
+  const sk=dailyStreak();return'<div class="slot"><div><b>📅 每日挑戰'+(sk>1?'・連續 '+sk+' 天':'')+'</b><div class="meta">'+ks.map(k=>dayLbl(k)+' '+fmtT(d[k])).join('、')+'</div></div></div>'}
+// 找一個欄位開挑戰：有空的就用；滿了可以拿舊的每日挑戰、朋友挑戰來換（鎖定的不換）
+function pickSlot(title,intro,go){const a=loadSlots();let s=a.indexOf(null);if(s<0&&a.length<3)s=a.length;
+  if(s>=0){dialog(title,intro,[['開始','gold',()=>go(s)],['先不要']]);return}
+  const j=a.findIndex(x=>x&&x.G&&(x.G.daily||x.G.vs)&&!x.locked);
+  if(j>=0)dialog(title,intro+'<p>三個存檔欄位都用掉了，要取代「'+a[j].name+'」嗎？</p>',[['取代','gold',()=>go(j)],['先不要']]);
+  else dialog('存檔欄位滿了','<p>挑戰會用一個存檔欄位，三個都用掉了，先刪掉一個再來。</p>',[['好','gold']])}
 function startDaily(){const k=dailyKey(),a=loadSlots(),i=a.findIndex(x=>x&&x.G&&x.G.daily===k);
   // 今天的已經開過就接著玩
   if(i>=0){startGame(i,a[i]);return}
-  const go=s=>startGame(s,{name:'每日挑戰 '+dayLbl(k),size:'small',seed:dailySeed(k),gmode:'challenge',daily:k});
-  let s=a.indexOf(null);if(s<0&&a.length<3)s=a.length;
-  const best=dailyRec()[k],intro='<p style="text-align:left">今天每個人拿到的都是同一座「小」硬幣堆，8 枚 1 元也藏在一樣的地方。計時，看多快能全部找出來，明天會換一座新的。'+(best?'<br>你今天的紀錄：<b>'+fmtT(best)+'</b>':'')+'</p>';
-  if(s>=0){dialog('每日挑戰・'+dayLbl(k),intro,[['開始','gold',()=>go(s)],['先不要']]);return}
-  // 欄位滿了：可以拿舊的每日挑戰來換
-  const j=a.findIndex(x=>x&&x.G&&x.G.daily&&!x.locked);
-  if(j>=0)dialog('每日挑戰・'+dayLbl(k),intro+'<p>三個存檔欄位都用掉了，要用今天的挑戰取代「'+a[j].name+'」嗎？</p>',[['取代','gold',()=>go(j)],['先不要']]);
-  else dialog('存檔欄位滿了','<p>每日挑戰會用一個存檔欄位，三個都用掉了，先刪掉一個再來。</p>',[['好','gold']])}
+  const best=dailyRec()[k],sk=dailyStreak();
+  pickSlot('每日挑戰・'+dayLbl(k),'<p style="text-align:left">今天每個人拿到的都是同一座「小」硬幣堆，8 枚 1 元也藏在一樣的地方。計時，看多快能全部找出來，明天會換一座新的。'+(best?'<br>你今天的紀錄：<b>'+fmtT(best)+'</b>':'')+(sk>0&&!best?'<br>已經連續 <b>'+sk+'</b> 天了，今天也來撈一下吧。':'')+'</p>',
+    s=>startGame(s,{name:'每日挑戰 '+dayLbl(k),size:'small',seed:dailySeed(k),gmode:'challenge',daily:k}))}
+// 挑戰朋友：把硬幣堆的種子和自己的成績放進連結，朋友打開就是同一座硬幣堆、1 元藏在一樣的地方
+function vsParse(q){const m=/[?&]vs=([a-z]+)\.(\d+)\.(\d+)/.exec(q||'');return m&&SIZES[m[1]]?{size:m[1],seed:+m[2],t:+m[3]}:null}
+function vsLink(t){return location.origin+location.pathname+'?vs='+G.size+'.'+G.seed+'.'+t}
+function sendVs(t){const url=vsLink(t),txt='我在「大海撈一元」用 '+fmtT(t)+' 找出了'+SIZES[G.size].name+'硬幣堆裡所有的 1 元，你能比我快嗎？',copy=()=>copyText(txt+'\n'+url,'挑戰連結複製好了，貼給朋友就可以','挑戰朋友');
+  if(TTON&&navigator.share)navigator.share({title:'大海撈一元',text:txt,url}).catch(e=>{if(e&&e.name!=='AbortError')copy()});else copy()}
+function acceptVs(v){const S=SIZES[v.size];
+  pickSlot('朋友挑戰你！','<p style="text-align:left">朋友在「'+S.name+'」硬幣堆用了 <b>'+fmtT(v.t)+'</b> 找出所有 '+S.ones+' 枚 1 元。你拿到的是同一座硬幣堆，1 元也藏在一樣的地方，看誰比較快。'+(S.warn?'<br><span style="color:#f0b060">這座硬幣堆比較大，手機或比較舊的電腦可能會跑不動。</span>':'')+'</p>',
+    s=>startGame(s,{name:'朋友挑戰 '+fmtT(v.t),size:v.size,seed:v.seed,gmode:'challenge',vs:v.t}))}
 // 成績分享圖：遊戲畫面加上成績，手機跳分享選單，電腦下載
 function shareScore(head){if(!G)return;renderer.render(scene,camera);
   const W=1200,H=630,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),sw=cv.width,sh=cv.height,k=Math.max(W/sw,H/sh);
@@ -4334,6 +4359,8 @@ async function selfTest(){const keys=[SKEY,DKEY,BKEY,CHKEY],bk={};keys.forEach(k
   await run('一開始沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m).join('；'):true);
   await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi').length===6);
   await run('存檔碼壓縮再解開',async()=>{const o={G:{a:1,b:'一元'},size:'small',seed:1};return JSON.stringify(await unpackCode(await packCode(JSON.stringify(o))))===JSON.stringify(o)});
+  await run('挑戰朋友連結',()=>{const v=vsParse('?x=1&vs=std.123456.754');return!!v&&v.size==='std'&&v.seed===123456&&v.t===754&&!vsParse('?vs=nope.1.2')});
+  await run('連續天數',()=>{const d={},day=new Date();for(let i=1;i<=3;i++){day.setDate(day.getDate()-1);d[dailyKey(day)]=100}localStorage.setItem(DKEY,JSON.stringify(d));const a=dailyStreak();d[dailyKey()]=90;localStorage.setItem(DKEY,JSON.stringify(d));const b=dailyStreak();localStorage.removeItem(DKEY);return a===3&&b===4&&dailyStreak()===0||a+'、'+b});
   await run('每日挑戰種子固定',()=>dailySeed('2026-01-01')===dailySeed('2026-01-01')&&dailySeed('2026-01-01')!==dailySeed('2026-01-02'));
   writeSlots([null,null,null]);
   await run('開新局（小）',async()=>{startGame(0,{name:'自我檢查',size:'small',seed:12345,gmode:'challenge'});return await until(playing,30000)||'等不到遊戲開始：'+mode});
@@ -4360,6 +4387,7 @@ async function selfTest(){const keys=[SKEY,DKEY,BKEY,CHKEY],bk={};keys.forEach(k
   keys.forEach(k=>bk[k]==null?localStorage.removeItem(k):localStorage.setItem(k,bk[k]));showMenu('main');
   const pass=out.every(x=>x.ok);out.push({n:'花了 '+((performance.now()-t0)/1000).toFixed(1)+' 秒，存檔已還原',ok:pass});show();box.style.color=pass?'#9f9':'#f99';window.__selftest={pass,out}}
 if(/[?&]selftest\b/.test(location.search))setTimeout(selfTest,500);
+{const v=vsParse(location.search);if(v){history.replaceState(null,'',location.pathname);const ask=()=>$('dialog').classList.contains('hidden')&&mode==='menu'?acceptVs(v):setTimeout(ask,300);setTimeout(ask,300)}}
 window.__booted=true;$('loading').classList.add('hidden');
 linColors(scene);scene.fog.color.convertSRGBToLinear();scene.background.convertSRGBToLinear();
 window.__g={get G(){return G},get pl(){return pl},get tiles(){return tiles},get items(){return items},get oneObjs(){return oneObjs},get anchors(){return anchors},
