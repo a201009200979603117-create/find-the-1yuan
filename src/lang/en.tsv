@@ -1581,7 +1581,8 @@ Find The 1元	Find The 1元
 語言	Language
 重新整理頁面之後就會換成中文。	Reload the page to switch to Chinese (中文).
 V2.7：英文版（瀏覽器不是中文的話自動用英文，設定裡可以切換語言）；程式拆成好幾個檔案整理，由 build.py 組回單一檔案。	V2.7: English version (used automatically when your browser isn't set to Chinese; switch in Settings → Language). The code is now split into source files and assembled into one file by build.py.
-Find The 1元 Demo V2.7	Find The 1元 Demo V2.7
+Find The 1元 Demo V2.8	Find The 1元 Demo V2.8
+V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績，主選單的排行榜最上面看今天全世界的前 20 名。	V2.8: Online leaderboard — after the daily challenge, pick a nickname and upload your time; the top 20 worldwide for today appear at the top of the Leaderboard.
 上傳排行榜	Upload score
 線上排行榜	Online leaderboard
 取一個暱稱放在排行榜上（最多 16 個字，不要用真實姓名）。	Pick a nickname for the leaderboard (up to 16 characters — not your real name).

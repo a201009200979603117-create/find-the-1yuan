@@ -1,17 +1,17 @@
 // ================= 線上排行榜（每日挑戰）：成績放在 Supabase =================
 // 網址和金鑰是給網頁用的公開金鑰（publishable／anon），能做什麼由 supabase/leaderboard.sql 的權限決定。
 // 只收每日挑戰：同一天每個人的硬幣堆都一樣，比起來才公平。兩個都空著的話，線上的功能都不會出現。
-const ONLINE={url:'',key:''};
-const onlineOn=()=>!!(ONLINE.url&&ONLINE.key);
+const ONLINE={url:'https://qkjylbmtrpdneasvnvnm.supabase.co',key:'sb_publishable_XAPs2IzTPXIjZeszHu32xg_sGOHK4SW'};
+const onlineOn=()=>!!(ONLINE.url&&ONLINE.key),onlineBase=()=>ONLINE.url.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'')+'/rest/v1/';
 function onlineHeaders(json){const h={apikey:ONLINE.key};if(!/^sb_/.test(ONLINE.key))h.Authorization='Bearer '+ONLINE.key;if(json){h['Content-Type']='application/json';h.Prefer='return=minimal'}return h}
 function playerId(){let p='';try{p=localStorage.getItem('ft1y_pid')||''}catch(e){}if(!p){p=crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36);try{localStorage.setItem('ft1y_pid',p)}catch(e){}}return p}
 function playerName(){try{return localStorage.getItem('ft1y_name')||''}catch(e){return''}}
 const cleanName=s=>String(s||'').replace(/[<>]/g,'').trim().slice(0,16);
-async function onlineGet(q,extra){const r=await fetch(ONLINE.url.replace(/\/$/,'')+'/rest/v1/'+q,{headers:{...onlineHeaders(),...extra||{}}});if(!r.ok)throw new Error('HTTP '+r.status);return r}
+async function onlineGet(q,extra){const r=await fetch(onlineBase()+q,{headers:{...onlineHeaders(),...extra||{}}});if(!r.ok)throw new Error('HTTP '+r.status);return r}
 const onlineTop=(board,n)=>onlineGet('best_scores?board=eq.'+board+'&select=name,seconds,player&order=seconds.asc,created_at.asc&limit='+(n||20)).then(r=>r.json());
 // 排第幾名：比我快的人數＋1
 const onlineRank=(board,sec)=>onlineGet('best_scores?board=eq.'+board+'&seconds=lt.'+sec+'&select=player&limit=1',{Prefer:'count=exact'}).then(r=>{const c=r.headers.get('content-range');return c&&/\/\d+$/.test(c)?+c.split('/')[1]+1:null});
-async function onlineSubmit(board,sec,name){const r=await fetch(ONLINE.url.replace(/\/$/,'')+'/rest/v1/scores',{method:'POST',headers:onlineHeaders(true),body:JSON.stringify({board,seconds:sec,name,player:playerId()})});
+async function onlineSubmit(board,sec,name){const r=await fetch(onlineBase()+'scores',{method:'POST',headers:onlineHeaders(true),body:JSON.stringify({board,seconds:sec,name,player:playerId()})});
   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,160))}
 // 取暱稱：第一次上傳時問，之後記在瀏覽器裡
 function askName(then){
