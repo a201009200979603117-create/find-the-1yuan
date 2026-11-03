@@ -148,6 +148,7 @@
   #dialog h3{margin:0 0 12px;color:var(--gold);font-size:19px}
   #dialog p{font-size:14px;line-height:1.75;margin:8px 0;color:#ddd}
   #dialog .row{display:flex;gap:14px;justify-content:center;margin-top:18px}
+  #dialog textarea{display:block;width:100%;box-sizing:border-box;height:64px;margin-top:8px;padding:6px 8px;background:#000;color:#ddd;border:1px solid var(--line);border-radius:6px;font:12px/1.4 monospace;resize:none}
   .btn{background:#17171a;border:1px solid #777;color:#eee;padding:8px 24px;font-size:14px;cursor:pointer}
   .btn.gold{background:var(--gold);border-color:var(--gold);color:#111;font-weight:700}
   .btn:hover:not(:disabled){filter:brightness(1.15)}
@@ -3595,7 +3596,7 @@ function renderSlots(){
     h+='<div class="slot" data-slot="'+k+'"><div><b>'+(s.name||'存檔欄位'+(k+1))+'</b><div class="meta">'+money(s.G.money||0)+' '+(s.G.onesFound||0)+'枚1元 挖了'+fmtS(s.G.dug||0)+'枚 還剩'+fmtS(s.G.left)+' '+SIZES[s.size].name+' '+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'</div></div><div class="ops"><button class="sbtn" data-ren="'+k+'">改名</button><button class="sbtn" data-export="'+k+'">匯出</button><button class="sbtn" data-bk="'+k+'">備份</button><button class="sbtn" data-lock="'+k+'">'+(s.locked?'🔒 解鎖':'鎖定')+'</button><button class="sbtn" data-del="'+k+'"'+(s.locked?' disabled title="鎖定的存檔不能刪除"':'')+'>刪除</button></div></div>'});
   if(slotMode==='new')h+='<div class="slot new" data-newslot="1"><div><b>新遊戲</b><div class="meta">在這裡開新局</div></div></div>';
   if(!h)h='<div class="slot"><div class="meta">還沒有存檔</div></div>';
-  h+='<div class="slot" data-import="1"><div><b>📂 匯入存檔</b><div class="meta">從別台電腦匯出的 .json 檔案</div></div></div>';
+  h+='<div class="slot" data-import="1"><div><b>📂 匯入存檔</b><div class="meta">從別台裝置帶過來的存檔檔案或存檔碼</div></div></div>';
   $('slotList').innerHTML=h;
 }
 function dialog(title,body,btns){$('dlgT').textContent=title;$('dlgB').innerHTML=body;$('dlgR').innerHTML='';btns.forEach(([t,cls,fn])=>{const b=document.createElement('button');b.className='btn '+(cls||'');b.textContent=t;b.onclick=()=>{$('dialog').classList.add('hidden');fn&&fn()};$('dlgR').appendChild(b)});$('dialog').classList.remove('hidden')}
@@ -3620,7 +3621,7 @@ $('menu').addEventListener('click',e=>{
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
   else if(m==='help')dialog('操作說明',TTON?HELP_T:HELP,[['知道了','gold']]);
-  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
+  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
   else if(m==='bug')dialog('回報問題','<p>遇到問題的話，把畫面截圖和你做了什麼告訴開發者就可以了。</p>',[['好','gold']]);
   else if(t.dataset.ren!==undefined){e.stopPropagation();const k=+t.dataset.ren,a=loadSlots(),n=prompt('存檔名稱',a[k].name||'');if(n){a[k].name=n.slice(0,20);writeSlots(a);renderSlots()}}
   else if(t.dataset.del!==undefined){e.stopPropagation();const k=+t.dataset.del;if(loadSlots()[k].locked){toast('這個存檔鎖定了，先解鎖才能刪除');return}dialog('刪除存檔','<p>確定要刪除「'+(loadSlots()[k].name||'存檔欄位'+(k+1))+'」嗎？刪掉就救不回來了。</p>',[['先不要'],['刪除','gold',()=>{const a=loadSlots();a[k]=null;writeSlots(a);renderSlots()}]])}
@@ -3753,7 +3754,7 @@ function lockLand(){try{const o=screen.orientation;if(o&&o.lock)o.lock('landscap
 function iosHint(){
   const d=document.documentElement;if(!TOUCH||isStandalone()||d.requestFullscreen||d.webkitRequestFullscreen||!/iPhone|iPod/.test(navigator.userAgent))return;
   try{if(localStorage.getItem('ft1y_ioshint'))return;localStorage.setItem('ft1y_ioshint','1')}catch(_){}
-  dialog('想要全螢幕玩？','<p style="text-align:left">iPhone 的 Safari 不能讓網頁自己全螢幕，網址列會一直在。<br>點 Safari 的<b>分享</b>按鈕 → <b>加入主畫面</b>，之後從主畫面的「大海撈一元」圖示打開，就是全螢幕。<br><span style="color:#aaa">主畫面打開的存檔和 Safari 裡的是分開的，可以用「匯出存檔」再「匯入存檔」搬過去。</span></p>',[['知道了','gold']])}
+  dialog('想要全螢幕玩？','<p style="text-align:left">iPhone 的 Safari 不能讓網頁自己全螢幕，網址列會一直在。<br>點 Safari 的<b>分享</b>按鈕 → <b>加入主畫面</b>，之後從主畫面的「大海撈一元」圖示打開，就是全螢幕。<br><span style="color:#aaa">主畫面打開的存檔和 Safari 裡的是分開的，可以在「匯出存檔」按「複製存檔碼」，再到另一邊的「匯入存檔」貼上。</span></p>',[['知道了','gold']])}
 // 下方中間的工具鍵：顯示現在拿的工具，建造時顯示要蓋的東西
 let tChipK='';
 function toolChip(){
@@ -3802,14 +3803,14 @@ function touchInit(){
   // 按鈕
   ui.querySelectorAll('[data-t]').forEach(b=>{
     const down=e=>{e.preventDefault();b.classList.add('on');const t=b.dataset.t;if(t!=='tool')showPick(false);
-      if(t==='grab'){if(mode==='photo'){savePhoto();return}lmb=true;if(G&&G.build)buildClick()}else if(t==='throw')rmb=true;else if(t==='jump')tKey('Space',true);else if(t==='use')tKey('KeyE',true);
+      if(t==='grab'){if(mode==='photo')return;lmb=true;if(G&&G.build)buildClick()}else if(t==='throw')rmb=true;else if(t==='jump')tKey('Space',true);else if(t==='use')tKey('KeyE',true);
       else if(t==='crouch'){tState.crouch=!tState.crouch;tKey('KeyC',tState.crouch)}
       else if(t==='menu'){if(mode==='play')openPause()}else if(t==='tool'){if(G&&G.build)openPanel('buildPanel');else showPick($('tPick').classList.contains('hidden'))}else if(t==='tech')openPanel('techPanel');else if(t==='build'){if(G&&G.build)exitBuild();else openPanel('buildPanel')}
       else if(t==='map')toggleTop();else if(t==='stats')openPanel('statPanel');else if(t==='rot')tKey('KeyR',true);else if(t==='rm'){if(beltStart)beltStart=null;else tKey('KeyX',true)}else if(t==='photo'){if(mode==='photo')exitPhoto();else enterPhoto()}
       else if(t==='lamp')tKey('KeyL',true);else if(t==='drop')tKey('KeyQ',true)
       else if(t==='up')tKey('PageUp',true);else if(t==='down')tKey('PageDown',true);else if(t==='grid')tKey('KeyG',true);else if(t==='bp')tKey('KeyN',true);else if(t==='undo'){if(G&&G.build)undo()}
       else if(t==='near')tKey('KeyC',true);else if(t==='far')tKey('KeyV',true);else if(t==='copy'){if(G&&!G.build&&mode==='play')copyBuilding()}};
-    const up=e=>{if(b.dataset.t!=='tool')b.classList.remove('on');const t=b.dataset.t;if(t==='grab')lmb=false;else if(t==='throw')rmb=false;else if(t==='jump')tKey('Space',false);else if(t==='use')tKey('KeyE',false);
+    const up=e=>{if(b.dataset.t!=='tool')b.classList.remove('on');const t=b.dataset.t;if(t==='grab'){lmb=false;if(mode==='photo'&&e.type==='pointerup')savePhoto()}else if(t==='throw')rmb=false;else if(t==='jump')tKey('Space',false);else if(t==='use')tKey('KeyE',false);
       else if(t==='rot')tKey('KeyR',false);else if(t==='rm')tKey('KeyX',false);else if(t==='lamp')tKey('KeyL',false);else if(t==='drop')tKey('KeyQ',false);else if(t==='up')tKey('PageUp',false);else if(t==='down')tKey('PageDown',false);else if(t==='grid')tKey('KeyG',false);else if(t==='bp')tKey('KeyN',false);else if(t==='near')tKey('KeyC',false);else if(t==='far')tKey('KeyV',false)};
     b.addEventListener('pointerdown',down);b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('pointerleave',up)});
 }
@@ -3865,10 +3866,38 @@ function loadBk(){try{return JSON.parse(localStorage.getItem(BKEY)||'{}')}catch(
 let bkT=0;
 function autoBackup(dt){if(!G||slotIdx<0)return;bkT+=dt;if(bkT<300)return;bkT=0;const bk=loadBk(),list=bk[slotIdx]=bk[slotIdx]||[];list.unshift(snapshot());bk[slotIdx]=list.slice(0,4);
   for(let tries=0;tries<6;tries++){try{localStorage.setItem(BKEY,JSON.stringify(bk));return}catch(e){const k=Object.keys(bk).find(k=>bk[k].length>1)||Object.keys(bk)[0];if(!k)return;bk[k].pop();if(!bk[k].length)delete bk[k]}}}
-function exportSlot(k){const s=loadSlots()[k];if(!s)return;const a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(s)],{type:'application/json'}));a.href=u;a.download='大海撈一元_存檔_'+(s.name||('欄位'+(k+1)))+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('存檔匯出了')}
-function importSave(){const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';inp.onchange=()=>{const f=inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{
-  try{const d=JSON.parse(rd.result);if(!d||!d.G||!d.size||d.seed==null||!SIZES[d.size])throw 0;const a=loadSlots();let k=a.indexOf(null);if(k<0){if(a.length<3)k=a.length;else{dialog('存檔欄位滿了','<p>三個欄位都有存檔，先刪掉一個再匯入。</p>',[['好','gold']]);return}}
-    d.locked=false;a[k]=d;writeSlots(a);renderSlots();toast('匯入成功，放在第 '+(k+1)+' 個欄位')}catch(e){dialog('匯入失敗','<p>這個檔案不是大海撈一元的存檔。</p>',[['好','gold']])}};rd.readAsText(f)};inp.click()}
+// 匯出／匯入存檔：存成檔案（手機跳出分享選單），或複製一串存檔碼到另一邊貼上
+function b64(u8){let s='';for(let k=0;k<u8.length;k+=8192)s+=String.fromCharCode.apply(null,u8.subarray(k,k+8192));return btoa(s)}
+async function packCode(j){if(typeof CompressionStream==='undefined')return j;
+  const b=await new Response(new Blob([j]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer();return'FT1Y:'+b64(new Uint8Array(b))}
+async function unpackCode(t){t=String(t).trim();if(t[0]==='{')return JSON.parse(t);if(!/^FT1Y:/.test(t))throw 0;
+  const bin=atob(t.slice(5).replace(/\s+/g,'')),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  return JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate'))).text())}
+// 手機跳出分享選單（存到相簿、存到檔案、傳 LINE）；電腦或不能分享時照舊下載
+function giveFile(f,msg){const dl=()=>{const a=document.createElement('a'),u=URL.createObjectURL(f);a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast(msg)};
+  if(TTON&&navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).then(()=>toast(msg),e=>{if(e&&e.name!=='AbortError')dl()});else dl()}
+function copyText(t){const ok=()=>toast('存檔碼複製好了，到另一邊的「匯入存檔」貼上'),manual=()=>{
+    const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;left:0;top:0;opacity:0';document.body.appendChild(ta);ta.select();let done=false;try{done=document.execCommand('copy')}catch(_){}ta.remove();
+    if(done){ok();return}dialog('複製存檔碼','<p>沒辦法自動複製，請在框框裡長按全選，再複製。</p><textarea readonly></textarea>',[['好','gold']]);$('dlgB').querySelector('textarea').value=t};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,manual);else manual()}
+function exportSlot(k){const s=loadSlots()[k];if(!s)return;const j=JSON.stringify(s),nm='大海撈一元_存檔_'+(s.name||('欄位'+(k+1))),fl=TTON?'分享檔案':'下載檔案';
+  let code='';packCode(j).then(c=>code=c,()=>{});
+  const file=()=>{let f=new File([j],nm+'.json',{type:'application/json'});
+    // Android 的 Chrome 不能分享 .json，改成 .txt（匯入一樣讀得到）
+    if(TTON&&navigator.canShare&&!navigator.canShare({files:[f]}))f=new File([j],nm+'.txt',{type:'text/plain'});giveFile(f,'存檔匯出了')};
+  dialog('匯出存檔','<p style="text-align:left">把存檔搬到別台裝置，或在 iPhone 的 Safari 和主畫面 App 之間搬：<br><b>'+fl+'</b>：存成檔案，到另一邊的「匯入存檔」選這個檔案<br><b>複製存檔碼</b>：複製一串文字，到另一邊的「匯入存檔」貼上</p>',
+    [[fl,'gold',file],['複製存檔碼','',()=>copyText(code||j)],['取消']])}
+function importData(d){if(!d||!d.G||!d.size||d.seed==null||!SIZES[d.size])throw 0;const a=loadSlots();let k=a.indexOf(null);if(k<0){if(a.length<3)k=a.length;else{dialog('存檔欄位滿了','<p>三個欄位都有存檔，先刪掉一個再匯入。</p>',[['好','gold']]);return}}
+  d.locked=false;a[k]=d;if(!writeSlots(a))return;slotMode='load';renderSlots();toast('匯入成功，放在第 '+(k+1)+' 個欄位')}
+const badSave=()=>dialog('匯入失敗','<p>這不是大海撈一元的存檔，或存檔碼沒有複製完整。</p>',[['好','gold']]);
+function importFile(){const inp=document.createElement('input');inp.type='file';inp.accept='.json,.txt,application/json,text/plain';inp.onchange=()=>{const f=inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>unpackCode(rd.result).then(importData).catch(badSave);rd.readAsText(f)};inp.click()}
+function importSave(){
+  dialog('匯入存檔','<p style="text-align:left">選一個匯出的存檔檔案，或把存檔碼貼在下面的框框裡'+(TTON?'（長按框框 → 貼上）':'')+'。</p><textarea id="codeIn" placeholder="在這裡貼上存檔碼"'+(TTON?' inputmode="none"':'')+'></textarea>',
+    [['匯入存檔碼','gold',()=>{const t=$('codeIn').value;
+      // 框框是空的就直接讀剪貼簿
+      if(t.trim())unpackCode(t).then(importData).catch(badSave);
+      else if(navigator.clipboard&&navigator.clipboard.readText)navigator.clipboard.readText().then(c=>c.trim()?unpackCode(c).then(importData).catch(badSave):toast('剪貼簿裡沒有存檔碼'),()=>toast('先把存檔碼貼在框框裡'));
+      else toast('先把存檔碼貼在框框裡')}],['選擇檔案','',importFile],['取消']])}
 function showBackups(k){const list=loadBk()[k]||[];if(!list.length){dialog('沒有備份','<p>這個欄位還沒有自動備份（玩超過 5 分鐘才會有）。</p>',[['好','gold']]);return}
   dialog('自動備份','<p>選一份備份來還原（目前的存檔會被取代）。</p>',list.map((b,i)=>{const d=new Date(b.date);return[(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'・'+money(b.G.money||0),i?'':'gold',()=>{const a=loadSlots();a[k]={...b,locked:a[k]&&a[k].locked};writeSlots(a);renderSlots();toast('還原了')}]}).concat([['取消']]))}
 // 第一次看到每台機器：右下角跳一張小說明卡
@@ -4110,7 +4139,8 @@ function updatePhoto(dt){const sp=(keys.has('ShiftLeft')?12:4)*dt,cp=Math.cos(pl
   if(keys.has('KeyW')){photo.x+=fx*sp;photo.y+=fy*sp;photo.z+=fz*sp}if(keys.has('KeyS')){photo.x-=fx*sp;photo.y-=fy*sp;photo.z-=fz*sp}
   if(keys.has('KeyD')){photo.x+=rx*sp;photo.z+=rz*sp}if(keys.has('KeyA')){photo.x-=rx*sp;photo.z-=rz*sp}if(keys.has('Space'))photo.y+=sp;if(keys.has('KeyC'))photo.y=Math.max(.3,photo.y-sp);
   camera.position.set(photo.x,photo.y,photo.z);camera.rotation.set(pl.pitch,pl.yaw,0)}
-function savePhoto(){G.flags.photo=true;renderer.render(scene,camera);const a=document.createElement('a'),d=new Date(),z=n=>String(n).padStart(2,'0');a.download='大海撈一元_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+z(d.getSeconds())+'.png';a.href=cv.toDataURL('image/png');a.click();tone(1500,.05);toast('照片存好了')}
+function savePhoto(){G.flags.photo=true;renderer.render(scene,camera);const d=new Date(),z=n=>String(n).padStart(2,'0'),bin=atob(cv.toDataURL('image/png').split(',')[1]),b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);tone(1500,.05);
+  giveFile(new File([b],'大海撈一元_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+z(d.getSeconds())+'.png',{type:'image/png'}),'照片存好了')}
 
 
 // ================= 主迴圈 =================
