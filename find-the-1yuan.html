@@ -88,6 +88,9 @@
   }
   .hidden{display:none!important}
   #upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:85;background:#1d4f8f;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #0008}
+  #errBar{position:fixed;top:52px;left:50%;transform:translateX(-50%);z-index:85;background:#a8322a;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #0008}
+  body.touch #errBar{top:auto;bottom:calc(104px + env(safe-area-inset-bottom));font-size:13px;padding:6px 14px}
+  #loading small{display:block;margin-top:10px;font-size:14px;font-weight:400;color:#999}
   body.touch #upd{top:auto;bottom:calc(68px + env(safe-area-inset-bottom));font-size:13px;padding:6px 14px}
   body.touch #statShare{height:36px;padding:0 12px;border-radius:10px;font-size:14px}
   /* 介面動畫：面板彈出、提示淡入、按鈕和卡片的回饋 */
@@ -454,9 +457,11 @@
   <div id="rankPanel" class="lp hidden"><div class="ph">排行榜（這台電腦）</div><div id="rankList"></div><button class="sbtn back" data-m="main">返回</button></div>
 </div>
 
+<div id="errBar" class="hidden">⚠ 遊戲出了點問題，點這裡回報</div>
 <div id="upd" class="hidden">🆕 有新版本，點這裡更新（會先存檔）</div>
 <div id="dialog" class="hidden"><div class="box"><h3 id="dlgT"></h3><div id="dlgB"></div><div class="row" id="dlgR"></div></div></div>
-<div id="loading" class="hidden">載入中…</div>
+<div id="loading">載入中…</div>
+<script>setTimeout(function(){var l=document.getElementById('loading');if(l&&!window.__booted)l.innerHTML='載入中…<small>網路比較慢，還在下載遊戲需要的 3D 引擎</small>'},6000)</script>
 <div id="lbT" class="hidden"></div><div id="lbB" class="hidden"></div><div id="skip" class="hidden">點一下跳過</div>
 
 <!-- HUD -->
@@ -499,7 +504,7 @@
 <div id="clickPlay" class="hidden">🖱 點一下畫面繼續</div>
 <div id="hud" class="hidden">
   <div id="obj"><div class="st" id="objN"></div><div class="t" id="objT"></div><span class="kb" id="objK"></span><div class="d" id="objD"></div><div class="rw" id="objR"></div><div class="bar" id="objBarW"><i id="objBar"></i></div><div class="p"><span id="objP"></span><span id="objL"></span></div></div>
-  <div id="ver"><div class="a">Find The 1元 Demo V2.2</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
+  <div id="ver"><div class="a">Find The 1元 Demo V2.3</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
   <div id="tips"><div class="h">提示</div><div id="tipTxt"></div></div>
   <div id="mon"><div class="m" id="money">$0.00</div><div class="l" id="left"></div><div class="l" id="rate"></div><div class="l" id="clock"></div><div class="l hidden" id="chal" style="color:#7fd1ff"></div><div class="l hidden" id="warnN"></div><div id="pin" class="hidden"></div></div>
   <div id="combo"></div><div id="floats"></div><div id="record"></div>
@@ -541,6 +546,7 @@
   <div class="setrow"><span>下雨</span><input type="checkbox" id="sWx"></div>
   <div class="setrow"><span>顯示每秒畫面數（FPS）</span><input type="checkbox" id="sFps"></div>
   <div class="setrow"><span>震動（手機）</span><input type="checkbox" id="sVib"></div>
+  <div class="setrow"><span>省電模式（每秒 30 格）</span><input type="checkbox" id="sEco"></div>
   <div class="setrow"><span>觸控操作（手機）</span><select id="sTouch" class="setsel"><option value="auto">自動</option><option value="on">開</option><option value="off">關</option></select></div>
   <div class="setrow" style="margin-top:8px;color:var(--gold)"><b>按鍵（點一下再按新的鍵）</b></div><div id="keyList"></div>
 </div></div>
@@ -548,9 +554,19 @@
 <div id="card" class="hidden"><div class="burst"></div><div class="cd" id="cardIn"></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>window.THREE||document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>')</script>
 <script>
 const $=id=>document.getElementById(id);
-if(!window.THREE){document.body.innerHTML='<p style="color:#fff;padding:30px">無法載入 3D 引擎：需要連網載入 three.js，且瀏覽器要支援 WebGL。</p>';throw new Error('three.js 未載入')}
+function fatal(msg){document.body.innerHTML='<div style="color:#eee;padding:30px;font:16px/1.8 sans-serif;max-width:600px">'+msg+'<br><button onclick="location.reload()" style="margin-top:16px;padding:8px 20px;font-size:16px">重新整理</button></div>';document.body.style.cssText='background:#111;overflow:auto;user-select:text';throw new Error(msg)}
+if(!window.THREE)fatal('沒辦法載入 3D 引擎（three.js）。<br>請確認網路連線，再重新整理一次。加入主畫面的話，要先連網打開過一次才能離線玩。');
+{const c=document.createElement('canvas'),gl=c.getContext('webgl2')||c.getContext('webgl');if(!gl)fatal('這個瀏覽器沒辦法顯示 3D 畫面（WebGL）。<br>請換成 Chrome、Edge 或 Safari，或到瀏覽器設定打開「硬體加速」再試一次。');const x=gl.getExtension('WEBGL_lose_context');if(x)x.loseContext()}
+// 錯誤回報：出錯時記下來，畫面上跳一條，點了可以複製錯誤資訊給開發者
+const ERRS=[];
+function logErr(m,at,st){m=String(m||'').slice(0,200);if(!m||/ResizeObserver/.test(m)||/^Script error\.?$/.test(m)&&!at||/extension:\/\//.test(at||''))return;
+  const o=ERRS.find(e=>e.m===m&&e.at===at);if(o){o.n++;return}if(ERRS.length>=10)return;
+  ERRS.push({m,at:at||'',st:String(st||'').split('\n').slice(1,4).map(x=>x.trim()).join(' ← ').slice(0,300),n:1});const b=$('errBar');if(b)b.classList.remove('hidden')}
+addEventListener('error',e=>{if(e.target!==window)return;logErr(e.message,(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno,e.error&&e.error.stack)},true);
+addEventListener('unhandledrejection',e=>{const r=e.reason;if(r&&/AbortError|NotAllowedError/.test(r.name))return;logErr('Promise：'+(r&&r.message||r),'',r&&r.stack)});
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const fmt=n=>Math.round(n).toLocaleString('en-US');
 const fmtS=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(Math.round(n));
@@ -3607,9 +3623,9 @@ function renderSlots(){
 }
 function dialog(title,body,btns){$('dlgT').textContent=title;$('dlgB').innerHTML=body;$('dlgR').innerHTML='';btns.forEach(([t,cls,fn])=>{const b=document.createElement('button');b.className='btn '+(cls||'');b.textContent=t;b.onclick=()=>{$('dialog').classList.add('hidden');fn&&fn()};$('dlgR').appendChild(b)});$('dialog').classList.remove('hidden')}
 const HELP='<p style="text-align:left"><b>W A S D</b> 移動、<b>Shift</b> 跑、<b>C</b> 蹲著走（手上的硬幣不會灑）、<b>空白鍵</b> 跳（有噴射背包就按住往上飛）、滑鼠轉視角<br>挖硬幣會耗體力，拿著硬幣跑步或跳起來落地會灑出來<br><b>左鍵</b> 按住拿硬幣　<b>右鍵</b> 丟硬幣（對準收購站進料口就是賣）<br><b>E</b> 開門、五金行、訂單板、一元收藏櫃<br><b>1～0</b> 換工具、<b>Q</b> 把工具放到地上、<b>F</b> 丟出去、<b>E</b> 撿回來<br><b>Tab</b> 科技樹、<b>B</b> 建造目錄（R 旋轉、X 拆除、滾輪或 C／V 拉近推遠、PageUp／PageDown 架高、F 吸附）<br><b>滑鼠中鍵</b> 複製看著的建築、看著輸送帶<b>按住 E</b> 把它反過來、看著機器按 <b>E</b> 開設定<br><b>L</b> 手電筒、<b>P</b> 拍照模式、<b>M</b> 俯瞰模式、<b>O</b> 機器狀態、<b>J</b> 成就與統計、<b>Ctrl+Z</b> 復原、建造時 <b>N</b> 藍圖（框選整組複製）、<b>F4</b> 隱藏介面、<b>F5</b> 存檔、<b>Esc</b> 暫停</p>';
-function openSettings(){$('sMus').value=SET.music;$('sAmb').value=SET.amb??.6;$('sSens').value=SET.sens;$('sVol').value=SET.vol;$('sFov').value=SET.fov;$('sRes').value=String(SET.res);$('sShadowQ').value=String(SET.shadowQ);$('sCoinQ').value=String(SET.coinQ);$('sFps').checked=!!SET.fps;$('sVib').checked=SET.vib!==false;$('sVib').closest('.setrow').style.display=TTON&&navigator.vibrate?'':'none';$('sDay').checked=SET.daynight!==false;$('sMusS').value=SET.musicStyle||'soft';$('sTouch').value=SET.touch||'auto';keyWait=null;renderKeys();$('sWx').checked=SET.weather!==false;$('setPanel').classList.remove('hidden')}
+function openSettings(){$('sMus').value=SET.music;$('sAmb').value=SET.amb??.6;$('sSens').value=SET.sens;$('sVol').value=SET.vol;$('sFov').value=SET.fov;$('sRes').value=String(SET.res);$('sShadowQ').value=String(SET.shadowQ);$('sCoinQ').value=String(SET.coinQ);$('sFps').checked=!!SET.fps;$('sVib').checked=SET.vib!==false;$('sEco').checked=!!SET.eco;$('sVib').closest('.setrow').style.display=TTON&&navigator.vibrate?'':'none';$('sDay').checked=SET.daynight!==false;$('sMusS').value=SET.musicStyle||'soft';$('sTouch').value=SET.touch||'auto';keyWait=null;renderKeys();$('sWx').checked=SET.weather!==false;$('setPanel').classList.remove('hidden')}
 $('sTouch').addEventListener('change',()=>{SET.touch=$('sTouch').value;applySet();dialog('觸控操作','<p>重新整理頁面之後才會套用。</p>',[['現在重新整理','gold',()=>{if(G)saveGame(true);location.reload()}],['等一下']])});
-['sSens','sVol','sAmb','sMus','sMusS','sFov','sRes','sShadowQ','sCoinQ','sFps','sDay','sWx','sVib'].forEach(id=>$(id).addEventListener('input',()=>{SET.vib=$('sVib').checked;SET.musicStyle=$('sMusS').value;musT=0;SET.daynight=$('sDay').checked;SET.weather=$('sWx').checked;SET.music=+$('sMus').value;SET.sens=+$('sSens').value;SET.vol=+$('sVol').value;SET.amb=+$('sAmb').value;SET.fov=+$('sFov').value;SET.res=$('sRes').value==='auto'?'auto':+$('sRes').value;SET.shadowQ=+$('sShadowQ').value;SET.coinQ=+$('sCoinQ').value;SET.fps=$('sFps').checked;applySet()}));
+['sSens','sVol','sAmb','sMus','sMusS','sFov','sRes','sShadowQ','sCoinQ','sFps','sDay','sWx','sVib','sEco'].forEach(id=>$(id).addEventListener('input',()=>{SET.vib=$('sVib').checked;SET.eco=$('sEco').checked;SET.musicStyle=$('sMusS').value;musT=0;SET.daynight=$('sDay').checked;SET.weather=$('sWx').checked;SET.music=+$('sMus').value;SET.sens=+$('sSens').value;SET.vol=+$('sVol').value;SET.amb=+$('sAmb').value;SET.fov=+$('sFov').value;SET.res=$('sRes').value==='auto'?'auto':+$('sRes').value;SET.shadowQ=+$('sShadowQ').value;SET.coinQ=+$('sCoinQ').value;SET.fps=$('sFps').checked;applySet()}));
 $('setClose').onclick=()=>$('setPanel').classList.add('hidden');
 $('menu').addEventListener('click',e=>{
   const t=e.target.closest('[data-m],[data-slot],[data-newslot],[data-size],[data-ren],[data-del],[data-lock],[data-export],[data-bk],[data-import]');if(!t)return;
@@ -3628,8 +3644,8 @@ $('menu').addEventListener('click',e=>{
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
   else if(m==='help')dialog('操作說明',TTON?HELP_T:HELP,[['知道了','gold']]);
-  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.2：每日挑戰（每天一座一樣的硬幣堆，計時找出所有的 1 元，紀錄記在排行榜）；成績分享圖（挑戰成功、挖完硬幣堆、成就與統計都能分享）；手機找到 1 元、完成訂單、買到科技、拿到成就會震動（設定可以關）；網頁版更新了會提示，點一下就換新版。<br>V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
-  else if(m==='bug')dialog('回報問題','<p>遇到問題的話，把畫面截圖和你做了什麼告訴開發者就可以了。</p>',[['好','gold']]);
+  else if(m==='news')dialog('更新紀錄','<p style="text-align:left">V2.3：遊戲出錯時畫面上會跳「點這裡回報」，可以一鍵複製錯誤資訊；「回報問題」也能複製裝置和遊戲資訊、直接到 GitHub 回報；一格畫面出錯不會再讓整個遊戲卡住；設定多了省電模式（每秒 30 格，手機比較不會燙）；打開時會顯示載入中，3D 引擎下載失敗會自動換一個來源，真的載入不了會說明原因。<br>V2.2：每日挑戰（每天一座一樣的硬幣堆，計時找出所有的 1 元，紀錄記在排行榜）；成績分享圖（挑戰成功、挖完硬幣堆、成就與統計都能分享）；手機找到 1 元、完成訂單、買到科技、拿到成就會震動（設定可以關）；網頁版更新了會提示，點一下就換新版。<br>V2.1：手機版重做——搖桿按哪裡就出現在哪裡、右下圍成一圈的按鍵、左上工具列、點一下選工具；建造時有架高、降低、方格、復原、藍圖、拉近推遠、取消，看著建築可以複製，建造目錄長按加到快捷欄；教學和提示改成按鈕說法；所有面板改成手機專用排法（科技樹左邊分類、中間小卡片，多一個「買得起」分類；建造目錄一次看得到三排；機器設定從下方拉出；設定兩欄、暫停大按鈕）；進遊戲自動全螢幕並鎖橫向，可以加入主畫面；加入主畫面後沒網路也能玩；拍照和匯出存檔在手機上改用分享選單（存到相簿、存到檔案、傳 LINE），多了存檔碼，複製貼上就能把存檔搬到別台裝置。雙手和所有工具照真實比例重做，有挖、丟、倒、掃的動作；走到機器上不會再卡住；水桶不會破圖。<br>V2：數值改成原作（遊戲資料）；24 種 1 元；第五種尺寸 The Mountain；體力、灑出來、蹲著走、噴射背包；壓縮機、包裝機、造粒機、圓盤壓製機、紙漿機、造紙機、筒倉、燃氣發電廠；抽水機和水管；T 型接頭、閘門、封閉式輸送帶、分流器優先、手臂連輸送帶；地下電纜箱、開關箱、用電警示；衛星天線、精準定位；平台、樓梯、欄杆、牆、屋頂、升降機、架高輸送帶；工作燈、油漆板；訂單時間限制；音效和背景音樂；教學照原作改成 46 步。<br>V1：照《Find The Needle》試玩版的流程做的台幣版。硬幣當乾草、1 元當針。</p>',[['好','gold']]);
+  else if(m==='bug')openReport();
   else if(t.dataset.ren!==undefined){e.stopPropagation();const k=+t.dataset.ren,a=loadSlots(),n=prompt('存檔名稱',a[k].name||'');if(n){a[k].name=n.slice(0,20);writeSlots(a);renderSlots()}}
   else if(t.dataset.del!==undefined){e.stopPropagation();const k=+t.dataset.del;if(loadSlots()[k].locked){toast('這個存檔鎖定了，先解鎖才能刪除');return}dialog('刪除存檔','<p>確定要刪除「'+(loadSlots()[k].name||'存檔欄位'+(k+1))+'」嗎？刪掉就救不回來了。</p>',[['先不要'],['刪除','gold',()=>{const a=loadSlots();a[k]=null;writeSlots(a);renderSlots()}]])}
   else if(t.dataset.slot!==undefined){const k=+t.dataset.slot;startGame(k,loadSlots()[k])}
@@ -3757,7 +3773,7 @@ function goFull(){
   const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;if(!rq)return;
   try{const p=rq.call(d,{navigationUI:'hide'});if(p&&p.then)p.then(lockLand,()=>{});else lockLand()}catch(_){}}
 // 手機震動：找到 1 元、完成訂單、買到科技、拿到成就（iPhone 的網頁不能震動）
-function buzz(p){if(TTON&&SET.vib!==false&&navigator.vibrate)try{navigator.vibrate(p)}catch(_){}}
+function buzz(p){const ua=navigator.userActivation;if(TTON&&SET.vib!==false&&navigator.vibrate&&!(ua&&!ua.hasBeenActive))try{navigator.vibrate(p)}catch(_){}}
 function lockLand(){try{const o=screen.orientation;if(o&&o.lock)o.lock('landscape').catch(()=>{})}catch(_){}}
 // iPhone 的 Safari 不能讓網頁全螢幕：第一次打開時教玩家加入主畫面
 function iosHint(){
@@ -3885,9 +3901,9 @@ async function unpackCode(t){t=String(t).trim();if(t[0]==='{')return JSON.parse(
 // 手機跳出分享選單（存到相簿、存到檔案、傳 LINE）；電腦或不能分享時照舊下載
 function giveFile(f,msg){const dl=()=>{const a=document.createElement('a'),u=URL.createObjectURL(f);a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast(msg)};
   if(TTON&&navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).then(()=>toast(msg),e=>{if(e&&e.name!=='AbortError')dl()});else dl()}
-function copyText(t){const ok=()=>toast('存檔碼複製好了，到另一邊的「匯入存檔」貼上'),manual=()=>{
+function copyText(t,msg,title){const ok=()=>toast(msg||'存檔碼複製好了，到另一邊的「匯入存檔」貼上'),manual=()=>{
     const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;left:0;top:0;opacity:0';document.body.appendChild(ta);ta.select();let done=false;try{done=document.execCommand('copy')}catch(_){}ta.remove();
-    if(done){ok();return}dialog('複製存檔碼','<p>沒辦法自動複製，請在框框裡長按全選，再複製。</p><textarea readonly></textarea>',[['好','gold']]);$('dlgB').querySelector('textarea').value=t};
+    if(done){ok();return}dialog(title||'複製存檔碼','<p>沒辦法自動複製，請在框框裡長按全選，再複製。</p><textarea readonly></textarea>',[['好','gold']]);$('dlgB').querySelector('textarea').value=t};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,manual);else manual()}
 function exportSlot(k){const s=loadSlots()[k];if(!s)return;const j=JSON.stringify(s),nm='大海撈一元_存檔_'+(s.name||('欄位'+(k+1))),fl=TTON?'分享檔案':'下載檔案';
   let code='';packCode(j).then(c=>code=c,()=>{});
@@ -4100,6 +4116,17 @@ function shareScore(head){if(!G)return;renderer.render(scene,camera);
   x.fillStyle='#8fa3b8';x.font='22px '+F;x.fillText('大海撈一元・a201009200979603117-create.github.io/find-the-1yuan',60,H-36);
   const d=new Date(),z=n=>String(n).padStart(2,'0'),bin=atob(c.toDataURL('image/png').split(',')[1]),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
   giveFile(new File([u],'大海撈一元_成績_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+'.png',{type:'image/png'}),'成績圖存好了')}
+// 回報問題：版本、裝置、遊戲狀態和最近的錯誤，一鍵複製
+function reportInfo(){const sf=f=>{try{return f()}catch(_){return'?'}},gl=sf(()=>renderer.getContext()),dbg=gl&&gl!=='?'&&gl.getExtension('WEBGL_debug_renderer_info');
+  return['大海撈一元 '+sf(()=>document.querySelector('#ver .a').textContent.replace(/^Find The 1元\s*/,'')),'時間：'+new Date().toLocaleString('zh-TW'),'網址：'+location.href.split('?')[0],'裝置：'+navigator.userAgent,
+    '畫面：'+innerWidth+'×'+innerHeight+' @'+devicePixelRatio+'・觸控 '+sf(()=>TTON?'開':'關')+'・主畫面 App '+sf(()=>isStandalone()?'是':'否')+'・省電 '+(SET.eco?'開':'關'),
+    '顯示卡：'+(dbg?gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL):'?'),
+    '遊戲：'+sf(()=>G?SIZES[G.size].name+'・'+(G.daily?'每日挑戰':G.gmode||'normal')+'・玩了 '+Math.floor(G.play/60)+' 分鐘・欄位 '+(slotIdx+1):'在主選單')+'・'+sf(()=>mode)+'・'+sf(()=>fpsNow)+' FPS',
+    '錯誤：'+(ERRS.length?'':'沒有')].concat(ERRS.map(e=>'・'+e.m+(e.at?'（'+e.at+'）':'')+(e.n>1?' ×'+e.n:'')+(e.st?'\n  '+e.st:''))).join('\n')}
+function openReport(){$('errBar').classList.add('hidden');const info=reportInfo(),url='https://github.com/a201009200979603117-create/find-the-1yuan/issues/new?title='+encodeURIComponent('問題回報：')+'&body='+encodeURIComponent('發生了什麼事：\n\n\n'+info);
+  dialog('回報問題','<p style="text-align:left">'+(ERRS.length?'遊戲剛剛出了 <b>'+ERRS.length+'</b> 個錯誤。':'')+'按「複製問題資訊」，連同你做了什麼、畫面截圖一起傳給開發者；有 GitHub 帳號的話也可以直接開一則回報。</p><textarea readonly></textarea>',
+    [['複製問題資訊','gold',()=>copyText(info,'問題資訊複製好了','複製問題資訊')],['到 GitHub 回報','',()=>open(url,'_blank','noopener')],['關閉']]);$('dlgB').querySelector('textarea').value=info}
+$('errBar').onclick=()=>{if(locked)unlock();openReport()};
 $('statShare').onclick=()=>shareScore('找到 '+G.onesFound+' 枚 1 元');
 $('eShare').onclick=()=>shareScore('整堆硬幣都挖完了！');
 function refillPile(){G.round=(G.round||1)+1;const seed=(Math.random()*2**31)|0;G.seed=seed;generate(seed,G.size,null);G.left=SIZES[G.size].coins;G.removed=0;G.ended=false;G.marked=[];
@@ -4194,10 +4221,12 @@ function savePhoto(){G.flags.photo=true;renderer.render(scene,camera);const d=ne
 let last=performance.now(),slowT=0;
 // 每 2 秒看一次平均每幀幾毫秒：太慢就把解析度降一點，夠快再慢慢調回來
 let perfAcc=0,perfN=0,perfT=0;
-function perfWatch(ms){perfAcc+=ms;perfN++;perfT+=ms;if(perfT<2000)return;const avg=perfAcc/perfN;perfAcc=perfN=perfT=0;
+let fpsNow=0;
+function perfWatch(ms){perfAcc+=ms;perfN++;perfT+=ms;if(perfT<2000)return;const avg=perfAcc/perfN;perfAcc=perfN=perfT=0;fpsNow=Math.round(1000/avg);
   if(SET.fps)$('fps').textContent=Math.round(1000/avg)+' FPS・'+avg.toFixed(1)+' ms'+(SET.res==='auto'?'・解析度 '+Math.round(dynScale*100)+'%':'');
-  if(SET.res==='auto'&&mode==='play'){const o=dynScale;if(avg>24&&dynScale>.55)dynScale=Math.max(.55,dynScale-.1);else if(avg<15&&dynScale<1)dynScale=Math.min(1,dynScale+.05);if(o!==dynScale)renderer.setPixelRatio(BASE_PR*dynScale)}}
-function frame(now){const ms=now-last,dt=Math.min(.05,ms/1000);last=now;tick(dt,now);perfWatch(ms);requestAnimationFrame(frame)}
+  if(SET.res==='auto'&&mode==='play'){const o=dynScale,hi=SET.eco?40:24,lo=SET.eco?36:15;if(avg>hi&&dynScale>.55)dynScale=Math.max(.55,dynScale-.1);else if(avg<lo&&dynScale<1)dynScale=Math.min(1,dynScale+.05);if(o!==dynScale)renderer.setPixelRatio(BASE_PR*dynScale)}}
+function frame(now){requestAnimationFrame(frame);if(SET.eco&&now-last<30)return;const ms=now-last,dt=Math.min(.05,ms/1000);last=now;
+  try{tick(dt,now)}catch(e){logErr(e&&e.message||e,'tick',e&&e.stack)}perfWatch(ms)}
 const clickPlayEl=$('clickPlay');
 function tick(dt,now){
   clickPlayEl.classList.toggle('hidden',!(G&&mode==='play'&&!locked&&!panel&&!topV&&!TOUCH));
@@ -4294,6 +4323,44 @@ if(TTON)$('upd').textContent='🆕 有新版本・點這裡更新';
 checkVer();setInterval(checkVer,20*60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&performance.now()-verT>60000)checkVer()});
 $('upd').onclick=()=>{if(G&&slotIdx>=0)saveGame(true);location.reload()};
+// 自我檢查（開發用）：網址加 ?selftest 會自動跑一遍主要功能，跑完把存檔還原
+async function selfTest(){const keys=[SKEY,DKEY,BKEY,CHKEY],bk={};keys.forEach(k=>bk[k]=localStorage.getItem(k));const t0=performance.now(),out=[];
+  const box=document.createElement('pre');box.id='selftest';box.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-height:90vh;overflow:auto;background:#000d;color:#ccc;font:12px/1.5 monospace;padding:10px;margin:0;pointer-events:none;white-space:pre-wrap;max-width:60vw';document.body.appendChild(box);
+  const w=ms=>new Promise(r=>setTimeout(r,ms)),until=async(f,ms)=>{const e=performance.now()+ms;while(performance.now()<e){if(f())return true;await w(100)}return false},
+    show=()=>box.textContent='自我檢查 '+(out.every(x=>x.ok)?'':'（有失敗）')+'\n'+out.map(x=>(x.ok?'✓ ':'✗ ')+x.n+(x.info?'　'+x.info:'')).join('\n'),
+    // 回傳 true 算通過、字串是失敗原因、{skip} 是略過
+    run=async(n,f)=>{let r;try{r=await f()}catch(e){r=String(e&&e.message||e)||'出錯了'}out.push({n,ok:r===true||!!(r&&r.skip),info:typeof r==='string'?r:r&&r.skip||''});show()},
+    gf=giveFile,playing=()=>{if(mode==='intro')for(let i=0;i<20;i++)tick(.05,performance.now());return mode==='play'};let file=null;
+  await run('一開始沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m).join('；'):true);
+  await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi').length===6);
+  await run('存檔碼壓縮再解開',async()=>{const o={G:{a:1,b:'一元'},size:'small',seed:1};return JSON.stringify(await unpackCode(await packCode(JSON.stringify(o))))===JSON.stringify(o)});
+  await run('每日挑戰種子固定',()=>dailySeed('2026-01-01')===dailySeed('2026-01-01')&&dailySeed('2026-01-01')!==dailySeed('2026-01-02'));
+  writeSlots([null,null,null]);
+  await run('開新局（小）',async()=>{startGame(0,{name:'自我檢查',size:'small',seed:12345,gmode:'challenge'});return await until(playing,30000)||'等不到遊戲開始：'+mode});
+  await run('8 枚 1 元',()=>anchors.size===8||String(anchors.size));
+  await run('同一個種子，硬幣堆一樣',()=>{const a=[...anchors].join();generate(12345,'small',null);return[...anchors].join()===a});
+  await run('存檔',()=>{saveGame(true);const s=loadSlots()[0];return!!(s&&s.G&&s.name==='自我檢查')});
+  await run('回主選單再讀檔',async()=>{toMenu();await w(800);startGame(0,loadSlots()[0]);return await until(()=>playing()&&G&&G.name==='自我檢查',30000)||'讀檔失敗'});
+  if(TTON)await run('觸控按鍵',async()=>await until(()=>!$('touchUI').classList.contains('hidden'),3000)&&document.querySelectorAll('#touchUI [data-t]').length>=15||'觸控按鍵沒出現');
+  await run('打開每個面板',async()=>{for(const p of['techPanel','buildPanel','shopPanel','boardPanel','cabPanel','statPanel']){openPanel(p);await w(150);if($(p).classList.contains('hidden'))return p+' 沒打開';closePanel();await w(80)}return true});
+  await run('買科技',()=>{G.money=1e7;const t=Object.values(TECHD).find(t=>{const x=techState(t);return!t.shop&&!t.auto&&x.cls!=='lock'&&x.price!=null});if(!t)return'找不到能買的';const l=lv(t.id);techBuy(t);return lv(t.id)===l+1});
+  giveFile=f=>{file=f};
+  await run('成績分享圖',()=>{file=null;shareScore('自我檢查');return!!(file&&file.type==='image/png'&&file.size>5000)||'沒產生圖片'});
+  await run('拍照',()=>{file=null;enterPhoto();savePhoto();exitPhoto();return!!(file&&file.size>5000)||'沒產生照片'});
+  giveFile=gf;
+  await run('匯入存檔',()=>{importData(JSON.parse(JSON.stringify(loadSlots()[0])));return!!loadSlots()[1]});
+  await run('挑戰完成',()=>{anchors.clear();G.onesHand=0;checkChallenge();const ok=$('dlgT').textContent==='挑戰成功！'&&G.chalDone;$('dialog').classList.add('hidden');return ok});
+  // 用假的時間跑主迴圈：60Hz 和 120Hz 的螢幕，省電模式都應該剛好每秒 30 格
+  await run('省電模式每秒 30 格',()=>{const raf=window.requestAnimationFrame,tk=tick,e0=SET.eco;let n=0,t=last;window.requestAnimationFrame=()=>0;tick=()=>{n++};
+    const sim=(hz,eco)=>{SET.eco=eco;n=0;for(let i=0;i<hz;i++){t+=1000/hz;frame(t)}return n};
+    const r=[sim(60,true),sim(120,true),sim(60,false)];SET.eco=e0;tick=tk;window.requestAnimationFrame=raf;last=performance.now();
+    return r[0]===30&&r[1]===30&&r[2]===60||'60Hz 省電 '+r[0]+' 格、120Hz 省電 '+r[1]+' 格、一般 '+r[2]+' 格'});
+  await run('回主選單',async()=>{toMenu();await w(800);return mode==='menu'});
+  await run('最後沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m+'（'+e.at+'）').join('；'):true);
+  keys.forEach(k=>bk[k]==null?localStorage.removeItem(k):localStorage.setItem(k,bk[k]));showMenu('main');
+  const pass=out.every(x=>x.ok);out.push({n:'花了 '+((performance.now()-t0)/1000).toFixed(1)+' 秒，存檔已還原',ok:pass});show();box.style.color=pass?'#9f9':'#f99';window.__selftest={pass,out}}
+if(/[?&]selftest\b/.test(location.search))setTimeout(selfTest,500);
+window.__booted=true;$('loading').classList.add('hidden');
 linColors(scene);scene.fog.color.convertSRGBToLinear();scene.background.convertSRGBToLinear();
 window.__g={get G(){return G},get pl(){return pl},get tiles(){return tiles},get items(){return items},get oneObjs(){return oneObjs},get anchors(){return anchors},
   st:()=>({M,Rp,H,mode,panel,locked,hover:hover&&hover.k,vis:mcount.reduce((a,b)=>a+b,0),power}),
