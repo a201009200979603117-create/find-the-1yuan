@@ -1,6 +1,6 @@
 // 離線玩：第一次打開時把遊戲和 three.js 存在手機裡，之後沒網路也能開
 // 遊戲檔每次先上網拿最新的，拿不到才用存著的；three.js 和圖示直接用存著的
-const CACHE = 'ft1y-v1';
+const CACHE = 'ft1y-v2';
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
 const CORE = ['./', './index.html', './find-the-1yuan.html', './manifest.webmanifest',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
@@ -24,10 +24,12 @@ self.addEventListener('fetch', e => {
   const page = req.mode === 'navigate' || (url.origin === location.origin && /\.(html|webmanifest)$|\/$/.test(url.pathname));
   if (page) {
     // 先上網，拿到就順便更新存著的；沒網路才用存著的
+    // 存的時候拿掉網址後面的 ?…（挑戰連結、自我檢查），同一頁只留最新的一份
+    const key = url.origin + url.pathname;
     e.respondWith(fetch(req).then(r => {
-      if (r.ok) { const cp = r.clone(); caches.open(CACHE).then(c => c.put(url.pathname.endsWith('/') ? './' : req, cp)); }
+      if (r.ok) { const cp = r.clone(); caches.open(CACHE).then(c => c.put(key, cp)); }
       return r;
-    }).catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match('./find-the-1yuan.html'))));
+    }).catch(() => caches.match(key).then(r => r || caches.match('./find-the-1yuan.html'))));
     return;
   }
   if (url.href === THREE_URL || url.origin === location.origin) {
