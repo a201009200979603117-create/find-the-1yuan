@@ -73,6 +73,14 @@
   }
   .hidden{display:none!important}
   #upd{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:85;background:#1d4f8f;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #0008}
+  /* 拍照模式的工具列：電腦放下面中間（按 F／T 切換），手機放右上角用點的 */
+  #photoBar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;display:flex;gap:8px;zoom:var(--fz)}
+  #photoBar button{background:#101014d9;color:#f3eee2;border:1px solid #ffffff33;border-radius:18px;padding:7px 14px;font-size:14px;cursor:pointer;white-space:nowrap}
+  body.touch #photoBar{left:auto;right:calc(10px + env(safe-area-inset-right));top:10px;bottom:auto;transform:none;gap:6px}
+  body.touch #photoBar button{font-size:12px;padding:6px 10px}
+  /* 拍照時用不到的手機按鍵先藏起來 */
+  body.photoOn #touchUI [data-t="drop"],body.photoOn #touchUI [data-t="use"],body.photoOn #touchUI [data-t="throw"],body.photoOn #touchUI [data-t="copy"]{visibility:hidden}
+  #photoVig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.45) 100%)}
   #errBar{position:fixed;top:52px;left:50%;transform:translateX(-50%);z-index:85;background:#a8322a;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #0008}
   body.touch #errBar{top:auto;bottom:calc(104px + env(safe-area-inset-bottom));font-size:13px;padding:6px 14px}
   /* 字體大小：設定裡選大、特大時把文字區塊整個放大，版面會跟著重排 */

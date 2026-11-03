@@ -140,6 +140,8 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   giveFile=f=>{file=f};
   await run('成績分享圖',()=>{file=null;shareScore('自我檢查');return!!(file&&file.type==='image/png'&&file.size>5000)||'沒產生圖片'});
   await run('拍照',()=>{file=null;enterPhoto();savePhoto();exitPhoto();return!!(file&&file.size>5000)||'沒產生照片'});
+  await run('拍照濾鏡和時間',()=>{file=null;const tod=G.tod;enterPhoto();photoNextFx();photoNextFx();photoNextFx();const fx=PHOTO_FX[photoFx].n,css=cv.style.filter;if(SET.daynight!==false)photoNextTod();const t1=G.tod;savePhoto();exitPhoto();
+    const m=photoMat(2).A,gray=Math.abs(m[0]-m[3])<1e-6&&Math.abs(m[1]-m[4])<1e-6;return fx==='復古'&&/sepia/.test(css)&&!!file&&file.size>5000&&G.tod===tod&&cv.style.filter===''&&gray&&(SET.daynight===false||t1===8.5)||[fx,css,G.tod,tod,t1].join('、')});
   giveFile=gf;
   await run('匯入存檔',()=>{importData(JSON.parse(JSON.stringify(loadSlots()[0])));return!!loadSlots()[1]});
   await run('挑戰完成',()=>{anchors.clear();G.onesHand=0;checkChallenge();const ok=$('dlgT').textContent===L('挑戰成功！')&&G.chalDone;$('dialog').classList.add('hidden');return ok});

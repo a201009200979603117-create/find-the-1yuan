@@ -12,7 +12,7 @@ function L(s){
   if(!enRe)enRe=new RegExp(Object.keys(EN_DICT).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
   r=s.replace(enRe,m=>'\u0001'+EN_DICT[m]+'\u0001').replace(/[，。、：；！？（）「」『』・～／＋　]/g,c=>'\u0001'+EN_PUNCT[c]+'\u0001');
   r=r.replace(/^\u0001+|\u0001+$/g,'').replace(/\u0001+/g,' ').replace(/ {2,}/g,' ')
-    .replace(/ ([,.!?:;)\]%”])/g,'$1').replace(/([(\[“$]) /g,'$1').replace(/” ([,.!?:;)])/g,'”$1');
+    .replace(/ ([,.!?:;)\]%”])/g,'$1').replace(/([(\[“$#]) /g,'$1').replace(/” ([,.!?:;)])/g,'”$1');
   // 原本頭尾沒有空白就拿掉；結尾是逗號、句號這類標點的話留著，後面接粗體字才不會黏在一起
   if(!/^[\s（「『]/.test(s))r=r.replace(/^ +/,'');if(!/[\s，。、：；！？）」』・]$/.test(s))r=r.replace(/ +$/,'');
   if(enCache.size>4000)enCache.clear();enCache.set(s,r);return r}

@@ -1581,7 +1581,6 @@ Find The 1元	Find The 1元
 語言	Language
 重新整理頁面之後就會換成中文。	Reload the page to switch to Chinese (中文).
 V2.7：英文版（瀏覽器不是中文的話自動用英文，設定裡可以切換語言）；程式拆成好幾個檔案整理，由 build.py 組回單一檔案。	V2.7: English version (used automatically when your browser isn't set to Chinese; switch in Settings → Language). The code is now split into source files and assembled into one file by build.py.
-Find The 1元 Demo V2.8	Find The 1元 Demo V2.8
 V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績，主選單的排行榜最上面看今天全世界的前 20 名。	V2.8: Online leaderboard — after the daily challenge, pick a nickname and upload your time; the top 20 worldwide for today appear at the top of the Leaderboard.
 上傳排行榜	Upload score
 線上排行榜	Online leaderboard
@@ -1602,3 +1601,25 @@ V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績�
 暱稱改好了，下次上傳會用新的	Nickname changed — your next upload will use it
 連不上線上排行榜，等一下再看看。	Can't reach the online leaderboard — check back later.
 沒有網路，連上之後才看得到線上排行榜。	No connection — the online leaderboard needs internet.
+Find The 1元 Demo V2.9	Find The 1元 Demo V2.9
+📷 存圖	📷 Save
+減少晃動（走路時畫面不上下晃）	Reduce motion (no head bob while walking)
+V2.9：拍照模式多了濾鏡（暖色、黑白、復古、清新）和時間（早上、中午、黃昏、晚上），存下來的照片也套用；線上排行榜可以看昨天的，沒進前 20 名也看得到自己的名次；設定多了「減少晃動」；多一個上榜的成就。	V2.9: Photo mode gets filters (warm, black & white, vintage, fresh) and time of day (morning, noon, dusk, night), applied to saved photos too. The online leaderboard shows yesterday's board, and your own rank even outside the top 20. New "Reduce motion" setting and a leaderboard achievement.
+上榜了	On the board
+把每日挑戰的成績上傳到線上排行榜	Upload a daily challenge time to the online leaderboard
+原色	Original
+暖色	Warm
+黑白	B&W
+復古	Vintage
+清新	Fresh
+現在	Now
+早上	Morning
+中午	Noon
+黃昏	Dusk
+晚上	Night
+濾鏡：	Filter:
+今天	Today
+昨天	Yesterday
+那天沒有人上傳。	Nobody uploaded that day.
+你：第	You: #
+名・	·

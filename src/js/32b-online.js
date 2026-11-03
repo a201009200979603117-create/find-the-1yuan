@@ -23,13 +23,17 @@ function uploadDaily(board,sec){if(!onlineOn())return;
     .catch(e=>{toast(navigator.onLine?'上傳失敗，等一下再試試看':'沒有網路，連上之後再上傳','red');console.warn('上傳成績失敗',e)})};
   const n=playerName();if(n)go(n);else askName(go)}
 // 主選單「排行榜」最上面：今天的線上排行。暱稱用文字節點放，英文版不會去翻別人的名字
-function renderOnline(){if(!onlineOn())return;const k=dailyKey(),box=document.createElement('div');box.className='slot';box.id='onlineRank';
-  box.innerHTML='<div style="width:100%"><b>🌐 線上排行・每日挑戰 '+dayLbl(k)+'</b><div class="meta" id="onlineList">讀取中…</div></div>';
+let onlineDay=0; // 0＝今天、1＝昨天
+function renderOnline(){if(!onlineOn())return;const day=new Date();day.setDate(day.getDate()-onlineDay);const k=dailyKey(day),box=document.createElement('div');box.className='slot';box.id='onlineRank';
+  box.innerHTML='<div style="width:100%"><b>🌐 線上排行・每日挑戰 '+dayLbl(k)+'</b> <button class="sbtn" data-oday="0"'+(onlineDay?'':' disabled')+'>今天</button> <button class="sbtn" data-oday="1"'+(onlineDay?' disabled':'')+'>昨天</button><div class="meta" id="onlineList">讀取中…</div></div>';
+  box.querySelectorAll('[data-oday]').forEach(b=>b.onclick=e=>{e.stopPropagation();onlineDay=+b.dataset.oday;renderOnline()});
   const old=$('onlineRank');if(old)old.remove();$('rankList').prepend(box);
   onlineTop(k,20).then(rows=>{const el=$('onlineList');if(!el)return;el.textContent='';
-    if(!rows.length){el.textContent='今天還沒有人上傳，完成每日挑戰就能當第一名。';return}
+    if(!rows.length){el.textContent=onlineDay?'那天沒有人上傳。':'今天還沒有人上傳，完成每日挑戰就能當第一名。';return}
     const me=playerId();rows.forEach((r,i)=>{const d=document.createElement('div');d.style.cssText='display:flex;gap:10px;word-spacing:normal'+(r.player===me?';color:var(--gold);font-weight:700':'');
       const a=document.createElement('span');a.style.minWidth='2.2em';a.appendChild(document.createTextNode('#'+(i+1)));const b=document.createElement('span');b.style.flex='1';b.appendChild(document.createTextNode(r.name));
       const c=document.createElement('span');c.appendChild(document.createTextNode(fmtT(r.seconds)));d.append(a,b,c);el.appendChild(d)});
+    // 沒進前 20 名的話，另外查自己的成績和名次
+    if(!rows.some(r=>r.player===me))onlineGet('best_scores?board=eq.'+k+'&player=eq.'+encodeURIComponent(me)+'&select=seconds').then(r=>r.json()).then(a=>a[0]&&onlineRank(k,a[0].seconds).then(n=>{if(!$('onlineList'))return;const d=document.createElement('div');d.style.cssText='color:var(--gold);font-weight:700;margin-top:4px';d.textContent='你：第 '+n+' 名・'+fmtT(a[0].seconds);el.insertBefore(d,el.lastChild)})).catch(()=>{});
     const nm=document.createElement('button');nm.className='sbtn';nm.style.marginTop='6px';nm.textContent='改暱稱';nm.onclick=e=>{e.stopPropagation();askName(()=>toast('暱稱改好了，下次上傳會用新的'))};el.appendChild(nm)})
   .catch(()=>{const el=$('onlineList');if(el)el.textContent=navigator.onLine?'連不上線上排行榜，等一下再看看。':'沒有網路，連上之後才看得到線上排行榜。'})}

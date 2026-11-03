@@ -58,15 +58,44 @@ function updateParts(dt){
   partMesh.count=k;if(k){partMesh.instanceMatrix.needsUpdate=true;partMesh.instanceColor.needsUpdate=true}
   for(const g of glints)if(g.life>0){g.life-=dt;g.material.opacity=Math.max(0,g.life/.35);g.scale.setScalar(.5+(.35-g.life)*3);if(g.life<=0)g.visible=false}
 }
-// 拍照模式：P 進入，WASD 飛、空白鍵上升、C 下降、Shift 加速，Enter 存成圖片
+// 拍照模式：P 進入，WASD 飛、空白鍵上升、C 下降、Shift 加速，Enter 存成圖片；F 換濾鏡、T 換時間
+// 濾鏡：畫面上用 CSS 濾鏡預覽；存圖時照 CSS 規格把同樣的數值算成一個顏色矩陣套到每個像素（Safari 的畫布不支援 filter）
+const PHOTO_FX=[{n:'原色',f:[]},{n:'暖色',f:[['sepia',.25],['saturate',1.25],['brightness',1.04]]},{n:'黑白',f:[['grayscale',1],['contrast',1.12]]},
+  {n:'復古',f:[['sepia',.6],['contrast',.92],['brightness',1.05],['saturate',.85]],vig:true},{n:'清新',f:[['saturate',1.35],['brightness',1.06],['hue-rotate',-8]]}];
+const PHOTO_TOD=[{n:'現在'},{n:'早上',h:8.5},{n:'中午',h:12.5},{n:'黃昏',h:18.1},{n:'晚上',h:22}];
+let photoFx=0,photoTod=0;
+const photoCss=i=>PHOTO_FX[i].f.map(([k,v])=>k+'('+(k==='hue-rotate'?v+'deg':v)+')').join(' ');
+function photoMat(i){let A=[1,0,0,0,1,0,0,0,1],o=[0,0,0];
+  for(const[k,v]of PHOTO_FX[i].f){let F,b=[0,0,0];const a=1-v;
+    if(k==='grayscale')F=[.2126+.7874*a,.7152-.7152*a,.0722-.0722*a,.2126-.2126*a,.7152+.2848*a,.0722-.0722*a,.2126-.2126*a,.7152-.7152*a,.0722+.9278*a];
+    else if(k==='sepia')F=[.393+.607*a,.769-.769*a,.189-.189*a,.349-.349*a,.686+.314*a,.168-.168*a,.272-.272*a,.534-.534*a,.131+.869*a];
+    else if(k==='saturate')F=[.213+.787*v,.715-.715*v,.072-.072*v,.213-.213*v,.715+.285*v,.072-.072*v,.213-.213*v,.715-.715*v,.072+.928*v];
+    else if(k==='hue-rotate'){const c=Math.cos(v*Math.PI/180),s=Math.sin(v*Math.PI/180);F=[.213+c*.787-s*.213,.715-c*.715-s*.715,.072-c*.072+s*.928,.213-c*.213+s*.143,.715+c*.285+s*.14,.072-c*.072-s*.283,.213-c*.213-s*.787,.715-c*.715+s*.715,.072+c*.928+s*.072]}
+    else if(k==='brightness')F=[v,0,0,0,v,0,0,0,v];else{F=[v,0,0,0,v,0,0,0,v];b=[.5-.5*v,.5-.5*v,.5-.5*v]} // contrast
+    const N=[],no=[];for(let r=0;r<3;r++){for(let c=0;c<3;c++)N[r*3+c]=F[r*3]*A[c]+F[r*3+1]*A[3+c]+F[r*3+2]*A[6+c];no[r]=F[r*3]*o[0]+F[r*3+1]*o[1]+F[r*3+2]*o[2]+b[r]}A=N;o=no}
+  return{A,o}}
+function photoApply(){if(!photo)return;cv.style.filter=photoCss(photoFx);$('photoVig').classList.toggle('hidden',!PHOTO_FX[photoFx].vig);
+  const t=PHOTO_TOD[photoTod];G.tod=t.h!=null?t.h:photo.tod;envT=sunT=0;
+  $('pfBtn').textContent=(TTON?'':'F・')+'濾鏡：'+PHOTO_FX[photoFx].n;$('ptBtn').textContent=(TTON?'':'T・')+'時間：'+t.n;$('psBtn').textContent=(TTON?'':'Enter・')+'📷 存圖';$('pxBtn').textContent=(TTON?'':'P・')+'離開'}
+function photoNextFx(){photoFx=(photoFx+1)%PHOTO_FX.length;photoApply();tone(900,.04,'triangle',.03)}
+function photoNextTod(){if(SET.daynight===false)return;photoTod=(photoTod+1)%PHOTO_TOD.length;photoApply();tone(700,.04,'triangle',.03)}
+// 存圖用的畫面：有濾鏡的話一個像素一個像素算
+function photoURL(){renderer.render(scene,camera);if(!photoFx||!photo)return cv.toDataURL('image/png');
+  const W=cv.width,Hh=cv.height,c=document.createElement('canvas');c.width=W;c.height=Hh;const x=c.getContext('2d');x.drawImage(cv,0,0);
+  const im=x.getImageData(0,0,W,Hh),d=im.data,{A,o}=photoMat(photoFx),vig=PHOTO_FX[photoFx].vig,cx=W/2,cy=Hh/2,md=Math.hypot(cx,cy);
+  for(let i=0,p=0;i<d.length;i+=4,p++){const r=d[i]/255,g=d[i+1]/255,b=d[i+2]/255;let k=255;
+    if(vig){const t=Math.hypot(p%W-cx,(p/W|0)-cy)/md;if(t>.45)k*=1-.45*Math.min(1,(t-.45)/.55)**2}
+    d[i]=(A[0]*r+A[1]*g+A[2]*b+o[0])*k;d[i+1]=(A[3]*r+A[4]*g+A[5]*b+o[1])*k;d[i+2]=(A[6]*r+A[7]*g+A[8]*b+o[2])*k}
+  x.putImageData(im,0,0);return c.toDataURL('image/png')}
+$('pfBtn').onclick=photoNextFx;$('ptBtn').onclick=photoNextTod;$('psBtn').onclick=()=>savePhoto();$('pxBtn').onclick=()=>exitPhoto();
 let photo=null;
-function enterPhoto(){if(!G||G.build)return;photo={x:camera.position.x,y:camera.position.y,z:camera.position.z,hud:hudOff};hudOff=true;$('hud').classList.add('off');mode='photo';toast('拍照模式：WASD 飛、空白鍵／C 上下、Enter 存圖、P 離開')}
-function exitPhoto(){if(!photo)return;hudOff=photo.hud;$('hud').classList.toggle('off',hudOff);photo=null;mode='play'}
+function enterPhoto(){if(!G||G.build)return;photo={x:camera.position.x,y:camera.position.y,z:camera.position.z,hud:hudOff,tod:G.tod};hudOff=true;$('hud').classList.add('off');mode='photo';photoFx=0;photoTod=0;$('photoBar').classList.remove('hidden');document.body.classList.add('photoOn');$('ptBtn').classList.toggle('hidden',SET.daynight===false);photoApply();toast('拍照模式：WASD 飛、空白鍵／C 上下、Enter 存圖、P 離開')}
+function exitPhoto(){if(!photo)return;G.tod=photo.tod;envT=sunT=0;cv.style.filter='';$('photoBar').classList.add('hidden');document.body.classList.remove('photoOn');$('photoVig').classList.add('hidden');hudOff=photo.hud;$('hud').classList.toggle('off',hudOff);photo=null;mode='play'}
 function updatePhoto(dt){const sp=(keys.has('ShiftLeft')?12:4)*dt,cp=Math.cos(pl.pitch),fx=-Math.sin(pl.yaw)*cp,fy=Math.sin(pl.pitch),fz=-Math.cos(pl.yaw)*cp,rx=Math.cos(pl.yaw),rz=-Math.sin(pl.yaw);
   if(keys.has('KeyW')){photo.x+=fx*sp;photo.y+=fy*sp;photo.z+=fz*sp}if(keys.has('KeyS')){photo.x-=fx*sp;photo.y-=fy*sp;photo.z-=fz*sp}
   if(keys.has('KeyD')){photo.x+=rx*sp;photo.z+=rz*sp}if(keys.has('KeyA')){photo.x-=rx*sp;photo.z-=rz*sp}if(keys.has('Space'))photo.y+=sp;if(keys.has('KeyC'))photo.y=Math.max(.3,photo.y-sp);
   camera.position.set(photo.x,photo.y,photo.z);camera.rotation.set(pl.pitch,pl.yaw,0)}
-function savePhoto(){G.flags.photo=true;renderer.render(scene,camera);const d=new Date(),z=n=>String(n).padStart(2,'0'),bin=atob(cv.toDataURL('image/png').split(',')[1]),b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);tone(1500,.05);
+function savePhoto(){G.flags.photo=true;const d=new Date(),z=n=>String(n).padStart(2,'0'),bin=atob(photoURL().split(',')[1]),b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);tone(1500,.05);
   giveFile(new File([b],'大海撈一元_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+z(d.getSeconds())+'.png',{type:'image/png'}),'照片存好了')}
 
 

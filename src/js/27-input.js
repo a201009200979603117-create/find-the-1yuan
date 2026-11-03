@@ -38,7 +38,7 @@ addEventListener('keydown',e=>{
   if(mode==='intro'){introT=99;return}
   if(mode==='appraise'){if(['KeyE','Space','Escape','Enter'].includes(C))apReveal();return}
   if(mode==='pause'&&C==='Escape'){resume();return}
-  if(mode==='photo'){if(C==='KeyP'||C==='Escape')exitPhoto();else if(C==='Enter')savePhoto();else keys.add(C);return}
+  if(mode==='photo'){if(C==='KeyP'||C==='Escape')exitPhoto();else if(C==='Enter')savePhoto();else if(C==='KeyF')photoNextFx();else if(C==='KeyT')photoNextTod();else keys.add(C);return}
   if(mode!=='play')return;
   if(C==='F4'){hudOff=!hudOff;$('hud').classList.toggle('off',hudOff);return}
   if(C==='F5'){saveGame(false);return}

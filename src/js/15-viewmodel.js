@@ -215,7 +215,7 @@ function updateVM(dt){
   VA.pk+=((VA.pour>0?1:0)-VA.pk)*Math.min(1,dt*7);VA.pour=Math.max(0,VA.pour-dt/.25);
   let dy=pl.yaw-VA.yaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));const dp=pl.pitch-VA.pit;VA.yaw=pl.yaw;VA.pit=pl.pitch;
   const k=Math.min(1,dt*9);VA.sx+=(Math.max(-.05,Math.min(.05,dy))-VA.sx)*k;VA.sy+=(Math.max(-.05,Math.min(.05,dp))-VA.sy)*k;
-  const mv=pl.bob!==VA.lb?1:0;VA.lb=pl.bob;VA.mv+=(mv-VA.mv)*Math.min(1,dt*6);
+  const mv=pl.bob!==VA.lb?(SET.calm?.25:1):0;VA.lb=pl.bob;VA.mv+=(mv-VA.mv)*Math.min(1,dt*6);
   vm.rotation.set(-VA.sy*1.4,-VA.sx*1.6,VA.sx*.6);
   vm.position.set(Math.sin(pl.bob*.5)*.011*VA.mv,-Math.abs(Math.cos(pl.bob*.5))*.009*VA.mv+Math.sin(VA.t*1.7)*.0022,0);
   if(!T)return;

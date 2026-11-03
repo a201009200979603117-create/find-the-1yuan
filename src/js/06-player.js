@@ -100,7 +100,7 @@ function spill(n){
 // 挖硬幣耗體力：工具越大越累
 const DIG_EFFORT={hand:.025,toy:.03,bucket:.035,spade:.05,fork:.055,cart:.06};
 function digCost(id){return(DIG_EFFORT[id]||.04)*Math.max(.1,1-.08*lv('easySwing')+bonus('dig'))}
-function placeCam(){camera.position.set(pl.x,pl.y+(pl.crouch?1.05:1.6)+Math.sin(pl.bob)*.035,pl.z);camera.rotation.set(pl.pitch,pl.yaw,0)}
+function placeCam(){camera.position.set(pl.x,pl.y+(pl.crouch?1.05:1.6)+(SET.calm?0:Math.sin(pl.bob)*.035),pl.z);camera.rotation.set(pl.pitch,pl.yaw,0)}
 
 // 手上的工具模型在後面（buildToolModels）
 const vm=new THREE.Group();

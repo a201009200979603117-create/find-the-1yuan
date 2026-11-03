@@ -29,6 +29,7 @@ const ACH=[
   {id:'catlover',n:'貓奴',d:'摸貓 10 次',rw:80,c:()=>(G.catPets||0)>=10},
   {id:'meteor',n:'對流星許願',d:'在晚上看到流星',rw:20,c:()=>G.flags.meteor},
   {id:'rainbow',n:'雨後彩虹',d:'雨停之後看到彩虹',rw:20,c:()=>G.flags.rainbow},
+  {id:'online',n:'上榜了',d:'把每日挑戰的成績上傳到線上排行榜',rw:20,c:()=>G.flags.online},
   {id:'allOnes',n:'大海撈一元',d:'找出這個院子所有的 1 元',rw:1000,c:()=>anchors.size===0&&G.onesHand===0&&G.onesFound>0},
   {id:'special3',n:'有求必應',d:'完成 3 張特別訂單',rw:200,c:()=>(G.specialDone||0)>=3},
   {id:'chal',n:'挑戰成功',d:'在挑戰模式找出所有的 1 元',rw:300,c:()=>G.chalDone}
