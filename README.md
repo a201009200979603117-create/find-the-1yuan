@@ -75,6 +75,22 @@ iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面
 
 遊戲出錯時畫面上會跳出「點這裡回報」，主選單右下也有「🐞 回報問題」。按「複製問題資訊」會複製版本、裝置和錯誤內容，可以貼到這個儲存庫的 [Issues](https://github.com/a201009200979603117-create/find-the-1yuan/issues)。
 
+## 改程式
+
+`find-the-1yuan.html` 是組出來的檔案，原始碼在 `src/`：
+
+- `src/style.css`：畫面樣式
+- `src/page-head.html`、`src/page-body.html`、`src/page-end.html`：網頁的骨架和介面
+- `src/js/00-boot.js`～`33-main-loop.js`：遊戲程式，照功能分段（設定、場景、硬幣山、玩家、機器、建造、面板、存檔、手機操作、主迴圈……），檔名前面的數字是接起來的順序
+
+改完 `src/` 之後執行：
+
+```
+python build.py
+```
+
+就會重新產生 `find-the-1yuan.html`。`python build.py --check` 可以檢查它是不是最新的。
+
 ## 技術
 
 - 整個遊戲只有一個 HTML 檔，用 [three.js](https://threejs.org/) r128

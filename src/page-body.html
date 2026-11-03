@@ -1,0 +1,126 @@
+</style>
+</head>
+<body>
+
+<!-- 主選單 -->
+<div id="menu">
+  <div id="logo"><div class="l1">FIND THE</div><div class="l2">1 元</div><div class="l3">試玩版</div></div>
+  <div id="mainList">
+    <button class="mi" data-m="new">新遊戲</button>
+    <button class="mi" data-m="daily">每日挑戰</button>
+    <button class="mi" data-m="load">讀取存檔</button>
+    <button class="mi" data-m="rank">排行榜</button>
+    <button class="mi" data-m="set">設定</button>
+    <button class="mi" data-m="quit">離開遊戲</button>
+  </div>
+  <div id="social"><div class="h">大海撈一元・試玩版</div>
+    <button style="background:#c43a2c" data-m="help">❓ 操作說明</button>
+    <button style="background:#2f6fd0" data-m="news">📋 更新紀錄</button>
+    <button style="background:#5865f2" data-m="bug">🐞 回報問題</button>
+  </div>
+  <div id="slotPanel" class="lp hidden"><div class="ph" id="slotTitle">選一個存檔欄位開新局</div><div id="slotList"></div><button class="sbtn back" data-m="main">返回</button></div>
+  <div id="sizePanel" class="lp hidden"><div class="ph">要多少硬幣</div><div id="sizeList"></div><button class="sbtn back" data-m="slots">返回</button></div>
+  <div id="rankPanel" class="lp hidden"><div class="ph">排行榜（這台電腦）</div><div id="rankList"></div><button class="sbtn back" data-m="main">返回</button></div>
+</div>
+
+<div id="errBar" class="hidden">⚠ 遊戲出了點問題，點這裡回報</div>
+<div id="upd" class="hidden">🆕 有新版本，點這裡更新（會先存檔）</div>
+<div id="dialog" class="hidden"><div class="box"><h3 id="dlgT"></h3><div id="dlgB"></div><div class="row" id="dlgR"></div></div></div>
+<div id="loading">載入中…</div>
+<script>setTimeout(function(){var l=document.getElementById('loading');if(l&&!window.__booted)l.innerHTML='載入中…<small>網路比較慢，還在下載遊戲需要的 3D 引擎</small>'},6000)</script>
+<div id="lbT" class="hidden"></div><div id="lbB" class="hidden"></div><div id="skip" class="hidden">點一下跳過</div>
+
+<!-- HUD -->
+<div id="fps" class="hidden"></div>
+<div id="touchUI" class="hidden">
+  <div id="tLook"></div>
+  <div id="tZone"></div>
+  <div id="tStick"><svg viewBox="0 0 132 132"><path d="M59 17l7-7 7 7M59 115l7 7 7-7M17 59l-7 7 7 7M115 59l7 7-7 7"/></svg><div id="tKnob"></div></div>
+  <div class="ttop">
+    <button data-t="menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>選單</button>
+    <button data-t="tech"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5l-5.3 5.3M12 11.5l5.3 5.3"/></svg>科技</button>
+    <button data-t="build"><svg viewBox="0 0 24 24"><path d="M4.5 19.5l9-9M10.5 7.5l4-4 6 6-4 4z"/></svg>建造</button>
+    <button data-t="map"><svg viewBox="0 0 24 24"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg>俯瞰</button>
+    <button data-t="up" class="bOnly"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M4 20h16M7 16.5h10"/></svg>架高</button>
+    <button data-t="down" class="bOnly"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M4 20h16"/></svg>降低</button>
+    <button data-t="grid" class="bOnly"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg>方格</button>
+    <button data-t="undo" class="bOnly"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>復原</button>
+    <button data-t="bp" class="bOnly"><svg viewBox="0 0 24 24"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M9 9h6v6H9z"/></svg>藍圖</button>
+    <button data-t="lamp" class="pOnly"><svg viewBox="0 0 24 24"><path d="M7 3h10l-2 5.5V20a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V8.5zM8.2 8.5h7.6M12 12v3"/></svg>照明</button>
+    <button data-t="photo" class="pOnly"><svg viewBox="0 0 24 24"><path d="M3.5 8h3.5l2-3h6l2 3h3.5v11.5h-17z"/><circle cx="12" cy="13.5" r="3.5"/></svg>拍照</button>
+    <button data-t="stats" class="pOnly"><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5v1A3.5 3.5 0 0 0 8 10.5M16 6h3.5v1a3.5 3.5 0 0 1-3.5 3.5M12 13v4M10 17h4v3.5h-4zM8 20.5h8"/></svg>成就</button>
+  </div>
+  <div id="tAct">
+    <button data-t="grab" class="big" style="--r:76px;--b:76px;--d:88px"><svg class="pOnly" viewBox="0 0 24 24"><path d="M7 12.5V6.5a1.5 1.5 0 0 1 3 0V11M10 10.5V4.5a1.5 1.5 0 0 1 3 0v6M13 10.5V5.5a1.5 1.5 0 0 1 3 0V11M16 11V8a1.5 1.5 0 0 1 3 0v6.5A6.5 6.5 0 0 1 12.5 21h-1a6 6 0 0 1-5-2.5l-2.8-4.2a1.5 1.5 0 0 1 2.5-1.7L7 14"/></svg><svg class="bOnly" viewBox="0 0 24 24"><path d="M4.5 19.5l9-9M10.5 7.5l4-4 6 6-4 4z"/></svg><span class="pOnly">撿</span><span class="bOnly nb">蓋</span><span class="bOnly rb">拆</span></button>
+    <button data-t="throw" class="pOnly" style="--r:178px;--b:54px;--d:62px"><svg viewBox="0 0 24 24"><path d="M4 19.5c1.5-7 7-12 14.5-12M14.5 3.5l4 4-4 4"/></svg>丟</button>
+    <button data-t="rm" class="bOnly" style="--r:178px;--b:54px;--d:62px"><svg viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></svg><span class="nc">拆除</span><span class="cc">取消</span></button>
+    <button data-t="jump" style="--r:62px;--b:178px;--d:62px"><svg viewBox="0 0 24 24"><path d="M12 17.5V5M6.5 10.5L12 5l5.5 5.5M5 21h14"/></svg>跳</button>
+    <button data-t="use" class="pOnly" style="--r:162px;--b:152px;--d:54px"><b class="kE">E</b>互動</button>
+    <button data-t="rot" class="bOnly" style="--r:162px;--b:152px;--d:54px"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4v4.5H15"/></svg>旋轉</button>
+    <button data-t="crouch" class="sm pOnly" style="--r:150px;--b:240px;--d:48px"><svg viewBox="0 0 24 24"><path d="M6 5.5l6 6 6-6M6 12.5l6 6 6-6"/></svg>蹲</button>
+    <button data-t="drop" class="sm pOnly" style="--r:60px;--b:256px;--d:46px"><svg viewBox="0 0 24 24"><path d="M12 3.5v10M7.5 9.5l4.5 4.5 4.5-4.5M4.5 16.5v3.5h15v-3.5"/></svg>放下</button>
+    <button data-t="near" class="sm bOnly" style="--r:150px;--b:240px;--d:48px"><svg viewBox="0 0 24 24"><path d="M12 4v13M6.5 11.5L12 17l5.5-5.5"/></svg>拉近</button>
+    <button data-t="far" class="sm bOnly" style="--r:60px;--b:256px;--d:46px"><svg viewBox="0 0 24 24"><path d="M12 20V7M6.5 12.5L12 7l5.5 5.5"/></svg>推遠</button>
+    <button data-t="copy" class="sm pOnly" style="--r:250px;--b:126px;--d:46px"><svg viewBox="0 0 24 24"><path d="M9 9h10v11H9zM5 15V4h10"/></svg>複製</button>
+  </div>
+  <button id="tTool" data-t="tool"><span class="tci">✋</span><span class="tcn">雙手</span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+  <div id="tPick" class="hidden"></div>
+</div>
+<div id="rotateMsg" class="hidden">📱↻ 把手機轉成橫的玩</div>
+<div id="clickPlay" class="hidden">🖱 點一下畫面繼續</div>
+<div id="hud" class="hidden">
+  <div id="obj"><div class="st" id="objN"></div><div class="t" id="objT"></div><span class="kb" id="objK"></span><div class="d" id="objD"></div><div class="rw" id="objR"></div><div class="bar" id="objBarW"><i id="objBar"></i></div><div class="p"><span id="objP"></span><span id="objL"></span></div></div>
+  <div id="ver"><div class="a">Find The 1元 Demo V2.6</div><div class="b">按 F4 隱藏介面・按 F5 存檔</div></div>
+  <div id="tips"><div class="h">提示</div><div id="tipTxt"></div></div>
+  <div id="mon"><div class="m" id="money">$0.00</div><div class="l" id="left"></div><div class="l" id="rate"></div><div class="l" id="clock"></div><div class="l hidden" id="chal" style="color:#7fd1ff"></div><div class="l hidden" id="warnN"></div><div id="pin" class="hidden"></div></div>
+  <div id="combo"></div><div id="floats"></div><div id="record"></div>
+  <svg id="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#ffffff30" stroke-width="3"/><circle id="ringArc" cx="32" cy="32" r="26" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="0 999" transform="rotate(-90 32 32)"/></svg>
+  <div id="cross"></div><div id="carry"></div><div id="oneHand"></div>
+  <div id="prompt" class="hidden"><div class="key" id="pKey">E</div><div class="lbl" id="pLbl"></div><div class="sub" id="pSub"></div></div>
+  <div id="meter" class="hidden"><div id="meterTxt"></div><div class="bar"><i id="meterFill"></i></div></div>
+  <div id="buildHint" class="hidden"></div>
+  <div id="stam"><i id="stamI"></i></div><div id="jet" class="hidden"><i id="jetI"></i></div><div id="pwarn" class="hidden"></div>
+  <div id="hotbar"></div><div id="hints"></div>
+  <div id="toasts"></div>
+</div>
+
+<!-- 面板 -->
+<div id="shopPanel" class="panel hidden"><div class="hd"><span style="font-size:22px">🪣</span><span class="tt">五金行</span><span class="sp"></span><span style="font-size:12px;color:#aaa">按 E 關閉</span><button class="xbtn" data-close>✕</button></div><div class="sub"><span>🛒 可用：<b id="shopCash"></b></span><span style="color:#aaa">工具和裝備</span></div><div class="bd"><div style="flex:1" id="shopList"></div></div></div>
+<div id="techPanel" class="panel hidden"><div class="hd"><span class="tt">科技樹</span><span class="sp"></span><span id="techCash" style="color:var(--gold);font-weight:700"></span><button class="xbtn" data-close>✕</button></div><div id="techWrap"><div id="techTree"></div><div id="techInfo"></div></div></div>
+<div id="buildPanel" class="panel hidden"><div class="hd"><span class="sp"></span><span class="tt" style="color:var(--gold);font-size:22px">建造目錄</span><span class="sp"></span><button class="xbtn" data-close>✕</button></div>
+  <div id="buildTop"><input id="buildSearch" placeholder="🔍 搜尋"><select id="buildSort" style="background:#1b1b1f;color:#eee;border:1px solid #555;padding:4px"><option value="">預設排序</option><option value="price">價格低到高</option><option value="name">名稱</option><option value="open">已解鎖的在前面</option></select><span class="sp" style="flex:1"></span><span>🖱 左鍵裝備・右鍵加到快捷欄</span><span>🔒 已鎖定，點一下看科技樹</span><span id="buildCash" style="color:var(--gold)"></span></div>
+  <div class="bd"><div class="side" id="buildCats"></div><div class="grid" id="buildList"></div></div><div id="buildFoot">點一下裝備，然後在地上點一下放好。</div></div>
+<div id="boardPanel" class="panel hidden" style="width:min(720px,94vw)"><div class="hd"><span class="tt">訂單板</span><span class="sp"></span><button class="xbtn" data-close>✕</button></div><div class="bd" id="boardBd"></div></div>
+<div id="cfgPanel" class="panel hidden" style="width:min(560px,94vw)"><div class="hd"><span style="font-size:20px" id="cfgI"></span><span class="tt" id="cfgT"></span><span class="sp"></span><span style="font-size:12px;color:#aaa">按 E 關閉</span><button class="xbtn" data-close>✕</button></div><div class="bd cfg" id="cfgBd"></div></div>
+<div id="statPanel" class="panel hidden" style="width:min(820px,94vw)"><div class="hd"><span style="font-size:20px">📊</span><span class="tt">成就與統計</span><span class="sp"></span><span style="font-size:12px;color:#aaa">按 J 關閉</span><button class="sbtn" id="statShare">📤 分享成績</button><button class="xbtn" data-close>✕</button></div><div class="bd cfg" id="statBd"></div></div>
+<div id="appraise" class="hidden"></div>
+<div id="mtip" class="hidden"></div>
+<div id="ovPanel" class="panel hidden" style="width:min(680px,94vw)"><div class="hd"><span style="font-size:20px">⚠</span><span class="tt">機器狀態總覽</span><span class="sp"></span><span style="font-size:12px;color:#aaa">按 O 關閉</span><button class="xbtn" data-close>✕</button></div><div class="bd cfg" id="ovBd"></div></div>
+<div id="cabPanel" class="panel hidden" style="width:min(640px,94vw)"><div class="hd"><span class="tt">一元收藏櫃</span><span class="sp"></span><button class="xbtn" data-close>✕</button></div><div class="bd"><div class="drawers" id="cabList"></div></div></div>
+<div id="pausePanel" class="panel hidden"><div class="hd"><span class="tt">暫停</span></div><div class="bd"><button class="btn gold" id="pResume">繼續</button><button class="btn" id="pSave">存檔（F5）</button><button class="btn" id="pStat">成就與統計（J）</button><button class="btn" id="pSet">設定</button><button class="btn" id="pMenu">存檔並回主選單</button></div></div>
+<div id="setPanel" class="panel hidden"><div class="hd"><span class="tt">設定</span><span class="sp"></span><button class="xbtn" id="setClose">✕</button></div><div class="bd">
+  <div class="setrow"><span>滑鼠靈敏度</span><input type="range" id="sSens" min="0.3" max="2.5" step="0.1"></div>
+  <div class="setrow"><span>音效</span><input type="range" id="sVol" min="0" max="1" step="0.05"></div>
+  <div class="setrow"><span>環境音（機器、下雨）</span><input type="range" id="sAmb" min="0" max="1" step="0.05"></div>
+  <div class="setrow"><span>音樂</span><input type="range" id="sMus" min="0" max="1" step="0.05"></div>
+  <div class="setrow"><span>音樂風格</span><select id="sMusS" class="setsel"><option value="soft">柔和</option><option value="temple">台式・廟口</option><option value="market">台式・夜市</option></select></div>
+  <div class="setrow"><span>視野（FOV）</span><input type="range" id="sFov" min="60" max="100" step="1"></div>
+  <div class="setrow"><span>畫面解析度</span><select id="sRes" class="setsel"><option value="auto">自動（卡就降低）</option><option value="1">高</option><option value="0.85">中</option><option value="0.7">低</option><option value="0.5">最低</option></select></div>
+  <div class="setrow"><span>陰影</span><select id="sShadowQ" class="setsel"><option value="0">關</option><option value="1">低</option><option value="2">中</option><option value="3">高</option></select></div>
+  <div class="setrow"><span>硬幣細節</span><select id="sCoinQ" class="setsel"><option value="0">低（最順）</option><option value="1">中</option><option value="2">高（最漂亮）</option></select></div>
+  <div class="setrow"><span>日夜循環</span><input type="checkbox" id="sDay"></div>
+  <div class="setrow"><span>下雨</span><input type="checkbox" id="sWx"></div>
+  <div class="setrow"><span>顯示每秒畫面數（FPS）</span><input type="checkbox" id="sFps"></div>
+  <div class="setrow"><span>震動（手機）</span><input type="checkbox" id="sVib"></div>
+  <div class="setrow"><span>省電模式（每秒 30 格）</span><input type="checkbox" id="sEco"></div>
+  <div class="setrow" id="ultraRow"><span>極高畫質（電腦，很吃效能）</span><input type="checkbox" id="sUltra"></div>
+  <div class="setrow"><span>字體大小</span><select id="sFz" class="setsel"><option value="1">標準</option><option value="1.15">大</option><option value="1.3">特大</option></select></div>
+  <div class="setrow"><span>觸控操作（手機）</span><select id="sTouch" class="setsel"><option value="auto">自動</option><option value="on">開</option><option value="off">關</option></select></div>
+  <div class="setrow" style="margin-top:8px;color:var(--gold)"><b>按鍵（點一下再按新的鍵）</b></div><div id="keyList"></div>
+</div></div>
+<div id="endPanel" class="panel hidden" style="width:min(460px,90vw)"><div class="hd"><span class="tt" style="color:var(--gold)">硬幣堆清空了</span></div><div class="bd"><div id="endTxt"></div><div style="display:flex;gap:10px;margin-top:12px"><button class="btn gold" id="eStay">繼續逛逛</button><button class="btn" id="eShare">分享成績</button><button class="btn" id="eMenu">回主選單</button></div></div></div>
+<div id="card" class="hidden"><div class="burst"></div><div class="cd" id="cardIn"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>window.THREE||document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>')</script>
+<script>
