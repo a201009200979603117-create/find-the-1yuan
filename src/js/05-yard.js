@@ -92,6 +92,7 @@ function buildWorld(){
   box(.06,2.6,.06,M_.wood,0,1.3,-.25,lad);box(.06,2.6,.06,M_.wood,0,1.3,.25,lad);for(let k=0;k<6;k++)box(.05,.05,.5,M_.wood,0,.3+k*.4,0,lad);
   for(let k=0;k<3;k++)box(.7,.6,.7,M_.wood,X0+1+k*.75,.3,H-5.2);
   obstacles.push({x:X0+1.8,z:H-5.2,r:1.1});
+  buildMailbox();
   linColors(world);
 }
 let EXT=0,dockTile='',floorMat=null;const GATE0=7,GATE1=10.6;

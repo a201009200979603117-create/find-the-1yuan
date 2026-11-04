@@ -43,5 +43,5 @@ function updateHud(dt){
   drawBoardT=(drawBoardT||0)+dt;if(drawBoardT>2){drawBoardT=0;drawBoard()}
 }
 let drawBoardT=0;
-function orderAdd(t,n){if(t==='coin')specialAdd('coin',n);const o=ORDERS[G.order];if(!o||o.t!==t)return;G.ordProg+=n;if(G.ordProg>=o.n){const late=(G.ordT||0)>o.min*60,rw=late?o.rw/2:o.rw;addMoney(rw,true);toast(late?'訂單完成，但是遲交了：「'+o.name+'」只拿到一半獎勵 '+money(rw):'準時完成訂單！「'+o.name+'」獎勵 '+money(rw),'gold');chime();buzz([60,40,60]);G.order++;G.ordProg=0;G.ordT=0;drawBoard();if(t!=='coin'&&truck.g){truck.state='leave';tone(180,.5,'sawtooth',.05)}}}
+function orderAdd(t,n){if(t==='coin')specialAdd('coin',n);const o=ORDERS[G.order];if(!o||o.t!==t)return;G.ordProg+=n;if(G.ordProg>=o.n){const late=(G.ordT||0)>o.min*60,rw=late?o.rw/2:o.rw;addMoney(rw,true);toast(late?'訂單完成，但是遲交了：「'+o.name+'」只拿到一半獎勵 '+money(rw):'準時完成訂單！「'+o.name+'」獎勵 '+money(rw),'gold');chime();buzz([60,40,60]);G.order++;G.ordProg=0;G.ordT=0;drawBoard();if(t!=='coin'&&truck.g){truck.state='leave';tone(180,.5,'sawtooth',.05);if(storyOK()&&G.story.read.order1)setTimeout(honk,700)}}}
 

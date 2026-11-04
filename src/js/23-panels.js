@@ -2,10 +2,10 @@
 let techSel='grab',cabSel=null;
 function openPanel(id){
   panel=id;lmb=rmb=false;unlock();
-  ['shopPanel','techPanel','buildPanel','boardPanel','cabPanel','cfgPanel','statPanel','ovPanel'].forEach(p=>$(p).classList.add('hidden'));
-  $(id).classList.remove('hidden');if(id==='techPanel')G.flags.techOpened=true;if(id==='shopPanel')G.flags.shopOpened=true;renderPanel();
+  ['shopPanel','techPanel','buildPanel','boardPanel','cabPanel','cfgPanel','statPanel','ovPanel','mailPanel'].forEach(p=>$(p).classList.add('hidden'));
+  if(id==='cabPanel')cabSel=null;$(id).classList.remove('hidden');if(id==='techPanel')G.flags.techOpened=true;if(id==='shopPanel')G.flags.shopOpened=true;renderPanel();
 }
-function closePanel(){if(!panel)return;$(panel).classList.add('hidden');panel=null;lock()}
+function closePanel(){if(!panel)return;if(panel==='cabPanel')cvStop();$(panel).classList.add('hidden');panel=null;lock()}
 function techState(t){
   const req=t.req&&!techOwned(TECHD[t.req]);
   if(t.shop){const tl=TOOL[t.shop];if(G.tools[t.shop])return{cls:'own',a:'完成',b:'已擁有'};if(req)return{cls:'lock',a:'已鎖定',b:''};return{cls:'',a:'商店有賣',b:money(tl.price)}}
@@ -70,7 +70,7 @@ function renderPanel(){
     $('buildCats').innerHTML=CATS.map(c=>'<div class="'+(c===buildCat?'on':'')+'" data-cat="'+c+'"><span>'+CATICON[c]+'</span>'+c+'</div>').join('');
     const q=$('buildSearch').value.trim();
     const favs=G.favs||[],srt=$('buildSort').value;
-    const list=BUILD.filter(b=>(buildCat==='全部'||b.cat===buildCat||(buildCat==='已解鎖'&&(!b.req||lv(b.req)))||(buildCat==='已設快捷鍵'&&favs.includes(b.id)))&&(!q||b.name.includes(q)||b.desc.includes(q)));
+    const list=BUILD.filter(b=>(!b.gift||lv(b.req))&&(buildCat==='全部'||b.cat===buildCat||(buildCat==='已解鎖'&&(!b.req||lv(b.req)))||(buildCat==='已設快捷鍵'&&favs.includes(b.id)))&&(!q||b.name.includes(q)||b.desc.includes(q)));
     if(srt==='price')list.sort((x,y)=>buildCost(x.id)-buildCost(y.id));else if(srt==='name')list.sort((x,y)=>x.name.localeCompare(y.name,'zh-Hant'));else if(srt==='open')list.sort((x,y)=>(x.req&&!lv(x.req)?1:0)-(y.req&&!lv(y.req)?1:0));
     $('buildList').innerHTML=list.length?list.map(b=>{const lk=b.req&&!lv(b.req),c=buildCost(b.id);
       return '<div class="card'+(lk?' lock':'')+'" data-build="'+b.id+'" title="'+b.desc+'">'+(lk?'<span class="lk">🔒</span>':'')+(favs.includes(b.id)?'<span style="position:absolute;right:4px;top:2px;color:var(--gold)">★'+(favs.indexOf(b.id)+1)+'</span>':'')+'<div class="ic">'+b.icon+'</div><div class="nm">'+b.name+'</div><div class="pr">'+(c===0?'免費 x1':money(c)+(b.per?' 每公尺':''))+'</div></div>'}).join(''):'<div style="color:#888;padding:20px">這裡還沒有東西</div>';
@@ -83,14 +83,12 @@ function renderPanel(){
       '<div class="paper"><b>清倉</b>把做好的東西全部賣掉<br><button class="ob" data-clear style="margin-top:6px">清倉</button></div>'+
       '<div class="paper"><b>下一批</b>'+(nx?nx.name+'<br>獎勵 '+money(nx.rw):'沒有了')+'</div></div>';
   }
-  if(panel==='cabPanel'){
-    $('cabList').innerHTML=ONE_TYPES.map(t=>{const n=G.coll[t.id],sel=cabSel===t.id;return '<div class="drawer'+(sel?' sel':'')+'" data-cab="'+t.id+'">'+coin3d(t,n,sel)+'<div class="lab">'+(n?t.en:'？？？')+'</div>'+(n?t.name+'×'+n+'<br>機率1/'+t.w+'<br>'+t.bo:'還沒找到<br>機率1/'+t.w)+(n?'<div class="story">'+(ONE_STORY[t.id]||[''])[0]+'</div>':'')+'</div>'}).join('');
-  }
+  if(panel==='cabPanel')renderCab();
+  if(panel==='mailPanel')renderMail();
 }
 document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-close],[data-buy],[data-sell],[data-to],[data-tech],[data-techbuy],[data-cat],[data-build],[data-pin],[data-clear],[data-cfg],[data-cfgline],[data-cab],[data-collector],[data-stab],[data-ovmark]');if(!b||!G)return;
+  const b=e.target.closest('[data-close],[data-buy],[data-sell],[data-to],[data-tech],[data-techbuy],[data-cat],[data-build],[data-pin],[data-clear],[data-cfg],[data-cfgline],[data-collector],[data-stab],[data-ovmark]');if(!b||!G)return;
   if(b.dataset.cfg||b.dataset.cfgline!==undefined){cfgClick(b);renderPanel();return}
-  if(b.dataset.cab){cabSel=cabSel===b.dataset.cab?null:b.dataset.cab;renderPanel();return}
   if(b.dataset.close!==undefined){closePanel();return}
   if(b.dataset.buy){const t=TOOL[b.dataset.buy];if(G.money>=t.price&&!G.tools[t.id]){G.money-=t.price;G.tools[t.id]=1;tone(1200,.15);if((t.id==='det'||t.id==='broom')?!G.carry:G.carry<=capOf(t.id))setTool(t.id);renderHotbar()}}
   if(b.dataset.sell){const id=b.dataset.sell;if(G.tool===id){if(G.carry>capOf('hand')){toast('先把手上的硬幣丟掉');return}G.tool='hand'}G.tools[id]=0;G.money+=TOOL[id].price*.5;renderHotbar()}

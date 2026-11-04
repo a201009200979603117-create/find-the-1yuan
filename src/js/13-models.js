@@ -81,6 +81,7 @@ function junction(S,D,t,T){
 // ---------- 每一台機器的樣子 ----------
 // 座標：模型的正中間是 (0,0,0)，箭頭方向（出口）是 -z，右邊是 +x；w×d 是佔的格子
 // 紅燈籠的燈罩：天黑時調亮（全部燈籠共用一個材質）
+let coSignTex=null;
 const LANT_M=share(new THREE.MeshStandardMaterial({color:0xc8241c,emissive:0xff3a1a,emissiveIntensity:.25,roughness:.7}));
 const MODELS={
   plant(S,D,t){ // 盆栽：陶盆＋圓圓的葉子
@@ -110,6 +111,22 @@ const MODELS={
     tor(S,.1,.015,red,0,.34,0,Math.PI/2,0,0);sph(S,.03,gold,0,.31,-.1);
     sph(S,.045,w,.08,.22,-.12);cyl(S,.075,.075,.015,gold,.02,.22,-.15,Math.PI/2,0,0);
     const pw=new THREE.Group();pw.position.set(-.12,.36,-.02);D.add(pw);t.wave=pw;cyl(pw,.03,.036,.15,w,0,.075,0);sph(pw,.042,w,0,.16,0);sph(pw,.016,pink,0,.17,-.035)},
+  radio(S,D,t){ // 阿公的舊收音機（劇情送的）：小木桌上的木頭收音機，打開時刻度窗會亮
+    const wd=paint(0x8a5a32,0,.8),bodyM=paint(0x6b3a1c,.1,.42),dk=paint(0x2a1a10,.1,.6);
+    rbx(S,.62,.04,.46,.015,wd,0,.56,0);for(const x of[-.26,.26])for(const z of[-.18,.18])cyl(S,.018,.016,.54,wd,x,.27,z);bx(S,.5,.02,.36,wd,0,.18,0);
+    rbx(S,.5,.3,.24,.035,bodyM,0,.73,0);mk(S,cylGeo(.25,.25,.24,24,false,Math.PI/2,Math.PI),bodyM,0,.875,0,Math.PI/2,0,0).scale.set(1,1,.42);
+    bx(S,.24,.18,.01,paint(0xcdb88e,0,.95),-.09,.75,-.121);for(let k=0;k<5;k++)bx(S,.012,.18,.012,dk,-.19+k*.05,.75,-.127);
+    cyl(S,.028,.028,.03,dk,.07,.66,-.128,Math.PI/2,0,0);cyl(S,.028,.028,.03,dk,.15,.66,-.128,Math.PI/2,0,0);cyl(S,.005,.004,.5,MM.chrome,.17,1.06,.06,0,0,-.42);
+    const dm=new THREE.MeshStandardMaterial({color:0xf3e2b0,emissive:0xffb040,emissiveIntensity:0,roughness:.5});mk(D,boxGeo(.16,.065,.008),dm,.11,.8,-.122);bx(D,.004,.052,.01,paint(0xc0281e,0,.5),.1,.8,-.127);t.dial=dm},
+  cosign(S,D,t){ // 合作社的舊招牌（劇情送的）：兩根木柱撐著一塊木頭招牌
+    const post=paint(0x5a3a22,0,.8),dk=paint(0x2a1a10,0,.7);
+    for(const x of[-.86,.86]){cyl(S,.05,.06,2.0,post,x,1.0,0);cyl(S,.08,.09,.06,dk,x,.03,0)}bx(S,2.02,.05,.16,dk,0,1.93,0);
+    if(!coSignTex)coSignTex=canvasTex(1024,300,(g,W,Hh)=>{g.fillStyle='#5a3418';g.fillRect(0,0,W,Hh);g.strokeStyle='rgba(0,0,0,.18)';g.lineWidth=2;for(let y=8;y<Hh;y+=14){g.beginPath();g.moveTo(0,y+Math.sin(y)*3);g.bezierCurveTo(W*.3,y+6,W*.6,y-6,W,y+Math.cos(y)*3);g.stroke()}
+      g.strokeStyle='#d8b060';g.lineWidth=10;g.strokeRect(16,16,W-32,Hh-32);g.fillStyle='#f2d690';g.textAlign='center';g.textBaseline='middle';
+      let fs=150;const txt='海口信用合作社';g.font='900 '+fs+'px "DFKai-SB","BiauKai","Kaiti TC","Microsoft JhengHei",serif';while(g.measureText(txt).width>W-90&&fs>40){fs-=6;g.font='900 '+fs+'px "DFKai-SB","BiauKai","Kaiti TC","Microsoft JhengHei",serif'}
+      g.fillText(txt,W/2,Hh/2-18);g.font='bold 34px Georgia,serif';g.fillStyle='#d8b060';g.fillText('HAIKOU CREDIT CO-OP',W/2,Hh-58)});
+    const bm=[dk,dk,dk,dk,new THREE.MeshStandardMaterial({map:coSignTex,roughness:.8}),new THREE.MeshStandardMaterial({map:coSignTex,roughness:.8})];
+    const b=new THREE.Mesh(boxGeo(1.9,.56,.07),bm);b.position.set(0,1.6,0);b.castShadow=true;D.add(b)},
   split:(S,D,t)=>junction(S,D,t,'split'),splitU:(S,D,t)=>junction(S,D,t,'splitU'),split3:(S,D,t)=>junction(S,D,t,'split3'),smart:(S,D,t)=>junction(S,D,t,'smart'),
   merge:(S,D,t)=>junction(S,D,t,'merge'),mergeU:(S,D,t)=>junction(S,D,t,'mergeU'),mergeC:(S,D,t)=>junction(S,D,t,'mergeC'),tjunc:(S,D,t)=>junction(S,D,t,'tjunc'),
 

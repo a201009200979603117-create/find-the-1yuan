@@ -1601,7 +1601,7 @@ V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績�
 暱稱改好了，下次上傳會用新的	Nickname changed — your next upload will use it
 連不上線上排行榜，等一下再看看。	Can't reach the online leaderboard — check back later.
 沒有網路，連上之後才看得到線上排行榜。	No connection — the online leaderboard needs internet.
-Find The 1元 Demo V2.9	Find The 1元 Demo V2.9
+Find The 1元 Demo V3.0	Find The 1元 Demo V3.0
 📷 存圖	📷 Save
 減少晃動（走路時畫面不上下晃）	Reduce motion (no head bob while walking)
 V2.9：拍照模式多了濾鏡（暖色、黑白、復古、清新）和時間（早上、中午、黃昏、晚上），存下來的照片也套用；線上排行榜可以看昨天的，沒進前 20 名也看得到自己的名次；設定多了「減少晃動」；多一個上榜的成就。	V2.9: Photo mode gets filters (warm, black & white, vintage, fresh) and time of day (morning, noon, dusk, night), applied to saved photos too. The online leaderboard shows yesterday's board, and your own rank even outside the top 20. New "Reduce motion" setting and a leaderboard achievement.
@@ -1623,3 +1623,325 @@ V2.9：拍照模式多了濾鏡（暖色、黑白、復古、清新）和時間�
 那天沒有人上傳。	Nobody uploaded that day.
 你：第	You: #
 名・	·
+# V3.0 劇情《第一枚一元》、收藏櫃、放大鏡
+信件	Letters
+按 K 關閉	Press K to close
+信件（K）	Letters (K)
+劇情（信件、硬幣山裡的回憶、一元展）	Story (letters, memories in the pile, the NT$1 Show)
+阿公的舊收音機	Grandpa's Old Radio
+阿公留下來的木頭收音機，五金行的阿德幫忙保管的。走過去按 E 打開，靠近才聽得到老歌。	Grandpa's wooden radio, kept safe by Ah-De at the hardware store. Walk up and press E to turn it on — you can only hear the old songs up close.
+合作社的舊招牌	The Co-op's Old Sign
+海口信用合作社掛了五十年的木頭招牌，黃理事長送的。	The wooden sign that hung over the Haikou Credit Cooperative for fifty years. A gift from Chairman Huang.
+海口信用合作社	Haikou Credit Cooperative
+你在阿公的舊倉庫裡醒來。昨天晚上外面一直有卡車倒東西的聲音……走到門前按 E，把門打開看看。	You wake up in Grandpa's old storeroom. All night you heard a truck dumping something outside… Walk to the door and press E to open it.
+常見	Common
+少見	Uncommon
+稀有	Rare
+很稀有	Very rare
+珍貴	Precious
+傳說	Legendary
+回憶	Memories
+總共找到	Total found
+從硬幣山裡找到的東西	Things found in the coin mountain
+硬幣山挖掉了	Coin mountain dug:
+還不知道在哪裡	Nobody knows where yet
+在整座山的最底下	At the very bottom of the mountain
+挖掉 %s% 的時候	When %s% is dug
+‹ 返回	‹ Back
+✉ 再讀一次〈%s〉	✉ Read “%s” again
+繼續挖，總有一天會找到。	Keep digging — you'll find it someday.
+↻ 翻面	↻ Flip
+用手指轉一轉	Spin it with your finger
+拖曳可以轉動	Drag to spin
+還沒找到的 1 元	An NT$1 you haven't found
+・機率 1/	 · Chance 1/
+加成	Bonus
+錢幣小知識	Coin trivia
+主人的話	From its owner
+第一次找到：玩到第 %s 分鐘	First found %s min into the game
+還沒找到這一種。挖得越多，越有機會遇到它。	You haven't found this kind yet. The more you dig, the better your chances.
+整枚有一點彎，放在桌上會晃	Slightly bent — it wobbles on a table
+花紋和字都磨淡了	The pattern and lettering are worn faint
+亮得可以照出你的眼睛	So shiny you can see your eye in it
+表面有一道一道的刮痕	Scratches all across the surface
+圖案跟現在的不太一樣	The design looks different from today's
+縫隙裡長了綠綠的銅綠	Green verdigris in the crevices
+顏色特別紅	An unusually red color
+梅花的紋路特別清楚	The plum blossom is extra crisp
+顏色又黑又暗，像被火烤過	Dark and blackened, as if it was burned
+中間被打了一個洞	A hole punched through the middle
+黑得發亮，像一面小鏡子	Glossy black, like a tiny mirror
+翻過來……還是同一面！	Flip it over… it's the same side!
+顏色很純，像剛熔好的銅	A pure color, like freshly melted copper
+字體很古老，是早年的一圓	Old-fashioned lettering — an early one-yuan
+表面像鏡子一樣，連指紋都看得到	Mirror-smooth — you can even see fingerprints
+邊緣一點磨損都沒有	Not a trace of wear on the rim
+圖案偏到一邊去了	The design is shifted to one side
+外面包著一層透明的膜	Wrapped in a clear film
+放大鏡的鐵框好像被它吸過去了	It seems to tug at the magnifier's metal rim
+這個年份很少見	A very rare year
+正面和背面的方向對不上	The front and back don't line up
+金黃色的，邊緣好像刻著一個小字	Golden, with a tiny character carved on the rim
+顏色灰灰的，跟一般的不一樣	Grayish, unlike the usual ones
+背面的圖案很特別	A special design on the back
+邊緣的齒紋很整齊	Neat ridges along the rim
+上面有一個小小的指紋	A tiny fingerprint on it
+沾了一點點灰塵	A little bit dusty
+「1」的數字很清楚	The “1” is very clear
+摸起來涼涼的	Cool to the touch
+亮光底下有細細的紋路	Fine lines show up under the light
+年份：沒有刻年份	Year: none stamped
+背面：紀念的圖案	Back: a commemorative design
+年份：民國 %s 年	Year: ROC %s
+用手指拖著放大鏡	Drag the magnifier with your finger
+移動滑鼠拿著放大鏡	Move the mouse to hold the magnifier
+，找出這枚 1 元的 3 個特徵	, and find this coin's 3 features
+鑑定	Appraised
+特徵	Features
+直接看結果	Skip to the result
+🪙 又一枚「%s」，收藏家出價 %s 買走了	🪙 Another %s — a collector bought it for %s
+海口庄，阿公的老院子。	Haikou Village. Grandpa's old yard.
+昨天晚上，合作社的卡車倒了一整座山的零錢進來。	Last night, the co-op's truck dumped a whole mountain of loose change here.
+V3.0：新的劇情《第一枚一元》：信箱會收到鎮上的人寄來的信，硬幣山裡會挖到阿公留下的東西，最後在院子辦一場一元展、放天燈（一般和無盡模式，設定裡可以關掉）。收藏櫃改成可以點開來轉著看每一枚 1 元，還有每一枚的主人說的話；放大鏡鑑定改成用放大鏡找出 3 個特徵，重複的 1 元不再打斷你。	V3.0: A new story, “The First NT$1”: the townsfolk send you letters, Grandpa's keepsakes turn up in the coin mountain, and it ends with an NT$1 Show and sky lanterns in your yard (Normal and Endless modes; you can turn it off in Settings). In the collection cabinet you can now open each NT$1 and spin it, with a note from its owner. The magnifier appraisal now has you find 3 features, and duplicate NT$1 coins no longer interrupt you.
+這個模式沒有信件	No letters in this mode
+有你的信	You've Got Mail
+讀了第一封信	Read your first letter
+山裡的回憶	Memories in the Mountain
+從硬幣山裡找到阿公的眼鏡、登記簿和老照片	Find Grandpa's glasses, the register, and the old photo in the coin mountain
+五十年後	Fifty Years Later
+看到秀蘭阿嬤和陳師傅坐在長椅上	See Grandma Hsiu-lan and Master Chen sitting on the bench
+第一枚一元	The First NT$1
+在一元展放天燈，看完劇情的結局	Release sky lanterns at the NT$1 Show and see the story's ending
+黃理事長	Chairman Huang
+秀蘭阿嬤	Grandma Hsiu-lan
+阿德	Ah-De
+阿財	Ah-Tsai
+陳師傅	Master Chen
+阿公	Grandpa
+給阿公的孫子	To Grandpa's Grandchild
+給阿公的孫子：	To Grandpa's grandchild,
+你好，我是海口信用合作社的黃理事長。昨天晚上卡車倒東西的聲音，應該把你吵醒了吧，真不好意思。	Hello, I'm Chairman Huang of the Haikou Credit Cooperative. The truck dumping its load last night must have woken you up. I'm so sorry about that.
+合作社月底就要收了，金庫裡存了五十年的零錢，實在不知道該放哪裡。後來我們在你阿公的抽屜裡找到一張紙條，上面寫著：「金庫的錢，交給我孫子整理。」所以就全部倒在你家院子了。	The co-op closes at the end of the month, and we had no idea where to put fifty years of loose change from the vault. Then we found a note in your grandpa's drawer: “Give the money in the vault to my grandchild to sort out.” So we dumped all of it in your yard.
+你阿公在合作社當了四十年的出納。鎮上的孩子第一次來開戶，存的都是一枚 1 元，他會在存摺上蓋第一個章，再把那枚 1 元收進金庫。那些「第一枚一元」，現在全都混在這座山裡。	Your grandpa was the co-op's teller for forty years. When the town's children opened their first account, each of them deposited a single NT$1. He'd stamp the first mark in their passbook and put that coin in the vault. All those “first NT$1 coins” are mixed into this mountain now.
+硬幣賣掉的錢都歸你，工具可以去五金行找阿德買。只拜託你一件事：裡面的 1 元，請一枚一枚找出來，放進收藏櫃。鎮上的人都很想再看看自己的第一枚。	The money from selling the coins is yours, and you can buy tools from Ah-De at the hardware store. I only ask one thing: please find the NT$1 coins, one by one, and put them in the collection cabinet. Everyone in town would love to see their first coin again.
+不用急，慢慢來就好。	No rush. Take your time.
+海口信用合作社　黃理事長	Chairman Huang, Haikou Credit Cooperative
+孩子：	Dear child,
+阿德跟我說，你找到第一枚了！	Ah-De told me you found your first one!
+你阿公以前常常坐在我店門口喝彈珠汽水，順便幫我數零錢。他數錢的時候好認真，眼鏡都滑到鼻頭了也不知道。	Your grandpa used to sit outside my shop drinking marble soda and helping me count change. He took counting so seriously that his glasses would slide to the tip of his nose without him noticing.
+我的第一枚一元是凹的。那天我把它放在門口的台階上，被我弟弟的腳踏車壓過去，我哭了一整個下午。你阿公蹲下來跟我說：「凹的也是一元啊，一樣可以存。」	My first NT$1 was bent. I'd left it on the step outside the shop, and my little brother rode his bike right over it. I cried all afternoon. Your grandpa crouched down and told me, “A bent one is still a dollar. You can still save it.”
+如果你找到一枚凹凹的一元，說不定就是我的。找到的話，要讓我看看喔。	If you find a bent NT$1, it might be mine. If you do, let me see it, okay?
+肚子餓了就過來，阿嬤請你吃枝仔冰。	Come by if you get hungry. Grandma will treat you to a popsicle.
+隔壁柑仔店　秀蘭阿嬤	Grandma Hsiu-lan, from the corner shop next door
+阿公的收音機	Grandpa's Radio
+小老闆：	Hey there, little boss,
+聽到你院子裡的機器聲了，很好聽！	I can hear the machines in your yard. Sounds great!
+你阿公是我店裡最會殺價的客人，買一包螺絲可以講二十分鐘，最後還要我多送兩顆。不過他修東西真的厲害，合作社那台老算錢機，他修了三十年都沒換。	Your grandpa was the best haggler I ever had. He could spend twenty minutes on one bag of screws and still talk me into two extra. But he really could fix anything. He kept the co-op's old counting machine running for thirty years.
+他走之前，在我店裡寄放了一台舊收音機，說等孫子回來再交給你。我已經幫你放進建造目錄的「裝飾」了，不用錢。	Before he passed, he left an old radio with me and said to give it to his grandchild when you came home. I've put it in the “Decor” section of your Build catalog. It's free.
+放在院子裡，走過去按 E 就能打開。他以前最喜歡一邊修東西、一邊聽老歌。	Put it in the yard, then walk up and press E to turn it on. He loved listening to old songs while he fixed things.
+SUPPLY CO. 五金行　阿德	Ah-De, SUPPLY CO. hardware store
+叭叭！	Beep Beep!
+老闆你好：	Hello, boss!
+我是開卡車的阿財啦！訂單的貨都是我來載。	It's Ah-Tsai, the truck driver! I'm the one who hauls your orders.
+偷偷跟你說，你不要跟理事長講：第一天晚上我倒錯位置了，本來要倒在院子中間偏左一點……算了，反正都在院子裡。	Between you and me (don't tell the chairman): I dumped it in the wrong spot that first night. It was supposed to go a little left of the middle of the yard… eh, it's in the yard either way.
+你做的硬幣捆很漂亮，整整齊齊的。我載去城裡，人家都問是哪裡做的，我就說：海口庄啊！	Your coin rolls look great, neat and tidy. When I drive them into the city, people ask where they're from, and I tell them: Haikou Village!
+以後我出發的時候，會按喇叭跟你說再見。叭叭！	From now on I'll honk goodbye whenever I head out. Beep beep!
+卡車司機　阿財	Ah-Tsai, truck driver
+阿公的眼鏡	Grandpa's Glasses
+阿德說你在硬幣堆裡挖到一副眼鏡。我一看就知道，那是你阿公的！右邊的鏡腳是他自己用鐵絲綁的，綁了十幾年都捨不得換。	Ah-De says you dug up a pair of glasses in the coin pile. I knew right away they were your grandpa's! He tied the right arm together with wire himself, and he wouldn't replace them for more than ten years.
+他總說戴著這副眼鏡，才看得清楚每一枚一元的年份。有一次他找眼鏡找了一整個下午，結果眼鏡就掛在他頭上。	He always said he needed those glasses to read the year on every NT$1. Once he spent a whole afternoon looking for them, and they were on top of his head the entire time.
+放在收藏櫃裡吧，讓它繼續陪著那些一元。	Keep them in the collection cabinet, so they can keep those coins company.
+第一枚登記簿	The First-Coin Register
+你好：	Hello,
+你挖到的那本，是合作社最早的「第一枚登記簿」！我們找了好多年。	The book you dug up is the co-op's very first “First-Coin Register”! We've been looking for it for years.
+每個孩子存第一枚一元的那天，你阿公都會在上面寫下名字和日期。我的名字在第三頁，民國六十四年，那年我六歲。	On the day each child deposited their first NT$1, your grandpa wrote their name and the date in it. Mine is on page three, in 1975, when I was six.
+最後一頁有一行字，是你阿公的筆跡，寫的是你的名字，旁邊註明：「乖孫的第一枚，先放在我這裡。」	On the last page there's a line in your grandpa's handwriting. It's your name, and next to it he wrote: “My grandchild's first coin. I'll keep it for now.”
+所以，你的第一枚一元，應該也在這座山的某個地方。	So your first NT$1 must be somewhere in this mountain too.
+為了謝謝你，合作社的舊招牌就送給你了，已經放進建造目錄的「裝飾」。掛了五十年，跟我差不多老呢。	As thanks, the co-op's old sign is yours. It's in the “Decor” section of your Build catalog. It hung there for fifty years, so it's almost as old as I am!
+照片裡的人	The People in the Photo
+你挖到的那張照片，阿德拿來給我看了。我看了好久好久。	Ah-De brought me the photo you dug up. I looked at it for a long, long time.
+照片裡綁辮子的女孩是我，旁邊穿工作服的，是陳師傅。那年他剛去造幣廠當學徒，每次回鎮上，都會繞到我店裡買一瓶彈珠汽水。	The girl with the braids is me, and the young man in work clothes is Master Chen. That year he'd just become an apprentice at the mint, and whenever he came back to town he'd stop by my shop for a bottle of marble soda.
+他說過，總有一天要送我一枚「世界上獨一無二的一元」。後來他調到外地，就再也沒有回來了。	He once said that someday he'd give me “the only NT$1 like it in the whole world.” Then he was transferred away and never came back.
+我寫了一封信寄去他以前的地址，也不知道他還住不住在那裡。如果有回信，我再告訴你。	I've written to his old address, though I don't know if he still lives there. If he writes back, I'll let you know.
+五十年	Fifty Years
+我是陳師傅。秀蘭的信，我收到了，讀了三遍。	This is Master Chen. I got Hsiu-lan's letter and read it three times.
+那張照片，我也有一張，一直放在皮夾裡。	I have a copy of that photo too. It's been in my wallet all these years.
+說起來不好意思。年輕時，我用造幣廠試鑄的模具，偷偷打了一枚一元，自己鍍上一層金，想送給秀蘭。可是走到柑仔店門口，就是不敢進去。最後我把它存進合作社，請你阿公幫我保管，說等我有勇氣了再去拿。	It's embarrassing to admit. When I was young, I used a trial die at the mint to secretly strike an NT$1, and plated it in gold myself to give to Hsiu-lan. But when I reached the door of her shop, I couldn't bring myself to go in. In the end I deposited it at the co-op and asked your grandpa to keep it safe until I found the courage to come for it.
+這一等，就是五十年。	That wait lasted fifty years.
+秀蘭說，那枚金色的一元，你已經找到了。謝謝你。	Hsiu-lan says you've already found that golden NT$1. Thank you.
+那枚金色的一元，應該還在你院子的硬幣山裡。如果你找到了，可以幫我放進收藏櫃嗎？不急，慢慢找。	That golden NT$1 should still be somewhere in the coin mountain in your yard. If you find it, would you put it in the collection cabinet for me? No rush. Take your time.
+下次回海口庄，我想去你的院子坐坐。	Next time I'm back in Haikou, I'd like to come sit in your yard for a while.
+陳師傅回來了！他說想看看那枚金色的一元，也想看看你阿公的院子。	Master Chen is back! He wants to see the golden NT$1, and your grandpa's yard too.
+他還是跟以前一樣，講沒兩句話就臉紅。	He's just like he used to be: two sentences in and he's blushing.
+我們找一個晚上，去你院子的長椅坐坐，不會吵到你的。	One of these evenings we'll come sit on the bench in your yard. We won't get in your way.
+你的院子如果有一張長椅就好了，我們老人家站不久。（建造目錄的「裝飾」裡有長椅）	If only your yard had a bench. Us old folks can't stand for long. (There's a bench in the “Decor” section of the Build catalog.)
+謝謝你，孩子。	Thank you, dear.
+給乖孫	To My Grandchild
+乖孫：	My dear grandchild,
+你看到這封信的時候，院子應該亂得不像話吧。	By the time you read this, the yard must be an unbelievable mess.
+這五十年，鎮上每個孩子的第一枚一元，都是我收的。我一直想讓大家再看一次，可是年紀大了，數不動了，只好交給你。	For fifty years, I took in every child's first NT$1 in this town. I always wanted everyone to see them again, but I'm old now and can't count them anymore. So I'm leaving it to you.
+盒子裡那枚，是你的第一枚一元。那年你才三歲，握在手裡不肯放，最後是用一顆糖跟你換的。	The one in this box is your first NT$1. You were only three. You held on to it and wouldn't let go, so I traded you a piece of candy for it.
+另外那枚金色的，是陳師傅寄放的。他來拿的時候，幫我跟他說一句：她一直在等。	The golden one beside it belongs to Master Chen. When he comes for it, tell him something for me: she's been waiting.
+山裡那枚金色的一元，是陳師傅寄放在我這裡的。如果他回來了，幫我跟他說一句：她一直在等。	The golden NT$1 in the mountain is one Master Chen left with me. If he ever comes back, tell him something for me: she's been waiting.
+慢慢挖，不用急。累了就坐下來，摸摸貓，看看天空。	Dig slowly, no need to hurry. When you're tired, sit down, pet the cat, look at the sky.
+錢是拿來用的，可是有些一元，是拿來記得的。	Money is for spending. But some coins are for remembering.
+今晚，一元展	Tonight: The NT$1 Show
+謝謝你，把整座山都整理好了。	Thank you for sorting out the whole mountain.
+鎮上的人聽說了，都想來看看自己的第一枚。今天晚上，可以在你的院子辦一場「一元展」嗎？	Word got around town, and everyone wants to come see their first coin. Could we hold an “NT$1 Show” in your yard tonight?
+大家會帶天燈來。阿財說他負責載椅子，秀蘭阿嬤負責枝仔冰。	Everyone will bring sky lanterns. Ah-Tsai says he'll bring chairs in his truck, and Grandma Hsiu-lan is in charge of popsicles.
+天燈	Sky Lanterns
+昨天晚上的天燈好漂亮，我跟陳師傅看到最後一盞飛不見了才回家。	Last night's sky lanterns were so beautiful. Master Chen and I didn't go home until the last one had disappeared.
+你阿公一定也看到了。	I'm sure your grandpa saw them too.
+院子整理好了，可是不用急著走喔。有空就來柑仔店坐坐，彈珠汽水阿嬤請。	The yard is all tidy now, but don't feel you have to leave. Come sit at the shop anytime. The marble soda's on Grandma.
+被我弟弟的腳踏車壓過，我哭了一整個下午。你阿公說：凹的也是一元啊。	My little brother rode his bike over it and I cried all afternoon. Your grandpa said a bent one is still a dollar.
+賣豆花的阿水伯	Uncle Shui, the tofu pudding seller
+推車賣了四十年豆花，找零找到字都磨不見了。	Forty years selling tofu pudding from a cart. I gave it out as change until the lettering wore off.
+國小三年級的小芸	Hsiao-yun, third grader
+我第一次自己去存錢，櫃檯的阿公還送我一顆糖。	The first time I went to save money by myself, the grandpa at the counter gave me a candy.
+五金行的阿德	Ah-De from the hardware store
+跟鑰匙、螺絲放在同一個口袋，刮成這樣很正常啦。	It shared a pocket with keys and screws. Of course it's scratched.
+菜市場的月娥阿嬤	Grandma Yueh-o from the market
+這是我出嫁前存的。那時候的一元，可以買好多顆糖。	I saved this before I got married. Back then, a dollar bought a lot of candy.
+廟公阿榮伯	Uncle Jung, the temple keeper
+掉進廟口的水溝好幾年，撈起來就長滿銅綠了。	It sat in the gutter outside the temple for years. When I fished it out, it was covered in verdigris.
+卡車司機阿財	Ah-Tsai the truck driver
+小時候拿去磨，想把它磨成金的，結果磨成紅的。	As a kid I polished it, hoping to turn it into gold. It turned red instead.
+美玲老師	Teacher Mei-ling
+我都跟學生說，梅花特別清楚的那枚，是幸運的一元。	I always tell my students the one with the clearest plum blossom is the lucky one.
+烤肉高手志偉	Chih-wei, the barbecue master
+中秋節烤肉，它掉進炭火裡，第二天才撿出來。	It fell into the coals at a Mid-Autumn barbecue. I didn't fish it out until the next day.
+漁夫阿海伯	Uncle Hai the fisherman
+穿個洞綁在船頭，出海四十年，一次都沒翻船。	I punched a hole in it and tied it to my bow. Forty years at sea, and I never capsized once.
+理髮廳的阿珠姨	Auntie Chu from the barbershop
+放在剪刀盒裡太久，變得黑亮黑亮的，可以照鏡子。	It sat in my scissor case so long it turned glossy black. You can see yourself in it.
+辦桌魔術師阿明叔	Uncle Ming, the banquet magician
+這是我的魔術道具！猜正反面，我從來沒輸過。	This is my magic prop! I've never lost a coin toss.
+打銅的老林	Old Lin the coppersmith
+顏色這麼純的銅，我做了一輩子銅器也很少看到。	A lifetime of coppersmithing, and I've rarely seen copper this pure.
+這是我自己的第一枚。那年我六歲，你阿公還是個年輕人。	This is my own first coin. I was six, and your grandpa was still a young man.
+愛收藏的淑芬	Shu-fen the collector
+從盒子裡拿出來存，被我爸念了好久。	I took it out of its case to deposit it, and my dad scolded me for ages.
+剛當爸爸的阿傑	Ah-Chieh, a new dad
+孩子滿月那天，我們拿全新的一元替她存了第一筆。	When our baby turned one month old, we made her first deposit with a brand-new NT$1.
+這枚是我當學徒的時候打歪的，本來要銷毀……噓。	I struck this one crooked when I was an apprentice. It was supposed to be destroyed… shh.
+收藏家許先生	Mr. Hsu the collector
+我封好膜才拿去存，你阿公笑我：錢就是要拿來存的嘛。	I sealed it in film before depositing it. Your grandpa laughed and said money is meant to be saved.
+國小五年級的阿凱	Ah-Kai, fifth grader
+自然課做實驗，它跟迴紋針黏在一起，就再也拿不下來了。	In a science class experiment it stuck to a paper clip, and we never got them apart.
+開計程車的阿國	Ah-Kuo the taxi driver
+這一年的鑄得特別少，我兒子就是那年出生的。	They minted very few that year. It's the year my son was born.
+鐘錶行的老吳	Old Wu the watchmaker
+修了一輩子的錶，我一眼就看出它轉了一個角度。	After a lifetime of fixing watches, I could tell at a glance it was rotated.
+年輕時偷偷打的，本來要送給一個人。	I struck it in secret when I was young. It was meant for someone.
+合作社的阿春姨	Auntie Chun from the co-op
+你阿公說試鑄的很少見，叫我一定要收好。	Your grandpa said trial strikes are rare and told me to keep it safe.
+國小的王校長	Principal Wang of the elementary school
+學校一百歲生日那年，每個學生都拿到一枚。	Every student got one the year our school turned a hundred.
+邊緣刻著一個很小的「陳」字。	A tiny character, “Chen,” is carved on the rim.
+阿公的老花眼鏡	Grandpa's Reading Glasses
+鏡片有一點刮痕，右邊的鏡腳用細鐵絲綁過。阿公戴著它，數了四十年的零錢。	The lenses are a little scratched, and the right arm is tied together with fine wire. Grandpa counted change in these for forty years.
+海口信用合作社最早的登記簿。每一頁都寫滿了名字和日期，旁邊蓋著小小的紅章。最後一頁，寫著你的名字。	The Haikou Credit Cooperative's very first register. Every page is full of names and dates, each beside a little red stamp. On the last page is your name.
+一張老照片	An Old Photo
+泛黃的照片：柑仔店門口，一個綁辮子的女孩，和一個穿工作服的年輕人，兩個人都笑得有點害羞。背面寫著「民國六十二年　春」。	A faded photo: outside the corner shop, a girl with braids and a young man in work clothes, both smiling a little shyly. On the back: “Spring, 1973.”
+阿公的餅乾鐵盒	Grandpa's Cookie Tin
+壓在整座山最底下的鐵盒，蓋子上畫著褪了色的花。	A tin box from under the whole mountain, with faded flowers painted on the lid.
+你的第一枚一元	Your First NT$1
+三歲的你，握在手裡不肯放的那一枚。阿公用一顆糖跟你換來，一直收在鐵盒裡。	The coin you clutched at three and wouldn't let go of. Grandpa traded you a candy for it and kept it in this tin ever since.
+📮 信箱裡有	📮 You have
+封信，在鐵捲門右邊的牆上	letter(s) in the mailbox, on the wall right of the shutter door
+寄來一封信	sent you a letter
+，點右上角的信封就能看	, tap the envelope at the top right to read it
+，按 K 或走到信箱看看	, press K or check the mailbox
+一元展正在院子裡進行中	The NT$1 Show is happening in your yard
+今晚辦一元展	Hold the NT$1 Show tonight
+晚點再說	Maybe later
+海口庄	Haikou
+已經放進建造目錄的「裝飾」	is now in the “Decor” section of the Build catalog
+還沒有信	No letters yet
+信箱是空的。	The mailbox is empty.
+阿公的院子很安靜。	Grandpa's yard is quiet.
+一元展的信會留在信箱裡，想辦的時候再打開它	The NT$1 Show letter will stay in your mailbox. Open it whenever you're ready
+硬幣山挖完了……最底下好像壓著一個鐵盒	The coin mountain is gone… there seems to be a tin box at the very bottom
+✨ 硬幣堆裡好像露出了什麼東西……	✨ Something is poking out of the coin pile…
+在硬幣堆裡找到了	Found in the coin pile
+打開鐵盒	Open the tin
+已經放進收藏櫃的「回憶」・	Added to the cabinet's “Memories” ·
+點一下關閉	Tap to close
+點一下或按 E 關閉	Click or press E to close
+把鐵盒收好	Put the tin away
+收藏櫃的「回憶」多了「你的第一枚一元」	“Your First NT$1” is now in the cabinet's “Memories”
+，還有陳師傅的黃金一元	, along with Master Chen's golden NT$1
+乖孫的第一枚	My grandkid's first
+柑仔店	Corner Shop
+民國六十二年　春	Spring, 1973
+乖孫	Grandkid
+那枚民國四十九年的一圓，就是我的第一枚。六歲的我一定想不到，會在這裡再看到它。	That 1960 one-yuan is my first coin. Six-year-old me would never have guessed I'd see it again here.
+我的那枚好像沒找到，大概被我自己偷偷花掉了，哈哈。	Looks like mine didn't turn up. I probably snuck it out and spent it myself, ha ha.
+你阿公要是看到今天這樣，一定很高興。	If your grandpa could see this, he'd be so happy.
+凹凹的那枚，真的是我的！你阿公說得對，凹的也是一元。	That bent one really is mine! Your grandpa was right. A bent one is still a dollar.
+我的那枚沒找到也沒關係，今天晚上已經夠開心了。	It's okay that mine wasn't found. Tonight is already more than enough.
+枝仔冰在桌上，自己拿喔！	The popsicles are on the table. Help yourself!
+這枚一元，終於送出去了。	I finally gave her this coin.
+五十年了，柑仔店的彈珠汽水還是一樣好喝。	Fifty years, and the shop's marble soda still tastes the same.
+那枚刮傷的是我的啦！跟螺絲放在一起，難怪。	The scratched one's mine! It lived with my screws, no wonder.
+收音機還好用嗎？那是你阿公的寶貝。	Is the radio still working? That was your grandpa's treasure.
+紅紅的那枚是我的！就是小時候想磨成金的那枚！	The red one's mine! The one I tried to polish into gold as a kid!
+椅子我載來了，坐坐坐！	I brought chairs. Sit, sit!
+阿海伯	Uncle Hai
+那枚有洞的，是我的護身符。謝謝你幫我找回來。	The one with the hole is my lucky charm. Thanks for finding it for me.
+我那枚，可能還綁在船上吧，哈哈。	Mine's probably still tied to my boat, ha ha.
+今天風很好，天燈會飛很高。	Good wind tonight. The lanterns will fly high.
+小芸	Hsiao-yun
+我的新亮一元！阿公送我的那顆糖，是草莓口味的。	My shiny NT$1! The candy Grandpa gave me was strawberry.
+沒找到也沒關係，我要把今天的一元存進撲滿裡！	It's okay if it's lost. I'll put today's NT$1 in my piggy bank!
+我把今天的零用錢存進撲滿了！	I put today's pocket money in my piggy bank!
+阿凱	Ah-Kai
+我的磁鐵一元！你看，迴紋針還黏在上面耶！	My magnetic NT$1! Look, the paper clip's still stuck to it!
+我帶了磁鐵來，可是好像吸不到它……	I brought a magnet, but I can't seem to find it…
+天燈什麼時候放？我好期待！	When do we launch the lanterns? I can't wait!
+梅花那枚是我的。看吧，幸運的一元，真的回來了。	The plum blossom one is mine. See? The lucky coin really came back.
+我的幸運一元沒回來，可是今天大家都很幸運。	My lucky coin didn't come back, but everyone's lucky tonight.
+孩子們都說，這是今年最好玩的一天。	The kids say this is the best day of the year.
+阿明叔	Uncle Ming
+猜猜看，正面還是反面？……兩面都是正面啦！	Heads or tails? …Both sides are heads!
+我的魔術道具不見了？沒關係，我再變一枚出來給你！	My magic prop is gone? No problem, I'll conjure up another one for you!
+要不要看魔術？……下次再表演！	Want to see a trick? …Next time!
+阿水伯	Uncle Shui
+磨平的那枚是我的，四十年的豆花錢啊。	The worn one is mine. Forty years of tofu pudding money.
+我帶了豆花來，大家都吃吃看！	I brought tofu pudding. Everyone, have some!
+豆花還有，多吃一碗！	There's more tofu pudding. Have another bowl!
+他還是一樣，講沒兩句話就臉紅。	He's the same as ever: two sentences in and he's blushing.
+你阿公以前也最喜歡坐在這裡看星星。	Your grandpa loved sitting here watching the stars, too.
+謝謝你阿公，幫我保管了這麼久。	Thank your grandpa for me, for keeping it safe so long.
+枝仔冰吃完了嗎？阿嬤明天再帶來。	Finished your popsicle? Grandma will bring more tomorrow.
+五十年了，她笑起來還是一樣。	Fifty years, and her smile hasn't changed.
+🌙 秀蘭阿嬤和陳師傅，坐在你院子的長椅上	🌙 Grandma Hsiu-lan and Master Chen are sitting on the bench in your yard
+跟%s聊聊	Talk to %s
+🏮 鎮上的人來了！走過去%s，跟大家聊聊	🏮 The townsfolk are here! Walk up and %s to chat with them
+按「互動」	tap “Use”
+大家準備好了嗎？到院子中間，我們來放天燈！	Is everyone ready? Come to the middle of the yard. Let's release the lanterns!
+🏮 黃理事長：到院子中間，我們來放天燈！	🏮 Chairman Huang: Come to the middle of the yard. Let's release the lanterns!
+海口庄　一元展	Haikou NT$1 Show
+平安	Peace
+健康	Health
+團圓	Together
+順利	Good luck
+幸福	Happiness
+謝謝	Thanks
+謝謝阿公	Thank you, Grandpa
+🏮 抬頭看看天空	🏮 Look up at the sky
+五金行的阿德　卡車司機阿財	Ah-De of the hardware store · Ah-Tsai the truck driver
+阿水伯　小芸　阿凱　美玲老師　阿明叔　阿海伯	Uncle Shui · Hsiao-yun · Ah-Kai · Teacher Mei-ling · Uncle Ming · Uncle Hai
+還有，海口庄的每一個人	And everyone in Haikou Village
+謝謝你，慢慢地把它們找回來。	Thank you for finding them, slowly, one by one.
+硬幣堆裡露出來的	Poking out of the coin pile
+放天燈	Release a sky lantern
+一元展	NT$1 Show
+看信	Read letters
+封新信	new letter(s)
+信箱	Mailbox
+關掉收音機	Turn off the radio
+打開收音機	Turn on the radio
+📻 收音機打開了，沙沙沙……	📻 The radio crackles to life…
+📻 收音機關掉了	📻 Radio off
+《第一枚一元》的故事，謝謝你看到最後。	Thank you for seeing “The First NT$1” through to the end.

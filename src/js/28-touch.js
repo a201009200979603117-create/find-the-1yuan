@@ -65,7 +65,7 @@ function touchInit(){
   if(!TOUCH)return;const ui=$('touchUI');iosHint();ui.addEventListener('pointerup',goFull,true);
   TTON=true;[['buildHint','innerHTML'],['techInfo','innerHTML'],['shopList','innerHTML'],['mtip','innerHTML'],['buildFoot','textContent'],['meterTxt','textContent'],['objD','textContent'],['pLbl','textContent'],['pSub','textContent']].forEach(([id,pr])=>hookText(id,pr));
   for(const sp of document.querySelectorAll('#buildTop span'))if(sp.textContent.indexOf('左鍵裝備')>=0){sp.textContent='點一下裝備・長按加快捷欄';sp.className='bhint'}
-  $('pSave').textContent='存檔';$('pStat').textContent='成就與統計';$('sSens').previousElementSibling.textContent='視角靈敏度';
+  $('pSave').textContent='存檔';$('pStat').textContent='成就與統計';$('pMail').textContent='信件';$('sSens').previousElementSibling.textContent='視角靈敏度';
   $('techTree').addEventListener('click',e=>{const l=e.target.closest('[data-tlane]');if(!l)return;techLane=l.dataset.tlane;renderTech();const g=$('techTree').querySelector('.tmG');if(g)g.scrollTop=0});
   const stick=$('tStick'),knob=$('tKnob'),zone=$('tZone'),look=$('tLook');
   // 搖桿：手指按下的地方就是搖桿中心，放開回到左下角

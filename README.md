@@ -1,6 +1,6 @@
 # 大海撈一元 Find The 1元
 
-院子裡倒了一座 1380 萬枚的硬幣山，全是 50 元、10 元和 5 元，裡面藏著幾枚 1 元。
+海口庄的信用合作社要收了，金庫裡五十年的零錢全倒進阿公的院子，堆成一座硬幣山，全是 50 元、10 元和 5 元，裡面藏著鎮上每個孩子存的「第一枚一元」。
 用雙手、鏟子、水桶慢慢挖，把硬幣賣掉換錢，再買工具、蓋機器和輸送帶，把整座山翻過來，找出每一枚 1 元。
 
 **👉 線上直接玩：https://a201009200979603117-create.github.io/find-the-1yuan/**
@@ -8,7 +8,7 @@
 電腦和手機都能玩，不用安裝。手機請橫著拿，進遊戲會自動全螢幕（Android）。
 iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面」，從主畫面的圖示打開就是全螢幕。
 
-> **English:** A cozy 3D game about digging through a giant pile of Taiwanese coins to find every NT$1 coin — dig, sell, buy tools, and build conveyor-belt factories. Play in your browser on PC or phone: **https://a201009200979603117-create.github.io/find-the-1yuan/** The game switches to English automatically when your browser isn't set to Chinese (Settings → Language to change).
+> **English:** A cozy 3D game about digging through a giant pile of Taiwanese coins to find every NT$1 coin — dig, sell, buy tools, and build conveyor-belt factories, with a gentle story about a small seaside town and the first coins its children saved. Play in your browser on PC or phone: **https://a201009200979603117-create.github.io/find-the-1yuan/** The game switches to English automatically when your browser isn't set to Chinese (Settings → Language to change).
 
 ![主選單](docs/menu.jpg)
 ![手機版畫面](docs/mobile.jpg)
@@ -19,7 +19,8 @@ iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面
 - 五金行買工具：玩具鏟、水桶、圓鍬、草叉、手推車、掃把、金屬探測器、吸塵器、硬幣掃描器
 - 科技樹解鎖機器：活塞耙、機械手臂、輸送帶、分流器、壓縮機、包裝機、造粒機、筒倉、發電機……
 - 電線桿會自動接到發電機，機器放在黃色範圍內就有電
-- 24 種 1 元可以收藏，找到的會放進收藏櫃
+- 劇情《第一枚一元》（一般和無盡模式）：鎮上的人會寄信到鐵捲門旁的信箱，硬幣山挖到一定程度會露出阿公留下的東西，挖到最底下有阿公的鐵盒，最後在院子辦一場一元展、放天燈。沒有時間限制，信會一直留著等你讀，設定裡可以關掉
+- 24 種 1 元可以收藏：找到新的一種時，用放大鏡在硬幣上找出 3 個特徵來鑑定；重複的直接收好，不會打斷你。收藏櫃可以點開每一枚，拖著轉來轉去看，還有它的主人說的話
 - 三種模式：一般、挑戰（計時）、無盡（挖完再倒一車）
 - 每日挑戰：每天一座固定的「小」硬幣堆，同一天每個人的都一樣，計時找出所有的 1 元，紀錄和連續天數記在排行榜
 - 挑戰朋友：挑戰成功後按「挑戰朋友」產生連結，朋友打開就是同一座硬幣堆，完成時會比較誰快
@@ -45,6 +46,7 @@ iPhone 的 Safari 不能讓網頁全螢幕，請按「分享 → 加入主畫面
 | B | 建造目錄（R 旋轉、X 拆除、PageUp／PageDown 架高） |
 | L／P／M | 手電筒／拍照模式／俯瞰模式 |
 | O／J | 機器狀態／成就與統計 |
+| K | 信件 |
 | F5 | 存檔（Esc 暫停） |
 
 按鍵可以在「設定」裡改。也支援手把。

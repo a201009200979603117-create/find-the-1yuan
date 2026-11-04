@@ -24,9 +24,10 @@ function interactions(dt){
   const hop=G.carry>0&&aimHopper();
   const mt=machineLooked();
   if(mt&&BIT[mt.type])machineTip(mt.type);
-  const hh=nearHatch(),pbh=paintHit();
+  const hh=nearHatch(),pbh=paintHit(),sn=storyNear();
   if(pl.sit)setPrompt('E','站起來','坐在長椅上休息，體力回得比較快');
   else if(nearDoor)setPrompt('E','開門');
+  else if(sn)setPrompt('E',sn.l,sn.s);
   else if(hh)setPrompt('E',pl.y<1.5?'爬上屋頂':'爬下梯子','屋頂天窗');
   else if(nearDropped())setPrompt('E','撿起'+TOOL[nearDropped()].name,TOOL[nearDropped()].cont?'裡面 '+fmt(G.drop[nearDropped()].fill)+' / '+fmt(capOf(nearDropped()))+' 枚':'');
   else if(G.carry>0&&aimDropped(7))setPrompt('RMB','丟進'+TOOL[aimDropped(7)].name,'裡面 '+fmt(G.drop[aimDropped(7)].fill)+' / '+fmt(capOf(aimDropped(7)))+' 枚');
@@ -89,6 +90,7 @@ function paintHit(){const{o,d}=camRay(0);paintRay.set(o,d);paintRay.far=3.2;
 function paintAt(p,draw){const c=p.t.cv.getContext('2d'),x=(1-p.uv.x)*256,y=(1-p.uv.y)*160;c.fillStyle=draw?'#1d2b4a':'#f6f4ee';c.beginPath();c.arc(x,y,draw?3.5:9,0,7);c.fill();p.t.tex.needsUpdate=true;p.t.img=null}
 function interactE(){
   if(pl.sit){standUp();return}
+  if(storyUse())return;
   if(nearCat()){petCat();return}
   {const b=nearBench();if(b){sitBench(b);return}}
   const hh=nearHatch();if(hh){climbHatch(hh);return}
@@ -111,7 +113,10 @@ function interactE(){
 }
 function rollType(){const tot=ONE_TYPES.reduce((s,t)=>s+1/t.w,0);let r=Math.random()*tot;for(const t of ONE_TYPES){r-=1/t.w;if(r<=0)return t}return ONE_TYPES[0]}
 function depositOne(){
-  const t=rollType(),isNew=!G.coll[t.id];G.coll[t.id]=(G.coll[t.id]||0)+1;G.onesFound++;
+  let t=rollType();
+  // 劇情：讀完陳師傅的信以後，下一枚就是那枚金色的一元
+  if(G.story&&G.story.forceGold&&!G.coll.gold){t=ONE_TYPES.find(x=>x.id==='gold');G.story.forceGold=false}
+  const isNew=!G.coll[t.id];G.coll[t.id]=(G.coll[t.id]||0)+1;G.onesFound++;
   if(!isNew)addMoney(10*t.w,true);drawPrice();
   (G.oneLog=G.oneLog||[]).push({t:Math.round(G.play),id:t.id});if(isNight())G.flags.nightOne=true;
   if(isNew)buzz([30,30,30]);startAppraise(t,isNew);
@@ -119,7 +124,7 @@ function depositOne(){
 let cardFlip=false,cardType=null,cardNew=true;
 function showCard(t,isNew){cardType=t;cardNew=isNew;cardFlip=false;renderCard();$('card').classList.remove('hidden');mode='card';unlock()}
 function renderCard(){const t=cardType;$('cardIn').innerHTML=cardFlip?
-  '<div class="hd2">'+t.name+'</div>'+coin3d(t,true,true)+'<div style="margin-top:8px;font-size:14px;line-height:1.9;color:#ddd">機率 1/'+t.w+'<br>加成：'+t.bo+'<br>收藏了 '+G.coll[t.id]+' 枚・總共找到 '+G.onesFound+' 枚<br><span style="color:#e9dcc0">'+(ONE_STORY[t.id]||[''])[0]+'</span></div><div class="ft">E・翻回去　點一下關閉</div>':
+  '<div class="hd2">'+t.name+'</div>'+coin3d(t,true,true)+'<div style="margin-top:8px;font-size:14px;line-height:1.9;color:#ddd">機率 1/'+t.w+'<br>加成：'+t.bo+'<br>收藏了 '+G.coll[t.id]+' 枚・總共找到 '+G.onesFound+' 枚<br><span style="color:#e9dcc0">'+(ONE_STORY[t.id]||[''])[0]+'</span>'+(ownerOf(t.id)?'<div class="own">「'+ownerOf(t.id)[1]+'」<br><small>'+ownerOf(t.id)[0]+'</small></div>':'')+'</div><div class="ft">E・翻回去　點一下關閉</div>':
   '<div class="hd2">'+(cardNew?'新的一元':'重複的一元')+'</div><div class="coin"'+(oneImgURL?' style="background:url('+oneImgURL+') center/cover;color:transparent"':'')+'>1</div><div class="en">'+t.en+'</div><div class="rt">機率1/'+t.w+'</div><div class="bo">'+(cardNew?t.bo:'賣給收藏家 +'+money(10*t.w))+'</div><div class="ft">E・翻過來看看　點一下關閉</div>'}
 function closeCard(){$('card').classList.add('hidden');mode='play';lock()}
 $('card').addEventListener('click',closeCard);

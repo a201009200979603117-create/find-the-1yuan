@@ -30,6 +30,10 @@ const ACH=[
   {id:'meteor',n:'對流星許願',d:'在晚上看到流星',rw:20,c:()=>G.flags.meteor},
   {id:'rainbow',n:'雨後彩虹',d:'雨停之後看到彩虹',rw:20,c:()=>G.flags.rainbow},
   {id:'online',n:'上榜了',d:'把每日挑戰的成績上傳到線上排行榜',rw:20,c:()=>G.flags.online},
+  {id:'letter1',n:'有你的信',d:'讀了第一封信',rw:5,c:()=>!!(G.story&&G.story.read.intro)},
+  {id:'memory3',n:'山裡的回憶',d:'從硬幣山裡找到阿公的眼鏡、登記簿和老照片',rw:80,c:()=>!!(G.story&&G.story.items.glasses&&G.story.items.passbook&&G.story.items.photo)},
+  {id:'reunion',n:'五十年後',d:'看到秀蘭阿嬤和陳師傅坐在長椅上',rw:100,c:()=>!!(G.story&&G.story.met)},
+  {id:'story',n:'第一枚一元',d:'在一元展放天燈，看完劇情的結局',rw:500,c:()=>!!(G.story&&G.story.festDone)},
   {id:'allOnes',n:'大海撈一元',d:'找出這個院子所有的 1 元',rw:1000,c:()=>anchors.size===0&&G.onesHand===0&&G.onesFound>0},
   {id:'special3',n:'有求必應',d:'完成 3 張特別訂單',rw:200,c:()=>(G.specialDone||0)>=3},
   {id:'chal',n:'挑戰成功',d:'在挑戰模式找出所有的 1 元',rw:300,c:()=>G.chalDone}
@@ -152,18 +156,5 @@ $('statShare').onclick=()=>shareScore('找到 '+G.onesFound+' 枚 1 元');
 $('eShare').onclick=()=>shareScore('整堆硬幣都挖完了！');
 function refillPile(){G.round=(G.round||1)+1;const seed=(Math.random()*2**31)|0;G.seed=seed;generate(seed,G.size,null);G.left=SIZES[G.size].coins;G.removed=0;G.ended=false;G.marked=[];
   shadowDirty=true;toast('卡車又倒了一整車硬幣進來！第 '+G.round+' 車，1 元也重新藏好了','gold');tone(160,.6,'sawtooth',.05)}
-// 放大鏡鑑定：拿著放大鏡在模糊的 1 元上看一看，才知道是哪一種
-let appr=null;
-function startAppraise(t,isNew){appr={t,isNew,acc:0,done:false};mode='appraise';unlock();const el=$('appraise'),S=ONE_STORY[t.id]||['','',''];
-  const img=oneImgURL?'url('+oneImgURL+')':'radial-gradient(#e0a050,#8a5a20)',fl=S[2]&&S[2]!=='hole'?S[2]:'';
-  el.innerHTML='<div class="ap-t">放大鏡鑑定</div><div class="ap-c" id="apC"><div class="ap-blur" style="background-image:'+img+';filter:blur(14px) '+fl+'"></div><div class="ap-lens" id="apLens" style="background-image:'+img+';filter:'+(fl||'none')+'"></div></div><div class="ap-s" id="apS">移動放大鏡看清楚這枚 1 元（按 E 跳過）</div><div class="ap-bar"><i id="apBar"></i></div>';
-  el.classList.remove('hidden');apMove(innerWidth/2,innerHeight/2)}
-function apMove(x,y){if(!appr||appr.done)return;const c=$('apC').getBoundingClientRect(),lx=x-c.left,ly=y-c.top,lens=$('apLens');
-  lens.style.clipPath='circle(70px at '+lx+'px '+ly+'px)';
-  const inside=Math.hypot(lx-c.width/2,ly-c.height/2)<c.width/2;if(inside){appr.acc+=.06;$('apBar').style.width=Math.min(100,appr.acc/1.6*100)+'%';if(appr.acc>=1.6)apReveal()}}
-function apReveal(){if(!appr||appr.done)return;appr.done=true;$('apLens').style.clipPath='circle(100% at 50% 50%)';$('apS').textContent='是「'+appr.t.name+'」！';tone(1100,.12);
-  setTimeout(()=>{$('appraise').classList.add('hidden');const a=appr;appr=null;showCard(a.t,a.isNew);chime()},900)}
-addEventListener('mousemove',e=>{if(mode==='appraise')apMove(e.clientX,e.clientY)});
-addEventListener('touchmove',e=>{if(mode==='appraise'&&e.touches[0])apMove(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
 
 

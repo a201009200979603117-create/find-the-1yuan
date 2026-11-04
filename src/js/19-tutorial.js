@@ -2,7 +2,7 @@
 const remOnes=()=>anchors.size;
 // 照原作影片的教學順序（第N步跟影片一樣；影片裡閃太快沒看清楚的幾步照前後文補上）
 const STEPS=[
-  {t:'開門',k:'E',d:'你被關在一間小房間裡，不記得是怎麼來的。走到門前按 E 把門打開。',done:()=>G.doorOpen},
+  {t:'開門',k:'E',d:'你被關在一間小房間裡，不記得是怎麼來的。走到門前按 E 把門打開。',ds:'你在阿公的舊倉庫裡醒來。昨天晚上外面一直有卡車倒東西的聲音……走到門前按 E，把門打開看看。',done:()=>G.doorOpen},
   {t:'拿一點硬幣',k:'LMB',d:'看著硬幣堆，按左鍵把硬幣抽出來。用手一次只能拿一枚，鏟子會拿得多。',done:()=>G.carry>0||G.earned>0},
   {t:'丟硬幣',k:'RMB',d:'按右鍵把手上的硬幣丟出去。',done:()=>G.thrown>0||G.earned>0},
   {t:'跑步',k:'SHIFT',d:'走路時按住 Shift 就能跑，跑得比較快，但會耗體力（左下的黃條）。',done:()=>G.flags.ran||G.earned>0},
@@ -60,7 +60,7 @@ function updateObjective(){
     toast('✔ 完成：'+s.t+(s.rw||s.rwText?'　獎勵：'+[s.rw?money(s.rw):'',s.rwText||''].filter(Boolean).join(' + '):''));tone(1000,.1);G.step++;s=STEPS[G.step];
   }
   if(!s){$('objN').textContent='';$('objT').textContent='全部完成';$('objD').textContent='教學都做完了，繼續把 1 元找出來吧。';$('objR').textContent='';$('objBarW').style.display='none';$('objP').textContent='';$('objL').textContent='';$('objK').innerHTML='';return}
-  $('objN').textContent=G.step?'第'+G.step+'步':'開始';$('objT').textContent=s.t;$('objD').textContent=s.d;
+  $('objN').textContent=G.step?'第'+G.step+'步':'開始';$('objT').textContent=s.t;$('objD').textContent=(storyOK()&&s.ds)||s.d;
   $('objK').innerHTML=TTON&&s.k?'<span class="tkey">'+(TKEY[s.k]||s.k)+'</span>':s.k==='LMB'||s.k==='RMB'?mouseSvg(s.k==='RMB',22):s.k?'<span class="kc">'+(s.k==='TAB'?'TAB':s.k)+'</span>':'';
   $('objR').textContent=s.rw||s.rwText?'獎勵：'+[s.rw?money(s.rw):'',s.rwText||''].filter(Boolean).join(' + '):'';
   if(s.p){const[v,g,u]=s.p(),f=Math.max(0,Math.min(1,v/g));$('objBarW').style.display='block';$('objBar').style.width=f*100+'%';

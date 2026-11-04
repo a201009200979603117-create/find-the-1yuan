@@ -61,6 +61,7 @@ function gong(t0,v){const o=ac.createOscillator(),g=ac.createGain();o.type='sine
 const TW_SCALE=[55,57,60,62,64,67,69,72,74,76],TW_PHR=[[0,2,4,2,1,0],[4,5,7,5,4,2],[2,4,5,4,2,1],[7,5,4,2,4,0]];let musPh=0;
 function updateMusic(dt){
   if(!ac||ac.state!=='running'||(SET.music??.35)<=0)return;
+  if(radioNear>.2)return; // 走到阿公的收音機旁邊，背景音樂先停一下
   const style=SET.musicStyle||'soft';
   if(style!=='soft'){musT-=dt;if(musT>0)return;
     const T=ac.currentTime,fast=style==='market',beat=fast?.32:.62,ph=TW_PHR[musPh++%TW_PHR.length];musT=beat*8;

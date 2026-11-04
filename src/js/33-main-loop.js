@@ -30,11 +30,13 @@ function tick(dt,now){
       updateAuto(dt);updateFlying(dt);processSell(dt);
       updateVM(dt);
       if(G.doorOpen&&doorOpenAmt<1){doorOpenAmt=Math.min(1,doorOpenAmt+dt*.6);door.position.y=1.35+doorOpenAmt*2.6;shadowDirty=true}
-      if(G.left<=0&&!G.ended&&G.gmode==='endless')refillPile();
-      if(G.left<=0&&!G.ended){G.ended=true;mode='end';unlock();$('endTxt').innerHTML='整堆硬幣都挖完了。<br>找到 <b>'+G.onesFound+'</b> 枚 1 元'+(G.onesLost?'，另外有 <b>'+G.onesLost+'</b> 枚被賣掉了':'')+'。<br>總共賺了 <b>'+money(G.earned)+'</b>，玩了 '+Math.floor(G.play/60)+' 分鐘。';$('endPanel').classList.remove('hidden')}
+      // 劇情：挖完以後先等鐵盒和一元展，再出現結束畫面（或無盡模式再倒一車）
+      if(G.left<=0&&!G.ended&&!storyHold()){if(G.gmode==='endless')refillPile();
+        else{G.ended=true;mode='end';unlock();$('endTxt').innerHTML='整堆硬幣都挖完了。<br>找到 <b>'+G.onesFound+'</b> 枚 1 元'+(G.onesLost?'，另外有 <b>'+G.onesLost+'</b> 枚被賣掉了':'')+'。<br>總共賺了 <b>'+money(G.earned)+'</b>，玩了 '+Math.floor(G.play/60)+' 分鐘。'+(G.story&&G.story.festDone?'<br><span style="color:var(--gold)">《第一枚一元》的故事，謝謝你看到最後。</span>':'');$('endPanel').classList.remove('hidden')}}
     }
+    storyTick(dt,now);storyWorld(dt,now);
     updateMovers(dt);updateHF(dt);if(mode==='play')updateHover();drawItems();drawBeacons();drawDropped();
-    slowT-=dt;if(slowT<=0&&mode!=='intro'){updateHud(.15);slowT=.15}
+    slowT-=dt;if(slowT<=0&&mode!=='intro'){updateHud(.15);updMailHud();slowT=.15}
     if(mode==='play')showTool();
   }
   updateEnv(dt);updateWeather(dt);updateVisitors(dt,now);updateParts(dt);updateLoops(dt);if(noPwr.size)bobNoPower(now);
@@ -151,6 +153,24 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
     const r=[sim(60,true),sim(120,true),sim(60,false)];SET.eco=e0;tick=tk;window.requestAnimationFrame=raf;last=performance.now();
     return r[0]===30&&r[1]===30&&r[2]===60||'60Hz 省電 '+r[0]+' 格、120Hz 省電 '+r[1]+' 格、一般 '+r[2]+' 格'});
   await run('線上排行榜（只讀）',async()=>{if(!onlineOn())return{skip:'還沒設定 Supabase，略過'};const r=await onlineTop(dailyKey(),1);return Array.isArray(r)||'讀不到排行榜'});
+  // 劇情《第一枚一元》：開新的一般模式跑一遍
+  await run('劇情：開門收到信',async()=>{toMenu();await w(400);startGame(0,{name:'劇情檢查',size:'small',seed:777,gmode:'normal'});if(!await until(playing,30000))return'等不到遊戲開始';
+    if(!G.story)return'一般模式沒有劇情';if(!mailBox||!mailBox.visible)return'信箱沒出現';G.doorOpen=true;G.story.last=-99;for(let i=0;i<20;i++){G.play+=.5;storyTick(.5,performance.now())}
+    if(!G.story.got.intro)return'開門以後沒收到信';openMail();const ok=panel==='mailPanel'&&!!$('mailRead').querySelector('.letter')&&!!G.story.read.intro;closePanel();
+    const g=G.story;G.story=null;G.order=1;storyInit(false);const old=!!(G.story&&G.story.got.intro&&G.story.got.order1);G.story=g;G.order=0;
+    return ok&&old||'讀信 '+ok+'、舊存檔補信 '+old});
+  await run('劇情：硬幣山裡的回憶',()=>{G.left=Math.floor(SIZES[G.size].coins*.7);storyTick(.6,performance.now());if(!G.story.memo.glasses||!memoObj.glasses)return'眼鏡沒出現';
+    pickMemo('glasses');const ok=!!G.story.items.glasses&&mode==='memo';closeMemo();return ok&&mode==='play'||'撿不起來'});
+  await run('放大鏡和收藏櫃',async()=>{G.coll={};const r0=rollType;rollType=()=>ONE_TYPES.find(t=>t.id==='holed');depositOne();const ap=mode==='appraise'&&!!appr&&appr.spots.length===3;apReveal();
+    await until(()=>mode==='card',4000);closeCard();depositOne();rollType=r0;const dup=mode==='play'&&G.coll.holed===2;
+    openPanel('cabPanel');cabSel='holed';renderCab();const v=!$('cabView').classList.contains('hidden')&&$('cabView').textContent.includes(L(ownerOf('holed')[0]));
+    cabTab='memo';cabSel=null;renderCab();const m=document.querySelectorAll('#cabList .memo').length===MEMOS.length;cabTab='one';closePanel();
+    return ap&&dup&&v&&m||('放大鏡 '+ap+'、重複的 '+dup+'、細看 '+v+'、回憶 '+m)});
+  await run('劇情：鐵盒和一元展',()=>{const S=G.story;G.left=0;storyHold();if(!memoObj.tin)return'鐵盒沒出現';pickMemo('tin');openTin();finishTin();if(!S.items.mine||!G.coll.gold)return'鐵盒裡沒有東西';
+    S.last=-99;for(let i=0;i<20;i++){G.play+=.5;storyTick(.5,performance.now())}if(!S.got.fest)return'沒收到一元展的信';
+    festStart();if(folk.length<8)return'鎮上的人沒來：'+folk.length;const p=folk.find(x=>!x.sit);talkFolk(p);if(!p.bub)return'聊不起來';
+    fest.ready=true;launchMark(true);launchLanterns();if(fest.lan.length<20)return'天燈沒放';for(let i=0;i<40;i++)festTick(.1,performance.now());endCredits();
+    return S.festDone&&S.fin||'結局沒完成'});
   await run('回主選單',async()=>{toMenu();await w(800);return mode==='menu'});
   await run('最後沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m+'（'+e.at+'）').join('；'):true);
   sk.forEach(k=>bk[k]==null?localStorage.removeItem(k):localStorage.setItem(k,bk[k]));showMenu('main');

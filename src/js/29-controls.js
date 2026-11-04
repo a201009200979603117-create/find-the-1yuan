@@ -2,7 +2,7 @@
 // 自訂按鍵：遊戲裡用的是「預設按鍵」的代號，玩家改過的按鍵在這裡翻譯回去
 const KEYDEF=[['KeyW','往前'],['KeyS','往後'],['KeyA','往左'],['KeyD','往右'],['ShiftLeft','跑'],['Space','跳／噴射背包'],['KeyC','蹲（建造時拉近）'],['KeyV','建造時推遠'],
   ['KeyE','互動'],['Tab','科技樹'],['KeyB','建造目錄'],['KeyQ','把工具放到地上'],['KeyF','丟出工具（建造時：吸附）'],['KeyR','旋轉'],['KeyX','拆除'],['KeyG','方格'],['KeyN','藍圖'],
-  ['KeyL','手電筒'],['KeyP','拍照模式'],['KeyM','俯瞰模式'],['KeyO','機器狀態'],['KeyJ','成就與統計'],['PageUp','架高'],['PageDown','降低'],['F4','隱藏介面'],['F5','存檔']];
+  ['KeyL','手電筒'],['KeyP','拍照模式'],['KeyM','俯瞰模式'],['KeyO','機器狀態'],['KeyJ','成就與統計'],['KeyK','信件'],['PageUp','架高'],['PageDown','降低'],['F4','隱藏介面'],['F5','存檔']];
 let keyMapCache=null;
 function keyMap(){if(keyMapCache)return keyMapCache;const m={},kb=SET.keys||{};for(const[d]of KEYDEF){const b=kb[d]||d;m[b]=d}
   for(const[d]of KEYDEF){const b=kb[d]||d;if(b!==d&&!(d in m))m[d]='_none'}return keyMapCache=m}

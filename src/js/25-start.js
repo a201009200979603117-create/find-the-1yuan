@@ -16,7 +16,7 @@ function startGame(slot,data){
   $('loading').classList.remove('hidden');$('loading').textContent='載入中…';
   lock(true);
   setTimeout(()=>{
-    slotIdx=slot;
+    slotIdx=slot;storyReset();
     if(data.mask){const s=atob(data.mask),mask=new Uint8Array(s.length);for(let k=0;k<s.length;k++)mask[k]=s.charCodeAt(k);
       G=Object.assign(newG(data.name,data.size,data.seed),data.G);G.build=null;G.removed=0;if(!G.tags)G.tags=defTags();if(!G.held)G.held=[];if(!G.marked)G.marked=[];
       setupLevel(data.seed,data.size,mask);for(let i=0;i<M;i++)if(st[i]===0)G.removed++;
@@ -29,19 +29,22 @@ function startGame(slot,data){
       for(const[type,gx,gz,dir,paid]of data.pipes||[])addPipe(type,gx,gz,dir,paid)
       for(const x of data.structs||[])addStruct(x)}
     else{G=newG(data.name,data.size,data.seed);G.gmode=data.gmode||'normal';if(data.daily)G.daily=data.daily;if(data.vs)G.vs=data.vs;if(!SIZES[data.size].hf)G.H=Math.max(14,Math.ceil(.21*Math.cbrt(SIZES[data.size].inst)+8))+8;setupLevel(data.seed,data.size,null)}
+    storyInit(!data.mask);memoCoinLoad();
     doorOpenAmt=G.doorOpen?1:0;door.position.y=1.35+doorOpenAmt*2.6;
     Object.assign(pl,G.doorOpen?{x:0,z:H-3,yaw:0}:{x:0,z:H+2.4,yaw:0},{y:0,vy:0,pitch:-.05,stam:1,jet:10,air:0});
     $('loading').classList.add('hidden');$('menu').classList.add('hidden');
     drawPrice();drawBoard();
-    if(!data.mask){mode='intro';introT=0;['lbT','lbB','skip'].forEach(i=>$(i).classList.remove('hidden'));saveGame(true)}
+    if(!data.mask){mode='intro';introT=0;['lbT','lbB','skip'].forEach(i=>$(i).classList.remove('hidden'));
+      // 劇情的開場字幕
+      $('lbB').innerHTML=storyOK()?'<div class="cap"><span>海口庄，阿公的老院子。</span><span>昨天晚上，合作社的卡車倒了一整座山的零錢進來。</span></div>':'';saveGame(true)}
     else beginPlay();
   },60);
 }
 function beginPlay(){if(HFm&&pourK<1){pourK=1;hf.set(hfT);hfSync(true)}['lbT','lbB','skip'].forEach(i=>$(i).classList.add('hidden'));$('hud').classList.remove('hidden');mode='play';renderHotbar();tipT=0;if(!locked)lock()}
 function toMenu(){
   if(G)saveGame(true);
-  mode='menu';panel=null;G=null;unlock();
-  ['shopPanel','techPanel','buildPanel','boardPanel','cabPanel','cfgPanel','statPanel','ovPanel','appraise','pausePanel','setPanel','endPanel','card'].forEach(p=>$(p).classList.add('hidden'));
+  mode='menu';panel=null;G=null;unlock();storyReset();
+  ['shopPanel','techPanel','buildPanel','boardPanel','cabPanel','cfgPanel','statPanel','ovPanel','mailPanel','appraise','pausePanel','setPanel','endPanel','card'].forEach(p=>$(p).classList.add('hidden'));
   $('hud').classList.add('hidden');$('menu').classList.remove('hidden');showMenu('main');menuScene();
 }
 function menuScene(){G=newG('menu','std',menuSeed);setupLevel(menuSeed,'std',null);door.position.y=1.35+2.6;G=null}
