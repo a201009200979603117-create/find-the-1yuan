@@ -5894,7 +5894,7 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   await run('線上排行榜（只讀）',async()=>{if(!onlineOn())return{skip:'還沒設定 Supabase，略過'};const r=await onlineTop(dailyKey(),1);return Array.isArray(r)||'讀不到排行榜'});
   // 劇情《第一枚一元》：開新的一般模式跑一遍
   await run('劇情：開門收到信',async()=>{toMenu();await w(400);startGame(0,{name:'劇情檢查',size:'small',seed:777,gmode:'normal'});if(!await until(playing,30000))return'等不到遊戲開始';
-    if(!G.story)return'一般模式沒有劇情';if(!mailBox||!mailBox.visible)return'信箱沒出現';G.doorOpen=true;G.story.last=-99;for(let i=0;i<20;i++){G.play+=.5;storyTick(.5,performance.now())}
+    if(!G.story)return'一般模式沒有劇情';storyTick(.05,performance.now());if(!mailBox||!mailBox.visible)return'信箱沒出現';G.doorOpen=true;G.story.last=-99;for(let i=0;i<20;i++){G.play+=.5;storyTick(.5,performance.now())}
     if(!G.story.got.intro)return'開門以後沒收到信';openMail();const ok=panel==='mailPanel'&&!!$('mailRead').querySelector('.letter')&&!!G.story.read.intro;closePanel();
     const g=G.story;G.story=null;G.order=1;storyInit(false);const old=!!(G.story&&G.story.got.intro&&G.story.got.order1);G.story=g;G.order=0;
     return ok&&old||'讀信 '+ok+'、舊存檔補信 '+old});
