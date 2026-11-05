@@ -33,10 +33,21 @@ function hfDig(x,z,vol){
   const R=.7,a0=Math.max(1,Math.floor((x-R+HFH)/HFS)),a1=Math.min(HFN-2,Math.ceil((x+R+HFH)/HFS)),b0=Math.max(1,Math.floor((z-R+HFH)/HFS)),b1=Math.min(HFN-2,Math.ceil((z+R+HFH)/HFS));
   let W=0;const cells=[];for(let b=b0;b<=b1;b++)for(let a=a0;a<=a1;a++){const d=Math.hypot(a*HFS-HFH-x,b*HFS-HFH-z);if(d<R){const w=1-d/R;cells.push([hfIdx(a,b),w]);W+=w}}
   if(!W)return;for(const[k,w]of cells)hf[k]=Math.max(0,hf[k]-vol*w/W/(HFS*HFS));
-  const MAXD=Math.tan(50*Math.PI/180)*HFS,c0=Math.max(1,a0-6),c1=Math.min(HFN-2,a1+6),d0=Math.max(1,b0-6),d1=Math.min(HFN-2,b1+6);
-  for(let it=0;it<3;it++)for(let b=d0;b<=d1;b++)for(let a=c0;a<=c1;a++){const k=hfIdx(a,b);for(const n of[k+1,k-1,k+HFN,k-HFN]){const df=hf[k]-hf[n];if(df>MAXD){const m=(df-MAXD)/2;hf[k]-=m;hf[n]+=m}}}
-  hfDirty=true;
+  // 太陡的地方不是一下子削平，而是接下來一秒多慢慢滑下來（見 hfSlumpTick）
+  const c0=Math.max(1,a0-6),c1=Math.min(HFN-2,a1+6),d0=Math.max(1,b0-6),d1=Math.min(HFN-2,b1+6),old=hfSlumps.find(r=>r.c0<=c0&&r.c1>=c1&&r.d0<=d0&&r.d1>=d1);
+  if(old)old.t=0;else{hfSlumps.push({c0,c1,d0,d1,t:0});if(hfSlumps.length>12)hfSlumps.shift()}
+  for(let it=0;it<2;it++)hfSlumpStep(c0,c1,d0,d1,.5);hfDirty=true;
 }
+// 比 50 度還陡的格子，把多出來的高度分一部分給旁邊比較低的格子；k 越大滑得越快
+const HF_MAXD=Math.tan(50*Math.PI/180)*HFS;let hfSlumps=[],hfSlT=0;
+function hfSlumpStep(c0,c1,d0,d1,k){let moved=0,big=null;
+  for(let b=d0;b<=d1;b++)for(let a=c0;a<=c1;a++){const i=hfIdx(a,b);for(const n of[i+1,i-1,i+HFN,i-HFN]){const df=hf[i]-hf[n];if(df>HF_MAXD){const m=(df-HF_MAXD)/2*k;hf[i]-=m;hf[n]+=m;moved+=m;if(m>.04&&(!big||m>big.m))big={m,a,b}}}}
+  return{moved,big}}
+function hfSlumpTick(dt){if(!hfSlumps.length)return;hfSlT-=dt;if(hfSlT>0)return;hfSlT=.05;
+  for(let j=hfSlumps.length-1;j>=0;j--){const r=hfSlumps[j];r.t+=.05;let moved=0,big=null;for(let it=0;it<2;it++){const o=hfSlumpStep(r.c0,r.c1,r.d0,r.d1,.5);moved+=o.moved;if(o.big&&(!big||o.big.m>big.m))big=o.big}if(moved>.002)hfDirty=true;
+    // 滑得多的地方滾下幾枚小硬幣，叮叮噹噹
+    if(big){const x=big.a*HFS-HFH,z=big.b*HFS-HFH;burst(x,hfAt(x,z)+.1,z,2,.6);if(SET.vol>0&&Math.random()<.5)clink()}
+    if(moved<.002||r.t>3.5)hfSlumps.splice(j,1)}}
 function hfRay(o,d,reach){if(d.y>.9)return null;for(let t=.2;t<=reach;t+=.08){const x=o.x+d.x*t,y=o.y+d.y*t,z=o.z+d.z*t;if(y<hfAt(x,z)&&y>.05)return{i:-1,t};if(y<0)return null}return null}
 function hfTake(x,y,z,n){
   n=Math.min(Math.floor(n),G.left);if(n<=0||hfAt(x,z)<.05)return{n:0,ones:0};
@@ -65,6 +76,7 @@ function detailHide(x,y,z,n){const k=Math.min(6,Math.ceil(n/200));const a=Math.f
 function updateHF(dt){
   if(!HFm)return;
   if(pourK<1){pourK=Math.min(1,pourK+dt/60);const k=pourK;for(let i=0;i<hf.length;i++)hf[i]=Math.min(hfT[i],hfT[i]*k*1.15);hfSync(false);hfNormT+=dt;if(hfNormT>.5||k>=1){hfNormT=0;hfMesh.geometry.computeVertexNormals()}detC.x=1e9}
+  hfSlumpTick(dt);
   if(hfDirty){hfNormT+=dt;if(hfNormT>.25){hfNormT=0;hfDirty=false;hfSync(true);detC.x=1e9}}
   detT-=dt;const c=mode==='play'?pl:{x:camera.position.x,z:camera.position.z};
   if(detT<=0&&Math.hypot(c.x-detC.x,c.z-detC.z)>2){detT=.2;detailBuild(c.x,c.z)}

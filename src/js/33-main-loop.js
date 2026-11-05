@@ -90,10 +90,12 @@ function detector(dt){
 }
 function updateMovers(dt){
   for(const i of movers){
-    if(st[i]===2){vy[i]-=9.8*dt;const ny=py[i]+vy[i]*dt,sup=supportY(i,px[i],pz[i],py[i]+.03);
-      if(ny<=sup){py[i]=sup;st[i]=1;vy[i]=0;gAdd(i);movers.delete(i);if(!buried(i))show(i);reveal(px[i],pz[i],py[i])}else py[i]=ny;setInst(i)}
+    if(st[i]===3)slideStep(i,dt); // 沿著坡滑（硬幣滑落）
+    else if(st[i]===2){vy[i]-=9.8*dt;const ny=py[i]+vy[i]*dt,sup=supportY(i,px[i],pz[i],py[i]+.03);
+      if(ny<=sup){py[i]=sup;st[i]=1;vy[i]=0;gAdd(i);movers.delete(i);if(!buried(i))show(i);reveal(px[i],pz[i],py[i]);if(slid&&slid[i])slideLand(i);else if(slid)slideAdd(i,1)}else py[i]=ny;setInst(i)}
     else movers.delete(i);
   }
+  slideTick();
 }
 menuScene();showMenu('main');touchInit();if(TOUCH)applySet();
 // 離線玩：存下遊戲和 three.js（只有網址是 http/https 才能用）
@@ -133,6 +135,11 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
     for(const tp of['plant','flowers','bench','lantern','luckycat']){const t=addTile(tp,gx,gz,0,0);if(!t||!t.mesh)return tp+' 蓋不起來';made.push(t);gx+=3}
     const b=made[2];pl.x=fpCenter('bench',b.gx,b.gz,0).x;pl.z=b.gz-.4;pl.y=0;const nb=nearBench()===b;sitBench(b);updatePlayer(.1);const sat=!!pl.sit;keys.add('KeyW');updatePlayer(.05);keys.delete('KeyW');const up=!pl.sit;
     made.forEach(removeTile);return nb&&sat&&up||'靠近 '+nb+'、坐下 '+sat+'、站起來 '+up});
+  await run('硬幣滑落',()=>{const visL=[];for(let i=0;i<M;i++)if(st[i]===1&&vis[i])visL.push(i);if(!visL.length)return'沒有硬幣';let calm=0;for(let k=0;k<400;k++)if(slideDir(visL[Math.floor(Math.random()*visL.length)]))calm++;
+    const P={x:Rp*.42,z:.3},far=()=>groundAt(P.x-2.2,P.z),f0=far(),n0=slideN;for(let pass=0;pass<12;pass++)for(let i=0;i<M;i++){if(st[i]===0||anchors.has(i))continue;if(Math.hypot(px[i]-P.x,pz[i]-P.z)<.8&&py[i]>.3)removeInst(i)}
+    const hole=groundAt(P.x,P.z);for(let f=0;f<900&&(slideQ.size||movers.size);f++)updateMovers(1/60);let moving=0;for(let i=0;i<M;i++)if(st[i]>=2)moving++;
+    const slid=slideN-n0,refill=groundAt(P.x,P.z)-hole,keep=Math.abs(far()-f0)<.08;
+    return calm<=4&&slid>=5&&!moving&&!slideQ.size&&refill>.2&&keep||['沒挖過會滑 '+calm+'/400','滑了 '+slid,'還在動 '+moving,'填回 '+refill.toFixed(2),'遠處不變 '+keep].join('、')});
   await run('來訪的貓',()=>{removeCat();G.catNext=0;updateCat(.1,performance.now());if(!cat)return'貓沒出現';const now=performance.now();for(let i=0;i<80;i++)updateCat(.1,now+i*100);
     const p=cat.g.position;pl.x=p.x+.6;pl.z=p.z;pl.y=p.y;if(!nearCat())return'靠不近';const n=G.catPets||0;petCat();const pet=G.catPets===n+1;cat.stay=0;for(let i=0;i<600&&cat;i++)updateCat(.1,now+i*100);return pet&&!cat||'貓沒離開'});
   await run('流星',()=>{if(SET.daynight===false)return{skip:'日夜循環關掉了，略過'};const tod=G.tod;G.tod=23;meteorT=0;updateMeteor(.1);const ok=!!meteor;for(let i=0;i<30;i++)updateMeteor(.1);G.tod=tod;return ok&&!meteor||'流星沒出現或沒消失'});

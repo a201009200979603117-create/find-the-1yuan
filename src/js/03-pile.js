@@ -32,13 +32,13 @@ function settle(x,z,y,r){
   }
 }
 // 把畫面上的一枚硬幣拿掉（它如果是藏著 1 元的那枚，就回傳 true）
-function removeInst(i){if(typ[i]===3&&G){G.twenty=(G.twenty||0)+1;G.money+=.35;G.earned+=.35}gDel(i);st[i]=0;settle(px[i],pz[i],py[i],rad[i]);reveal(px[i],pz[i],py[i]);setInst(i);G.removed++;if(anchors.has(i)){anchors.delete(i);return true}return false}
+function removeInst(i){if(typ[i]===3&&G){G.twenty=(G.twenty||0)+1;G.money+=.35;G.earned+=.35}gDel(i);st[i]=0;settle(px[i],pz[i],py[i],rad[i]);reveal(px[i],pz[i],py[i]);slideNear(px[i],pz[i],.9,0,py[i]-.1);setInst(i);G.removed++;if(anchors.has(i)){anchors.delete(i);return true}return false}
 
 function generate(seed,sizeKey,mask){
   meshes.forEach(m=>{scene.remove(m);if(m.dispose)m.dispose()});
   const S=SIZES[sizeKey],r=mulberry32(seed);
   HFm=!!S.hf;if(hfMesh)hfMesh.visible=HFm;detMeshes.forEach(m=>m.visible=HFm);
-  if(HFm){M=0;perInst=1;meshes=[];owner=[];mcount=CT.map(()=>0);vis=new Uint8Array(0);movers=new Set();hover=null;grid=Array.from({length:GN*GN},()=>[]);Rp=40;genHF(seed,S,mask);return}
+  if(HFm){M=0;perInst=1;meshes=[];owner=[];mcount=CT.map(()=>0);vis=new Uint8Array(0);movers=new Set();hover=null;grid=Array.from({length:GN*GN},()=>[]);Rp=40;slid=null;hfSlumps=[];genHF(seed,S,mask);return}
   M=S.inst;perInst=S.coins/S.inst;
   [px,py,pz,qx,qy,qz,qw,vy,rad,th,bright]=Array.from({length:11},()=>new Float32Array(M));
   typ=new Uint8Array(M);st=new Uint8Array(M);inst=new Int32Array(M);cellId=new Int32Array(M).fill(-1);
@@ -72,6 +72,7 @@ function generate(seed,sizeKey,mask){
   meshes=CT.map((t,k)=>{const cap=Math.max(1,cnt[k]),m=new THREE.InstancedMesh(coinGeo,COINMAT[k],cap);m.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(cap*3).fill(1),3);m.count=0;m.frustumCulled=false;m.castShadow=true;m.receiveShadow=true;scene.add(m);return m});
   owner=cnt.map(n=>new Int32Array(Math.max(1,n)));mcount=CT.map(()=>0);vis=new Uint8Array(M);
   for(let i=0;i<M;i++)if(st[i]===1&&!buried(i))show(i);
+  slideInit();
 }
 
 // 從硬幣堆的某個位置拿走 n 枚（抽象數量），畫面上的硬幣按比例消失；藏著的 1 元會一起被拿出來
