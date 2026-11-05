@@ -1,8 +1,8 @@
 // ================= 機器的大小：不是每台都只佔一格 =================
 // [寬, 長]：寬是左右，長是沿著箭頭方向。東西從後面或旁邊進來，從最前排的「出口格」往箭頭方向出去
-const FP={bench:[2,1],cosign:[2,1],rake:[1,2],gen:[2,2],gas:[3,3],pump:[2,2],dish:[2,2],silo:[2,2],roller:[1,2],unroll:[1,2],wrap:[1,2],pellet:[1,2],disc:[2,2],pulp:[2,2],paper:[2,3],scanner:[1,2],scanner2:[1,2],detector:[1,3],drone:[2,2],cabinet:[2,1]};
+const FP={bench:[2,1],cosign:[2,1],museum:[2,1],rake:[1,2],gen:[2,2],gas:[3,3],pump:[2,2],dish:[2,2],silo:[2,2],roller:[1,2],unroll:[1,2],wrap:[1,2],pellet:[1,2],disc:[2,2],pulp:[2,2],paper:[2,3],scanner:[1,2],scanner2:[1,2],detector:[1,3],drone:[2,2],cabinet:[2,1]};
 // 機器多高（看著機器、拉電線用）
-const MH={plant:.9,radio:1.15,cosign:2.1,flowers:.3,bench:.9,lantern:2.1,luckycat:.6,rake:1.5,arm:1.6,arm2:1.8,arm3:2,gen:1.5,gas:2.6,pole:3.3,cbox:.8,switch:1.7,dish:3,scanner:1.6,scanner2:1.6,detector:2.2,roller:2,unroll:1.3,wrap:1.7,pellet:1.8,disc:2.3,pulp:1.9,paper:1.9,silo:4.6,pump:2.3,pusher:.9,drone:.4,cabinet:1.9,lamp:2.3,paint:1.8,chute:1.4,tube:1.4,lift:1.8};
+const MH={plant:.9,radio:1.15,cosign:2.1,museum:2.45,flowers:.3,bench:.9,lantern:2.1,luckycat:.6,rake:1.5,arm:1.6,arm2:1.8,arm3:2,gen:1.5,gas:2.6,pole:3.3,cbox:.8,switch:1.7,dish:3,scanner:1.6,scanner2:1.6,detector:2.2,roller:2,unroll:1.3,wrap:1.7,pellet:1.8,disc:2.3,pulp:1.9,paper:1.9,silo:4.6,pump:2.3,pusher:.9,drone:.4,cabinet:1.9,lamp:2.3,paint:1.8,chute:1.4,tube:1.4,lift:1.8};
 let occ=new Map();
 const cellAt=k=>occ.get(k);
 const fpSize=(type,cmp)=>cmp?[1,1]:FP[type]||[1,1];

@@ -20,7 +20,7 @@ function interactions(dt){
   const nearDoor=!G.doorOpen&&Math.hypot(pl.x,pl.z-H)<3.2;
   const nearShop=Math.hypot(pl.x-shopPos.x,pl.z-shopPos.z)<2.6;
   const nearBoard=Math.hypot(pl.x-boardPos.x,pl.z-boardPos.z)<2.6;
-  const cab=nearTile('cabinet',2.2);
+  const cab=nearTile('cabinet',2.2),mus=nearMuseum();
   const hop=G.carry>0&&aimHopper();
   const mt=machineLooked();
   if(mt&&BIT[mt.type])machineTip(mt.type);
@@ -35,6 +35,7 @@ function interactions(dt){
   else if(nearBench())setPrompt('E','坐下休息','長椅');
   else if(pbh)setPrompt('LMB','畫畫','右鍵擦掉・油漆板');
   else if(hop)setPrompt('RMB','丟進收購站','手上 '+fmt(G.carry)+' 枚・每枚 $'+priceEach().toFixed(4));
+  else if(mus&&!(cab&&G.onesHand))setPrompt('E','看一元博物館',musPrompt());
   else if(cab&&G.onesHand)setPrompt('E','把 1 元放進收藏櫃','手上有 '+G.onesHand+' 枚');
   else if(cab)setPrompt('E','打開一元收藏櫃');
   else if(nearShop)setPrompt('E','打開商店','五金行・工具');
@@ -97,6 +98,7 @@ function interactE(){
   const nd=nearDropped();if(nd){pickDropped(nd);return}
   if(!G.doorOpen&&Math.hypot(pl.x,pl.z-H)<3.2){G.doorOpen=true;tone(160,.6,'sawtooth',.04);return}
   const cab=nearTile('cabinet',2.2);
+  if(nearMuseum()&&!(cab&&G.onesHand>0)){openPanel('cabPanel');return}
   if(cab&&G.onesHand>0){G.onesHand--;depositOne();return}
   if(cab){openPanel('cabPanel');return}
   if(Math.hypot(pl.x-shopPos.x,pl.z-shopPos.z)<2.6){openPanel('shopPanel');return}

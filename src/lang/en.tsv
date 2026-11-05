@@ -1601,7 +1601,7 @@ V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績�
 暱稱改好了，下次上傳會用新的	Nickname changed — your next upload will use it
 連不上線上排行榜，等一下再看看。	Can't reach the online leaderboard — check back later.
 沒有網路，連上之後才看得到線上排行榜。	No connection — the online leaderboard needs internet.
-Find The 1元 Demo V3.0	Find The 1元 Demo V3.0
+Find The 1元 Demo V3.1	Find The 1元 Demo V3.1
 📷 存圖	📷 Save
 減少晃動（走路時畫面不上下晃）	Reduce motion (no head bob while walking)
 V2.9：拍照模式多了濾鏡（暖色、黑白、復古、清新）和時間（早上、中午、黃昏、晚上），存下來的照片也套用；線上排行榜可以看昨天的，沒進前 20 名也看得到自己的名次；設定多了「減少晃動」；多一個上榜的成就。	V2.9: Photo mode gets filters (warm, black & white, vintage, fresh) and time of day (morning, noon, dusk, night), applied to saved photos too. The online leaderboard shows yesterday's board, and your own rank even outside the top 20. New "Reduce motion" setting and a leaderboard achievement.
@@ -1945,3 +1945,87 @@ SUPPLY CO. 五金行　阿德	Ah-De, SUPPLY CO. hardware store
 📻 收音機打開了，沙沙沙……	📻 The radio crackles to life…
 📻 收音機關掉了	📻 Radio off
 《第一枚一元》的故事，謝謝你看到最後。	Thank you for seeing “The First NT$1” through to the end.
+# V3.1 一元博物館、節日、收音機換台、相簿
+相簿	Album
+照片存在這台裝置的瀏覽器裡	Photos are kept in this device's browser
+阿公留下來的木頭收音機，五金行的阿德幫忙保管的。走過去按 E 打開，再按會換台（三首老歌、雨聲和蟲鳴），靠近才聽得到。	Grandpa's old wooden radio, which Ah-De from the hardware store kept for you. Walk up and press E to turn it on; press again to change stations (three old songs, plus rain and crickets). You can only hear it up close.
+合作社大廳的玻璃展示櫃，黃理事長送的。找到的每一種 1 元都會自己擺上去，走過去按 E 可以細看。	The glass display case from the co-op's lobby, a gift from Chairman Huang. Every kind of NT$1 you find goes on display by itself. Walk up and press E for a closer look.
+看一元博物館	View the NT$1 Museum
+合作社的展示櫃	The Co-op's Display Case
+一元展結束以後，好多人跑來問我：「那些一元，以後還看得到嗎？」	After the NT$1 Show, so many people came to ask me: “Will we ever get to see those coins again?”
+合作社大廳有一個玻璃展示櫃，以前是放紀念幣的，合作社收了，它也空下來了。我請阿財載去給你，已經放進建造目錄的「裝飾」。	There's a glass display case in the co-op's lobby. It used to hold commemorative coins, and now that the co-op has closed, it sits empty. I asked Ah-Tsai to drive it over to you. It's in the “Decor” section of the build catalog.
+裡面剛好有二十四個小架子，一種一元放一格。你找到的會自己擺上去，還沒找到的格子就先空著，慢慢來。	It has exactly twenty-four little stands, one for each kind of NT$1. The ones you find will set themselves out, and the empty stands can wait. Take your time.
+晚上如果有人跑去你的院子看展示櫃，別嚇到，大家只是想再看看自己的第一枚。	If you see someone in your yard at night looking at the case, don't be startled. They just want another look at their first coin.
+二十四種	Twenty-Four Kinds
+聽說你的展示櫃，二十四格全部擺滿了！	I hear all twenty-four stands in your display case are filled!
+我把合作社最後一本帳簿也翻完了。五十年來，鎮上的孩子存進來的一元，每一種都在你的院子裡了。	I've gone through the co-op's very last ledger. Every kind of NT$1 the town's children deposited over fifty years is now in your yard.
+你阿公說過，錢是拿來用的，可是有些一元，是拿來記得的。現在，大家都記得了。	Your grandpa used to say that money is for spending, but some coins are for remembering. Now everyone remembers.
+謝謝你。	Thank you.
+轉到下一台	Next station
+現在：%s	On air: %s
+第 %s 台：	Station %s:
+老歌〈海口小調〉	Oldie: “Haikou Tune”
+老歌〈月娘〉	Oldie: “Moonlight”
+老歌〈騎鐵馬〉	Oldie: “Riding My Bike”
+雨聲和蟲鳴	Rain and Crickets
+✨ 一元博物館的 24 格全部擺滿了！	✨ All 24 stands in the NT$1 Museum are filled!
+展示了 %s / 24 種	%s / 24 kinds on display
+民國四十九年的那枚擺在這裡，好像真的博物館裡的寶貝。	My 1960 coin looks like a real museum treasure in here.
+凹凹的那枚擺在玻璃櫃裡，也好好看。凹的也是一元嘛。	Even the bent one looks lovely behind glass. A bent one is still a dollar.
+金色的那枚放在這麼亮的地方，有點不好意思。	The golden one, under lights this bright… I'm a little embarrassed.
+刮傷的那枚是我的。玻璃擦得這麼亮，刮痕都看得一清二楚。	The scratched one's mine. With the glass this clean, you can see every scratch.
+紅紅的那枚！下次載貨經過，我還要再來看。	The red one! I'll stop by again next time I'm driving past.
+有洞的那枚，以前綁在我的船頭，現在換它休息了。	The one with the hole used to ride on the bow of my boat. Now it gets to rest.
+我的新亮一元！明天我要帶同學來看！	My shiny NT$1! I'm bringing my classmates tomorrow!
+磁鐵一元在這裡！老師說，下次自然課要來參觀。	The magnet coin's here! My teacher says our science class will come and visit.
+梅花那枚擺在這裡，大家都可以來沾沾好運。	With the plum blossom coin here, everyone can share a little of its luck.
+兩面都是正面的那枚……猜猜看，現在朝外的是哪一面？	The two-headed one… Guess which side is facing out right now?
+磨平的那枚，四十年的豆花錢，現在住進玻璃櫃了。	The worn one, forty years of tofu pudding money, lives in a glass case now.
+🌙 %s來看一元博物館了	🌙 %s came to see the NT$1 Museum
+晚上的院子好安靜。	The yard is so quiet at night.
+你阿公以前也常常這樣，一個人站著看那些一元。	Your grandpa used to do this too, standing alone and looking at those coins.
+謝謝你把它們擺得這麼漂亮。	Thank you for setting them out so nicely.
+看完就回家了，不吵你。	I'll head home after this. I won't bother you.
+一元復始春光好	一元復始春光好
+萬象更新福氣多	萬象更新福氣多
+年年有餘	年年有餘
+福	福
+一元復始	一元復始
+🧧 新年快樂！鐵捲門兩邊貼上春聯了	🧧 Happy Lunar New Year! Spring couplets are up beside the shutter door
+🌕 中秋節快樂！今天晚上的月亮好圓	🌕 Happy Mid-Autumn Festival! The moon is so round tonight
+🌕 中秋節快樂！院子裡多了烤肉架和柚子	🌕 Happy Mid-Autumn Festival! There's a barbecue grill and pomelos in the yard
+新年快樂	Happy New Year
+🧧 紅包收進收藏櫃的「回憶」了	🧧 The red envelope is now under “Memories” in the collection cabinet
+新年快樂！	Happy New Year!
+海口庄的習慣，過年要給孩子包紅包。你阿公以前每年都會包一枚亮晶晶的 1 元給鎮上的孩子，說是「一元復始」：新的一年，從一元開始。	In Haikou, we give children red envelopes at New Year. Every year, your grandpa put one shiny NT$1 in an envelope for each child in town. He called it “a fresh start from one”: a new year begins with a single dollar.
+今年換阿嬤包給你。紅包袋裡只有一枚 1 元，不多，可是它是新的一年的第一枚。	This year it's my turn to give one to you. There's only one NT$1 inside. It isn't much, but it's the first one of the new year.
+春聯是阿德幫你貼的，就在鐵捲門兩邊。晚上記得抬頭看看，鎮上的人在海邊放煙火。	Ah-De put up the couplets for you, on both sides of the shutter door. Look up at night, too: the townsfolk are setting off fireworks by the sea.
+有空來柑仔店，阿嬤請你吃年糕。	Come by the shop when you're free. I'll treat you to New Year's cake.
+中秋節快樂	Happy Mid-Autumn Festival
+中秋節快樂！我是烤肉高手志偉，就是把一元掉進炭火裡的那個。	Happy Mid-Autumn Festival! It's Chih-wei, the barbecue master. Yes, the one who dropped his coin into the charcoal.
+今年我多帶了一個烤肉架，已經擺在你的院子裡了，炭也幫你點好了。秀蘭阿嬤說中秋一定要有柚子，就放在旁邊的小桌子上。	I brought an extra grill this year. It's already in your yard, and I've lit the charcoal for you. Grandma Hsiu-lan says Mid-Autumn isn't complete without pomelos, so they're on the little table next to it.
+烤肉的時候記得把零錢收好，不然會像我一樣，第二天才從炭裡把它撿出來。	Keep your change in your pocket while you grill, or you'll end up like me, fishing it out of the coals the next day.
+今天晚上的月亮很圓，記得抬頭看看。	The moon is very round tonight. Remember to look up.
+年的紅包	red envelope
+秀蘭阿嬤包的紅包，裡面是一枚亮晶晶的 1 元。阿公說：新的一年，從一元開始。	A red envelope from Grandma Hsiu-lan, with one shiny NT$1 inside. Grandpa used to say: a new year begins with a single dollar.
+新年快樂！紅包收到了嗎？	Happy New Year! Did you get your red envelope?
+以前過年，合作社門口也貼一樣的春聯。	The co-op used to put up the very same couplets every New Year.
+年糕在桌上，吃一塊再去挖。	There's New Year's cake on the table. Have a piece before you dig.
+一元復始，萬象更新。你阿公每年都這樣寫。	“A fresh start from one, and everything made new.” Your grandpa wrote that every year.
+今天的月亮好圓。	The moon is so round tonight.
+五十年前的中秋，我也在柑仔店門口看月亮。	Fifty years ago at Mid-Autumn, I watched the moon outside the shop too.
+柚子剝好了，柚子皮給你戴，當帽子。	I've peeled the pomelo. Here, wear the peel as a hat.
+志偉的烤肉，還是一樣有點焦。	Chih-wei's barbecue is still a little burnt, as always.
+相簿滿了（	The album is full (
+張），這張只存到裝置裡	photos), so this one was only saved to your device
+📷 這張也收進相簿了，主選單和暫停選單都看得到	📷 This photo is in your album too. Open it from the main menu or the pause menu
+這個瀏覽器存不了相簿（可能是無痕模式）。	This browser can't keep an album (maybe it's a private window).
+照片還是會存到裝置裡。	Photos still get saved to your device.
+還沒有照片。	No photos yet.
+點左上角的 📷 進入拍照模式，再點「存圖」拍一張。	Tap 📷 at the top left for Photo mode, then tap “Save” to take a photo.
+按 P 進入拍照模式，按 Enter 拍一張。	Press P for Photo mode, then press Enter to take a photo.
+💾 存到裝置	💾 Save to device
+確定刪掉？	Really delete?
+🗑 刪掉	🗑 Delete
+照片刪掉了	Photo deleted
+V3.1：一元展之後，黃理事長會送你「一元博物館」：找到的每一種 1 元都會擺進玻璃展示櫃，晚上偶爾有鎮上的人來看；照真實的日期，過年院子會貼春聯、放煙火、收到紅包，中秋有大月亮、烤肉架和柚子；阿公的收音機可以換台（三首老歌、雨聲和蟲鳴）；拍的照片會收進新的「相簿」，主選單和暫停選單都打得開。	V3.1: After the NT$1 Show, Chairman Huang gives you the “NT$1 Museum”: every kind of NT$1 you find goes into a glass display case, and townsfolk sometimes come by at night to see it. Following the real calendar, Lunar New Year brings spring couplets, fireworks and a red envelope, and Mid-Autumn brings a big moon, a barbecue grill and pomelos. Grandpa's radio now has stations (three old songs, plus rain and crickets). Your photos also go into a new Album, which you can open from the main menu or the pause menu.

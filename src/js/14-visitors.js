@@ -91,6 +91,7 @@ function animTile(t,dt,now){
     if(t.outArr&&t.litRel!==rel){t.litRel=rel;for(const k in t.outArr)t.outArr[k].material=+k===rel?MM.arrOut:MM.arrOff}}}
   if(t.scanBar)t.scanBar.position.z=Math.sin(now/300)*.55;
   if(t.wave)t.wave.rotation.x=-.25+Math.sin(now/280)*.45; // 招財貓招手
+  if(t.mus)museumAnim(t,dt,now); // 一元博物館：1 元慢慢轉
   if(t.spin){const k=dt*(t.prog>0||!PROCS[t.type]?4:.6)*(t.pw||0);if(t.spinAx==='z')t.spin.rotation.z+=k;else if(t.spinAx==='x')t.spin.rotation.x+=k;else t.spin.rotation.y+=k}
   if(t.beam){t.beam.rotation.x=Math.sin(now/400)*.22*(t.pw>0?1:0)}
 }

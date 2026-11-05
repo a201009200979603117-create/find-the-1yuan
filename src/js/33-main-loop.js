@@ -34,7 +34,7 @@ function tick(dt,now){
       if(G.left<=0&&!G.ended&&!storyHold()){if(G.gmode==='endless')refillPile();
         else{G.ended=true;mode='end';unlock();$('endTxt').innerHTML='整堆硬幣都挖完了。<br>找到 <b>'+G.onesFound+'</b> 枚 1 元'+(G.onesLost?'，另外有 <b>'+G.onesLost+'</b> 枚被賣掉了':'')+'。<br>總共賺了 <b>'+money(G.earned)+'</b>，玩了 '+Math.floor(G.play/60)+' 分鐘。'+(G.story&&G.story.festDone?'<br><span style="color:var(--gold)">《第一枚一元》的故事，謝謝你看到最後。</span>':'');$('endPanel').classList.remove('hidden')}}
     }
-    storyTick(dt,now);storyWorld(dt,now);
+    storyTick(dt,now);storyWorld(dt,now);seasonTick(dt,now);
     updateMovers(dt);updateHF(dt);if(mode==='play')updateHover();drawItems();drawBeacons();drawDropped();
     slowT-=dt;if(slowT<=0&&mode!=='intro'){updateHud(.15);updMailHud();slowT=.15}
     if(mode==='play')showTool();
@@ -107,7 +107,7 @@ checkVer();setInterval(checkVer,20*60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&performance.now()-verT>60000)checkVer()});
 $('upd').onclick=()=>{if(G&&slotIdx>=0)saveGame(true);location.reload()};
 // 自我檢查（開發用）：網址加 ?selftest 會自動跑一遍主要功能，跑完把存檔還原
-async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk[k]=localStorage.getItem(k));const t0=performance.now(),out=[];
+async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk[k]=localStorage.getItem(k));const t0=performance.now(),out=[];ALB_DB='fty1-album-selftest';albDB=null;
   const box=document.createElement('pre');box.id='selftest';box.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-height:90vh;overflow:auto;background:#000d;color:#ccc;font:12px/1.5 monospace;padding:10px;margin:0;pointer-events:none;white-space:pre-wrap;max-width:60vw';document.body.appendChild(box);
   const w=ms=>new Promise(r=>setTimeout(r,ms)),until=async(f,ms)=>{const e=performance.now()+ms;while(performance.now()<e){if(f())return true;await w(100)}return false},
     show=()=>box.textContent='自我檢查 '+(out.every(x=>x.ok)?'':'（有失敗）')+'\n'+out.map(x=>(x.ok?'✓ ':'✗ ')+x.n+(x.info?'　'+x.info:'')).join('\n'),
@@ -115,7 +115,7 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
     run=async(n,f)=>{let r;try{r=await f()}catch(e){r=String(e&&e.message||e)||'出錯了'}out.push({n,ok:r===true||!!(r&&r.skip),info:typeof r==='string'?r:r&&r.skip||''});show()},
     gf=giveFile,playing=()=>{if(mode==='intro')for(let i=0;i<20;i++)tick(.05,performance.now());return mode==='play'};let file=null;
   await run('一開始沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m).join('；'):true);
-  await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi').length===6);
+  await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi').length===7);
   await run('存檔碼壓縮再解開',async()=>{const o={G:{a:1,b:'一元'},size:'small',seed:1};return JSON.stringify(await unpackCode(await packCode(JSON.stringify(o))))===JSON.stringify(o)});
   await run('挑戰朋友連結',()=>{const v=vsParse('?x=1&vs=std.123456.754');return!!v&&v.size==='std'&&v.seed===123456&&v.t===754&&!vsParse('?vs=nope.1.2')});
   await run('連續天數',()=>{const d={},day=new Date();for(let i=1;i<=3;i++){day.setDate(day.getDate()-1);d[dailyKey(day)]=100}localStorage.setItem(DKEY,JSON.stringify(d));const a=dailyStreak();d[dailyKey()]=90;localStorage.setItem(DKEY,JSON.stringify(d));const b=dailyStreak();localStorage.removeItem(DKEY);return a===3&&b===4&&dailyStreak()===0||a+'、'+b});
@@ -144,6 +144,7 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   await run('拍照',()=>{file=null;enterPhoto();savePhoto();exitPhoto();return!!(file&&file.size>5000)||'沒產生照片'});
   await run('拍照濾鏡和時間',()=>{file=null;const tod=G.tod;enterPhoto();photoNextFx();photoNextFx();photoNextFx();const fx=PHOTO_FX[photoFx].n,css=cv.style.filter;if(SET.daynight!==false)photoNextTod();const t1=G.tod;savePhoto();exitPhoto();
     const m=photoMat(2).A,gray=Math.abs(m[0]-m[3])<1e-6&&Math.abs(m[1]-m[4])<1e-6;return fx==='復古'&&/sepia/.test(css)&&!!file&&file.size>5000&&G.tod===tod&&cv.style.filter===''&&gray&&(SET.daynight===false||t1===8.5)||[fx,css,G.tod,tod,t1].join('、')});
+  await run('相簿',async()=>{let n=0;for(let i=0;i<30&&n<2;i++){await w(200);try{n=await albCount()}catch(e){return'打不開相簿：'+e}}await openAlbum();const g=document.querySelectorAll('#alGrid .al-it').length;albSel=0;albShow();const big=!!$('alView').querySelector('img');closeAlbum();return n>=2&&g===n&&big||'相簿 '+n+' 張、畫面 '+g+' 張、大圖 '+big});
   giveFile=gf;
   await run('匯入存檔',()=>{importData(JSON.parse(JSON.stringify(loadSlots()[0])));return!!loadSlots()[1]});
   await run('挑戰完成',()=>{anchors.clear();G.onesHand=0;checkChallenge();const ok=$('dlgT').textContent===L('挑戰成功！')&&G.chalDone;$('dialog').classList.add('hidden');return ok});
@@ -164,16 +165,34 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   await run('放大鏡和收藏櫃',async()=>{G.coll={};const r0=rollType;rollType=()=>ONE_TYPES.find(t=>t.id==='holed');depositOne();const ap=mode==='appraise'&&!!appr&&appr.spots.length===3;apReveal();
     await until(()=>mode==='card',4000);closeCard();depositOne();rollType=r0;const dup=mode==='play'&&G.coll.holed===2;
     openPanel('cabPanel');cabSel='holed';renderCab();const v=!$('cabView').classList.contains('hidden')&&$('cabView').textContent.includes(L(ownerOf('holed')[0]));
-    cabTab='memo';cabSel=null;renderCab();const m=document.querySelectorAll('#cabList .memo').length===MEMOS.length;cabTab='one';closePanel();
+    cabTab='memo';cabSel=null;renderCab();const m=document.querySelectorAll('#cabList .memo').length===MEMOS.filter(x=>!x.season||G.story.items[x.id]).length;cabTab='one';closePanel();
     return ap&&dup&&v&&m||('放大鏡 '+ap+'、重複的 '+dup+'、細看 '+v+'、回憶 '+m)});
   await run('劇情：鐵盒和一元展',()=>{const S=G.story;G.left=0;storyHold();if(!memoObj.tin)return'鐵盒沒出現';pickMemo('tin');openTin();finishTin();if(!S.items.mine||!G.coll.gold)return'鐵盒裡沒有東西';
     S.last=-99;for(let i=0;i<20;i++){G.play+=.5;storyTick(.5,performance.now())}if(!S.got.fest)return'沒收到一元展的信';
     festStart();if(folk.length<8)return'鎮上的人沒來：'+folk.length;const p=folk.find(x=>!x.sit);talkFolk(p);if(!p.bub)return'聊不起來';
     fest.ready=true;launchMark(true);launchLanterns();if(fest.lan.length<20)return'天燈沒放';for(let i=0;i<40;i++)festTick(.1,performance.now());endCredits();
     return S.festDone&&S.fin||'結局沒完成'});
+  // 一元展結束：鎮民回家（像天亮了一樣），再檢查博物館、節日、收音機
+  folk.slice().forEach(removeFolk);festLights(false);launchMark(false);if(fest){fest.lan.forEach(l=>{scene.remove(l.g);disposeObj(l.g)});fest=null}
+  await run('一元博物館',()=>{deliver('museum',true);if(!lv('giftMuseum'))return'沒有送展示櫃';const t=addTile('museum',Math.floor(-H+3),Math.floor(H-4),0,0);if(!t||!t.musCoins)return'蓋不起來';animTile(t,.1,performance.now());
+    const have=ONE_TYPES.filter(x=>G.coll[x.id]).length,shown=t.musCoins.filter(c=>c.have).length,c=fpCenter('museum',t.gx,t.gz,0);pl.x=c.x;pl.z=c.z-1.2;pl.y=0;const near=nearMuseum()===t;
+    G.tod=22;musVT=0;museumVisit(.1,performance.now());const v=!!musV;for(let i=0;i<220&&musV&&musV.st!=='look';i++)museumVisit(.1,performance.now());for(let i=0;i<20&&musV;i++)museumVisit(.1,performance.now());
+    const said=!!(musV&&musV.said);folk.filter(p=>p.mus).forEach(removeFolk);musV=null;removeTile(t);
+    return t.musCoins.length===24&&shown===have&&have>0&&near&&v&&said||['格子 '+t.musCoins.length,'擺了 '+shown+'/'+have,'靠近 '+near,'有人來看 '+v,'說話 '+said].join('、')});
+  await run('節日：過年和中秋',()=>{const S=G.story,d0=seasonDay,now=()=>performance.now();
+    seasonDay='2027-02-06';seaT=0;seaT0=now()-20000;S.last=-99;G.play=Math.max(G.play,100);seasonTick(.1,now());
+    const cny=!!cnyG&&SEA.cny===2027,got=!!S.got.cny2027;openMail('cny2027');const red=!!$('mailRead').querySelector('.letter.red')&&!!S.items.hb2027;closePanel();launchFw();const fw=FW.length>0;
+    seasonDay='2027-09-15';seaT=0;S.last=-99;G.tod=21;seasonTick(.1,now());seasonTick(.1,now());const moon=!cnyG&&!!moonP&&moonS.visible&&moonS.scale.x>25,ml=!!S.got.moon2027;
+    seasonDay='2026-11-05';seaT=0;seasonTick(.1,now());const off=!cnyG&&!moonP;seasonDay=d0;seaT=0;
+    return cny&&got&&red&&fw&&moon&&ml&&off||['春聯 '+cny,'紅包信 '+got,'紅信紙 '+red,'煙火 '+fw,'中秋 '+moon,'中秋的信 '+ml,'收起來 '+off].join('、')});
+  await run('收音機換台',()=>{G.ups.giftRadio=1;const t=addTile('radio',Math.floor(-H+3),Math.floor(H-7),0,0);if(!t)return'蓋不起來';pl.x=t.gx+.5;pl.z=t.gz-.6;pl.y=0;
+    G.story.radio=true;const old=radioSt()===1,seen=[];for(let i=0;i<5;i++){const n=storyNear();if(!n||n.k!=='radio')return'靠近收音機沒有提示';storyUse();seen.push(radioSt())}
+    G.story.radio=4;updateRadio(.1);const blue=t.dialC===0x60b8ff;G.story.radio=0;updateRadio(.1);removeTile(t);
+    return old&&seen.join()==='2,3,4,0,1'&&blue||'舊存檔 '+old+'、順序 '+seen.join()+'、雨聲的燈 '+blue});
   await run('回主選單',async()=>{toMenu();await w(800);return mode==='menu'});
   await run('最後沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m+'（'+e.at+'）').join('；'):true);
   sk.forEach(k=>bk[k]==null?localStorage.removeItem(k):localStorage.setItem(k,bk[k]));showMenu('main');
+  try{(await albOpen()).close()}catch(e){}albDB=null;try{indexedDB.deleteDatabase('fty1-album-selftest')}catch(e){}ALB_DB='fty1-album';
   const pass=out.every(x=>x.ok);out.push({n:'花了 '+((performance.now()-t0)/1000).toFixed(1)+' 秒，存檔已還原',ok:pass});show();box.style.color=pass?'#9f9':'#f99';window.__selftest={pass,out}}
 if(/[?&]selftest\b/.test(location.search))setTimeout(selfTest,500);
 {const v=vsParse(location.search);if(v){history.replaceState(null,'',location.pathname);const ask=()=>$('dialog').classList.contains('hidden')&&mode==='menu'?acceptVs(v):setTimeout(ask,300);setTimeout(ask,300)}}

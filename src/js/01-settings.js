@@ -211,8 +211,9 @@ const BUILD=[
   {id:'bench',  cat:'裝飾',name:'長椅',icon:'🪑',price:35,desc:'木頭長椅。走過去按 E 坐下來休息，體力回得比較快。'},
   {id:'lantern',cat:'裝飾',name:'紅燈籠',icon:'🏮',price:25,desc:'掛在木柱上的紅燈籠，天黑之後會亮起來。'},
   {id:'luckycat',cat:'裝飾',name:'招財貓',icon:'🐱',price:88,desc:'一直招手的招財貓，希望 1 元自己跑出來。'},
-  {id:'radio',cat:'裝飾',name:'阿公的舊收音機',icon:'📻',price:0,max:1,req:'giftRadio',gift:true,desc:'阿公留下來的木頭收音機，五金行的阿德幫忙保管的。走過去按 E 打開，靠近才聽得到老歌。'},
+  {id:'radio',cat:'裝飾',name:'阿公的舊收音機',icon:'📻',price:0,max:1,req:'giftRadio',gift:true,desc:'阿公留下來的木頭收音機，五金行的阿德幫忙保管的。走過去按 E 打開，再按會換台（三首老歌、雨聲和蟲鳴），靠近才聽得到。'},
   {id:'cosign',cat:'裝飾',name:'合作社的舊招牌',icon:'🪧',price:0,max:1,req:'giftSign',gift:true,desc:'海口信用合作社掛了五十年的木頭招牌，黃理事長送的。'},
+  {id:'museum',cat:'裝飾',name:'一元博物館',icon:'🏛',price:0,max:1,req:'giftMuseum',gift:true,desc:'合作社大廳的玻璃展示櫃，黃理事長送的。找到的每一種 1 元都會自己擺上去，走過去按 E 可以細看。'},
   {id:'scanner',cat:'探勘',name:'掃描器 Mk I',icon:'🔍',price:250,req:'scanBP',power:1,desc:'檢查經過的硬幣，發現 1 元就收進抽屜。每分鐘 1,000 枚。抽屜滿了輸送帶會停住，走過去按 E 拿出 1 元。'},
   {id:'scanner2',cat:'探勘',name:'掃描器 Mk II',icon:'🔍',price:600,req:'scan2BP',power:2,desc:'每分鐘 1,667 枚，抽屜大一倍。抽屜滿了會把 1 元放到旁邊的托盤，輸送帶不會停。'},
   {id:'dish',   cat:'探勘',name:'衛星天線',icon:'📡',price:1200,req:'dishBP',power:3,max:1,desc:'一個院子一個。掃描 45 公尺內的硬幣堆，把埋在裡面的 1 元用紅色記號標出來。Mk 等級越高標得越快。'},
@@ -220,7 +221,7 @@ const BUILD=[
 ];
 const BELTLIKE=new Set(['belt','beltC','tjunc','gate','mergeC','hstairs','split','splitU','split3','smart','merge','mergeU','chute','scanner','scanner2','detector','tube','lift']);
 const SCANS=new Set(['scanner','scanner2','detector']);
-const SOLID=new Set(['plant','flowers','bench','lantern','luckycat','radio','cosign','rake','arm','arm2','arm3','gen','gas','pole','cbox','switch','dish','lamp','paint','cabinet','roller','unroll','wrap','pellet','disc','pulp','paper','silo','pump','pusher','drone']);
+const SOLID=new Set(['plant','flowers','bench','lantern','luckycat','radio','cosign','museum','rake','arm','arm2','arm3','gen','gas','pole','cbox','switch','dish','lamp','paint','cabinet','roller','unroll','wrap','pellet','disc','pulp','paper','silo','pump','pusher','drone']);
 // 發電：硬幣發電機燒散硬幣（燃料算枚數），燃氣發電廠燒環保磚＋要水（燃料算滿載秒數）
 const GENS={gen:{kw:()=>6+2*lv('genBig'),cap:()=>240+240*lv('genBig'),burn:2.5,fuel:it=>!it.prod?it.n:0},
   gas:{kw:()=>20*(1+.25*lv('gasBig')),cap:()=>300,burn:1,fuel:it=>it.prod==='eco'?30*it.n/100:0}};

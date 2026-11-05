@@ -4,8 +4,8 @@
 // 沒有時間限制，信會一直放在信箱裡等你讀；送的禮物都是裝飾，不會讓遊戲變簡單或變難。
 const storyOK=()=>!!(G&&G.story&&SET.story!==false);
 const STORY_MACH=new Set(['gen','gas','rake','arm','arm2','arm3','roller','scanner','scanner2','detector','drone']);
-const STORY_PPL={huang:'黃理事長',lan:'秀蘭阿嬤',de:'阿德',tsai:'阿財',chen:'陳師傅',gp:'阿公'};
-const STORY_STAMP={huang:'🏦',lan:'🍧',de:'🔧',tsai:'🚚',chen:'🪙',gp:'🍬'};
+const STORY_PPL={huang:'黃理事長',lan:'秀蘭阿嬤',de:'阿德',tsai:'阿財',chen:'陳師傅',gp:'阿公',zw:'烤肉高手志偉'};
+const STORY_STAMP={huang:'🏦',lan:'🍧',de:'🔧',tsai:'🚚',chen:'🪙',gp:'🍬',zw:'🍖'};
 // 劇情送的裝飾：用一個看不到的科技等級解鎖
 const GIFT={radio:'giftRadio',cosign:'giftSign'};
 const hasBench=()=>{for(const t of tiles.values())if(t.type==='bench')return t;return null};
@@ -74,7 +74,17 @@ const LETTERS=[
   {id:'after',from:'lan',title:'天燈',to:'孩子：',need:['fest'],when:()=>G.story.festDone,delay:40,
     body:['昨天晚上的天燈好漂亮，我跟陳師傅看到最後一盞飛不見了才回家。',
       '你阿公一定也看到了。',
-      '院子整理好了，可是不用急著走喔。有空就來柑仔店坐坐，彈珠汽水阿嬤請。'],sig:'秀蘭阿嬤'}
+      '院子整理好了，可是不用急著走喔。有空就來柑仔店坐坐，彈珠汽水阿嬤請。'],sig:'秀蘭阿嬤'},
+  {id:'museum',from:'huang',title:'合作社的展示櫃',to:'你好：',need:['fest'],when:()=>G.story.festDone,delay:90,gift:'museum',
+    body:['一元展結束以後，好多人跑來問我：「那些一元，以後還看得到嗎？」',
+      '合作社大廳有一個玻璃展示櫃，以前是放紀念幣的，合作社收了，它也空下來了。我請阿財載去給你，已經放進建造目錄的「裝飾」。',
+      '裡面剛好有二十四個小架子，一種一元放一格。你找到的會自己擺上去，還沒找到的格子就先空著，慢慢來。',
+      '晚上如果有人跑去你的院子看展示櫃，別嚇到，大家只是想再看看自己的第一枚。'],sig:'海口信用合作社　黃理事長'},
+  {id:'musefull',from:'huang',title:'二十四種',to:'你好：',need:['museum'],when:()=>!!museumTile()&&musFull(),delay:10,
+    body:['聽說你的展示櫃，二十四格全部擺滿了！',
+      '我把合作社最後一本帳簿也翻完了。五十年來，鎮上的孩子存進來的一元，每一種都在你的院子裡了。',
+      '你阿公說過，錢是拿來用的，可是有些一元，是拿來記得的。現在，大家都記得了。',
+      '謝謝你。'],sig:'海口信用合作社　黃理事長'}
 ];
 const LETTER=Object.fromEntries(LETTERS.map(l=>[l.id,l]));
 // 每種 1 元的主人：收藏櫃和翻過來的卡片上會多一句「主人的話」
@@ -117,7 +127,7 @@ const MEMO=Object.fromEntries(MEMOS.map(m=>[m.id,m]));
 function storyInit(fresh){if(!G)return;
   if(G.daily||G.vs||(G.gmode&&G.gmode!=='normal'&&G.gmode!=='endless')){G.story=null;return}
   if(G.story){for(const k in G.story.got){const l=LETTER[k];if(l&&l.gift)G.ups[GIFT[l.gift]]=1}return}
-  G.story={got:{},read:{},items:{},memo:{},wait:{},last:-99,radio:false};
+  G.story={got:{},read:{},items:{},memo:{},wait:{},last:-99,radio:0};
   if(fresh)return;
   // 舊存檔：已經做到的部分，信直接放進信箱，不一封一封跳通知
   let n=0;for(const id of['intro','first1','gen','order1']){const l=LETTER[id];if(l.when()){G.story.got[id]=Math.max(.01,G.play-n);n++;if(l.gift)G.ups[GIFT[l.gift]]=1}}
@@ -172,9 +182,9 @@ function openMail(id){if(!storyOK())return;const S=G.story,ids=LETTERS.filter(l=
 const letterBody=l=>typeof l.body==='function'?l.body():l.body;
 function letterHTML(l,anim){const S=G.story;
   let act='';if(l.act==='fest')act=S.festDone?'':S.fest?'<div class="lt-act"><span>一元展正在院子裡進行中</span></div>':'<div class="lt-act"><button class="btn gold" data-fest="go">今晚辦一元展</button>'+(S.fin?'':'<button class="btn" data-fest="later">晚點再說</button>')+'</div>';
-  return '<div class="letter'+(anim?' anim':'')+(EN_ON?' en':'')+'"><div class="lt-hd"><div class="lt-to">'+l.to+'</div><div class="lt-stamp"><i>'+STORY_STAMP[l.from]+'</i><small>海口庄</small></div></div>'+
+  return '<div class="letter'+(anim?' anim':'')+(EN_ON?' en':'')+(l.red?' red':'')+'"><div class="lt-hd"><div class="lt-to">'+l.to+'</div><div class="lt-stamp"><i>'+STORY_STAMP[l.from]+'</i><small>海口庄</small></div></div>'+
     letterBody(l).map(p=>'<p>'+TT(p)+'</p>').join('')+'<div class="lt-sig">'+l.sig+'</div>'+
-    (l.gift?'<div class="lt-gift">🎁 <b>'+BIT[l.gift].name+'</b> 已經放進建造目錄的「裝飾」</div>':'')+act+'</div>'}
+    (l.gift?'<div class="lt-gift">🎁 <b>'+BIT[l.gift].name+'</b> 已經放進建造目錄的「裝飾」</div>':'')+(l.note?'<div class="lt-gift">'+l.note+'</div>':'')+act+'</div>'}
 function renderMail(){const S=G.story;if(!S)return;const ls=LETTERS.filter(l=>S.got[l.id]).sort((a,b)=>S.got[b.id]-S.got[a.id]);
   if(!LETTER[mailSel]||!S.got[mailSel])mailSel=ls[0]?ls[0].id:null;
   const l=LETTER[mailSel],fresh=l&&!S.read[l.id];if(l&&fresh){S.read[l.id]=G.play||1;readFx(l)}
@@ -182,7 +192,7 @@ function renderMail(){const S=G.story;if(!S)return;const ls=LETTERS.filter(l=>S.
   $('mailRead').innerHTML=l?letterHTML(l,fresh):'<div class="mnone">信箱是空的。<br>阿公的院子很安靜。</div>';if(fresh){paperSnd();$('mailRead').scrollTop=0}
   updMailHud()}
 // 第一次讀的時候才發生的事
-function readFx(l){const S=G.story;if(l.id==='chen'&&!G.coll.gold)S.forceGold=true}
+function readFx(l){const S=G.story;if(l.id==='chen'&&!G.coll.gold)S.forceGold=true;if(l.memo&&!S.items[l.memo]){S.items[l.memo]=true;seaMemo(l.memo)}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mail],[data-fest],#mailBadge,[data-readmail]');if(!b||!G)return;
   if(b.id==='mailBadge'){if(mode==='play'&&!G.build)openMail();return}
   if(b.dataset.mail){mailSel=b.dataset.mail;renderMail();tone(700,.03);return}
@@ -258,6 +268,7 @@ function memoImg(id){return memoImgC[id]||(memoImgC[id]=memoCanvas(id,480,360).t
 function memoCanvas(id,W,Hh){const c=document.createElement('canvas');c.width=W;c.height=Hh;const g=c.getContext('2d'),s=W/480,KAI='"DFKai-SB","BiauKai","Kaiti TC","STKaiti","KaiTi",serif';
   const bg=()=>{const gr=g.createRadialGradient(W/2,Hh*.45,10,W/2,Hh/2,W*.7);gr.addColorStop(0,'#5a4330');gr.addColorStop(1,'#1e150d');g.fillStyle=gr;g.fillRect(0,0,W,Hh)};
   const shadow=(x,y,rx,ry)=>{g.save();g.fillStyle='rgba(0,0,0,.35)';g.filter='blur('+8*s+'px)';g.beginPath();g.ellipse(x,y,rx,ry,0,0,7);g.fill();g.restore()};
+  if(/^hb\d/.test(id)){hbArt(g,W,Hh,s,KAI,bg,shadow);return c}
   if(id==='glasses'){bg();shadow(240*s,250*s,170*s,26*s);g.lineCap='round';
     g.strokeStyle='#3a2414';g.lineWidth=7*s;g.beginPath();g.moveTo(92*s,160*s);g.lineTo(40*s,120*s);g.moveTo(388*s,160*s);g.lineTo(440*s,118*s);g.stroke();
     g.strokeStyle='#bfbfbf';g.lineWidth=2.5*s;for(let k=0;k<5;k++){g.beginPath();g.ellipse((405+k*7)*s,(138-k*5)*s,4*s,8*s,.7,0,7);g.stroke()}

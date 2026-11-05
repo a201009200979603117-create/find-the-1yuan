@@ -87,8 +87,8 @@ function updateFolk(dt,now){for(const p of folk){
   if(p.bub){p.bt-=dt;p.bub.material.opacity=Math.min(1,p.bt);if(p.bt<=0){p.g.remove(p.bub);disposeObj(p.bub);p.bub=null}}}
   folk.filter(p=>p.gone&&p.fade<.03).forEach(removeFolk)}
 const nearFolk=()=>{let best=null,bd=1.7;for(const p of folk){if(p.gone)continue;const d=Math.hypot(pl.x-p.g.position.x,pl.z-p.g.position.z);if(d<bd){bd=d;best=p}}return best};
-function talkFolk(p){const S=G.story;
-  if(p.id==='lan'||p.id==='chen'){if(!fest){const k=(S.elderK=(S.elderK||0)+1)%ELDER_LINES.length,[who,txt]=ELDER_LINES[k];const q=folk.find(x=>x.id===who&&!x.gone)||p;sayFolk(q,txt);return}}
+function talkFolk(p){const S=G.story;if(p.mus){talkMus(p);return}
+  if(p.id==='lan'||p.id==='chen'){if(!fest){const EL=seaElder()||ELDER_LINES,k=(S.elderK=(S.elderK||0)+1)%EL.length,[who,txt]=EL[k];const q=folk.find(x=>x.id===who&&!x.gone)||p;sayFolk(q,txt);return}}
   p.n=(p.n||0)+1;sayFolk(p,p.n===1?(G.coll[p.d.coin]?p.d.a:p.d.b):p.n%2?p.d.c:(G.coll[p.d.coin]?p.d.a:p.d.b));
   if(fest){fest.talked.add(p.id)}}
 
@@ -111,7 +111,7 @@ function festStart(){const S=G.story;if(!S||S.festDone||fest)return;S.fest=1;
   let cab=null;for(const t of tiles.values())if(t.type==='cabinet'){cab=t;break}
   const spots=[];const tryAt=(x,z)=>allowed(x,z)&&!occ.has(tkey(Math.floor(x),Math.floor(z)))&&spots.every(q=>Math.hypot(q.x-x,q.z-z)>1)&&Math.hypot(x-MAILP.x,z-MAILP.z)>1.2;
   const add=(x,z,fx,fz)=>{spots.push({x,z,yaw:Math.atan2(-(fx-x),-(fz-z))})};
-  if(cab){const c=fpCenter('cabinet',cab.gx,cab.gz,cab.dir),[fx,fz]=DIRS[cab.dir];for(const[r,o]of[[1.5,0],[1.7,.7],[1.7,-.7],[2.5,.35],[2.5,-.35]]){const a=Math.atan2(fz,fx)+o,x=c.x+Math.cos(a)*r,z=c.z+Math.sin(a)*r;if(tryAt(x,z))add(x,z,c.x,c.z)}}
+  if(cab){const c=fpCenter('cabinet',cab.gx,cab.gz,cab.dir),[fx,fz]=DIRS[cab.dir];for(const[r,o]of[[1.5,0],[1.7,.7],[1.7,-.7],[2.5,.35],[2.5,-.35]]){const a=Math.atan2(-fz,-fx)+o,x=c.x+Math.cos(a)*r,z=c.z+Math.sin(a)*r;if(tryAt(x,z))add(x,z,c.x,c.z)}}
   const b=hasBench(),bs=b?benchSeats(b):null;
   for(let ring=0;ring<4&&spots.length<12;ring++){const r=2.6+ring*1.4;for(let k=0;k<10&&spots.length<12;k++){const a=k/10*6.283+ring*.4,x=Math.cos(a)*r,z=Math.sin(a)*r;if(tryAt(x,z))add(x,z,0,0)}}
   const ids=TOWN.map(p=>p.id).filter(id=>!(bs&&(id==='lan'||id==='chen')));
@@ -178,24 +178,37 @@ function endCredits(){$('storyCred').classList.add('hidden');credTok=null;if(fes
 function storyNear(){if(!storyOK())return null;
   const m=nearMemo();if(m)return{k:'memo',id:m,l:'撿起'+MEMO[m].name,s:'硬幣堆裡露出來的'};
   if(nearLaunch())return{k:'launch',l:'放天燈',s:'一元展'};
-  const p=nearFolk();if(p)return{k:'folk',p,l:EN_ON?'Talk to '+L(p.d.n):'跟%s聊聊'.replace('%s',p.d.n),s:fest?'一元展':'長椅'};
+  const p=nearFolk();if(p)return{k:'folk',p,l:EN_ON?'Talk to '+L(p.d.n):'跟%s聊聊'.replace('%s',p.d.n),s:fest?'一元展':p.mus?'一元博物館':'長椅'};
   if(nearMail()){const n=mailUnread();return{k:'mail',l:'看信',s:n?n+' 封新信':'信箱'}}
-  const r=nearTile('radio',1.6);if(r)return{k:'radio',l:G.story.radio?'關掉收音機':'打開收音機',s:'阿公的舊收音機'};
+  const r=nearTile('radio',1.6);if(r){const i=radioSt(),last=i===RADIO_ST.length-1;return{k:'radio',l:!i?'打開收音機':last?'關掉收音機':'轉到下一台',s:i?(EN_ON?'On air: '+L(RADIO_ST[i].n):'現在：%s'.replace('%s',RADIO_ST[i].n)):'阿公的舊收音機'}}
   return null}
 function storyUse(){const s=storyNear();if(!s)return false;
   if(s.k==='memo')pickMemo(s.id);else if(s.k==='launch')launchLanterns();else if(s.k==='folk')talkFolk(s.p);else if(s.k==='mail')openMail();
-  else if(s.k==='radio'){G.story.radio=!G.story.radio;toast(G.story.radio?'📻 收音機打開了，沙沙沙……':'📻 收音機關掉了');if(G.story.radio)radioTune();radioStep=0;radioT=.9}
+  else if(s.k==='radio'){const i=(radioSt()+1)%RADIO_ST.length;G.story.radio=i;if(i){toast('📻 '+(EN_ON?'Station '+i+': '+L(RADIO_ST[i].n):'第 %s 台：'.replace('%s',i)+RADIO_ST[i].n));radioTune()}else toast('📻 收音機關掉了');radioStep=0;radioT=.9}
   return true}
 
-// ---------- 阿公的收音機：走近才聽得到的老歌 ----------
-// 3/4 拍的小曲子（五聲音階），每小節：旋律[音, 拍數]和和弦
+// ---------- 阿公的收音機：走近才聽得到；按 E 換台（三首老歌、雨聲和蟲鳴），轉到最後一台再按一下就關掉 ----------
+// 每小節：旋律[音, 拍數]和和弦；三首都是自己寫的小曲子
 const RADIO_SONG=[[[[64,1],[67,1],[69,1]],'C'],[[[67,2],[64,1]],'C'],[[[62,1],[64,1],[67,1]],'G'],[[[64,3]],'C'],
   [[[67,1],[69,1],[72,1]],'Am'],[[[69,2],[67,1]],'F'],[[[64,1],[62,1],[60,1]],'C'],[[[62,3]],'G'],
   [[[64,1],[67,1],[69,1]],'C'],[[[72,2],[69,1]],'Am'],[[[67,1],[64,1],[62,1]],'G'],[[[60,3]],'C'],
   [[[69,1],[72,1],[74,1]],'Am'],[[[76,2],[74,1]],'C'],[[[72,1],[69,1],[67,1]],'F'],[[[69,3]],'Am'],
   [[[67,1],[64,1],[62,1]],'C'],[[[64,2],[67,1]],'C'],[[[62,1],[60,1],[62,1]],'G'],[[[60,3]],'C']];
-const RADIO_CH={C:[48,[60,64,67]],Am:[45,[57,60,64]],F:[41,[57,60,65]],G:[43,[55,59,62]]};
-let radioBus=null,radioHiss=null,radioT=0,radioStep=0,radioNear=0,noteT=0,noteTex=null;const radioNotes=[];
+// 〈月娘〉：4/4 拍，慢慢的
+const RADIO_SONG2=[[[[69,2],[72,1],[74,1]],'Am'],[[[76,3],[74,1]],'C'],[[[72,1],[74,1],[72,1],[69,1]],'F'],[[[67,4]],'G'],
+  [[[69,2],[72,1],[74,1]],'Am'],[[[76,2],[79,2]],'C'],[[[76,1],[74,1],[72,2]],'Dm'],[[[74,4]],'G'],
+  [[[79,2],[76,1],[74,1]],'C'],[[[76,2],[72,2]],'Am'],[[[74,1],[72,1],[69,2]],'Dm'],[[[67,4]],'Em'],
+  [[[69,1],[72,1],[74,1],[76,1]],'F'],[[[74,2],[72,2]],'G'],[[[69,1],[67,1],[64,2]],'Am'],[[[69,4]],'Am']];
+// 〈騎鐵馬〉：2/4 拍，輕快的，每八小節響一下腳踏車鈴
+const RADIO_SONG3=[[[[67,.5],[71,.5],[74,1]],'G'],[[[76,.5],[74,.5],[71,1]],'G'],[[[72,.5],[71,.5],[69,.5],[67,.5]],'C'],[[[69,2]],'D'],
+  [[[67,.5],[71,.5],[74,1]],'G'],[[[79,1],[76,1]],'C'],[[[74,.5],[72,.5],[71,.5],[69,.5]],'D'],[[[67,2]],'G'],
+  [[[71,.5],[71,.5],[74,1]],'G'],[[[76,.5],[76,.5],[79,1]],'C'],[[[78,.5],[76,.5],[74,1]],'D'],[[[71,2]],'G'],
+  [[[72,.5],[74,.5],[76,1]],'C'],[[[74,.5],[71,.5],[67,1]],'G'],[[[69,.5],[71,.5],[69,.5],[66,.5]],'D'],[[[67,2]],'G']];
+const RADIO_CH={C:[48,[60,64,67]],Am:[45,[57,60,64]],F:[41,[57,60,65]],G:[43,[55,59,62]],Dm:[50,[62,65,69]],Em:[52,[59,64,67]],D:[50,[62,66,69]]};
+const RADIO_ST=[null,{n:'老歌〈海口小調〉',beats:3,B:.72,bars:RADIO_SONG},{n:'老歌〈月娘〉',beats:4,B:.82,bars:RADIO_SONG2,lead:'sine'},{n:'老歌〈騎鐵馬〉',beats:2,B:.4,bars:RADIO_SONG3},{n:'雨聲和蟲鳴',nature:1}];
+// 以前的存檔是 true／false，現在是第幾台（0 是關掉）
+const radioSt=()=>{const r=G&&G.story?G.story.radio:0;return r===true?1:Math.max(0,Math.min(RADIO_ST.length-1,+r||0))};
+let radioBus=null,radioHiss=null,radioT=0,radioStep=0,radioNear=0,noteT=0,noteTex=null,natBus=null,natN=0;const radioNotes=[];
 function radioOut(){if(radioBus)return radioBus;const g=ac.createGain();g.gain.value=0;const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=330;const pk=ac.createBiquadFilter();pk.type='peaking';pk.frequency.value=1400;pk.Q.value=.8;pk.gain.value=6;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3100;
   g.connect(hp).connect(pk).connect(lp).connect(musG);radioBus=g;
   try{const s=ac.createBufferSource();s.buffer=pinkBuf||noiseBuf;s.loop=true;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=2400;f.Q.value=.5;const hg=ac.createGain();hg.gain.value=.05;s.connect(f).connect(hg).connect(g);s.start();radioHiss=hg}catch(e){}
@@ -204,16 +217,31 @@ function rnote(t0,m,v,len,type){const o=ac.createOscillator(),o2=ac.createOscill
   lf.frequency.value=5;lg.gain.value=mtof(m)*.005;lf.connect(lg);lg.connect(o.frequency);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.025);g.gain.exponentialRampToValueAtTime(v*.45,t0+len*.5);g.gain.exponentialRampToValueAtTime(.0001,t0+len+.25);
   o.connect(g);o2.connect(g);g.connect(radioBus);[o,o2,lf].forEach(x=>{x.start(t0);x.stop(t0+len+.3)})}
 function radioTune(){if(SET.vol<=0||!audio())return;try{radioOut();const T=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(1800,T);o.frequency.exponentialRampToValueAtTime(420,T+.6);g.gain.setValueAtTime(.025,T);g.gain.exponentialRampToValueAtTime(.0001,T+.7);o.connect(g).connect(radioBus);o.start(T);o.stop(T+.75);noiseS(.6,2200,.4,.04)}catch(e){}}
-function updateRadio(dt){const t=storyOK()&&G.story.radio?nearTileAny('radio'):null;let k=0;
+// 一小節：旋律＋伴奏（3/4 拍：低音、和弦、和弦；4/4 拍：低音和弦交替；2/4 拍：碰恰）
+function radioBar(st){const B=st.B,T=ac.currentTime+.05,[mel,ch]=st.bars[radioStep%st.bars.length],[bass,tri]=RADIO_CH[ch];radioStep++;radioT=B*st.beats;
+  let b=0;for(const[m,n]of mel){rnote(T+b*B,m,st.lead==='sine'?.085:.075,n*B*.95,st.lead);b+=n}
+  if(st.beats===3){rnote(T,bass,.07,B*1.6,'sine');for(const q of[1,2])tri.forEach(m=>rnote(T+q*B,m,.022,B*.55,'sine'))}
+  else if(st.beats===4){for(const q of[0,2])rnote(T+q*B,bass,.065,B*1.8,'sine');for(const q of[1,3])tri.forEach(m=>rnote(T+q*B,m,.018,B*.8,'sine'))}
+  else{rnote(T,bass,.07,B*.6,'sine');tri.forEach(m=>rnote(T+B,m,.02,B*.35,'sine'));if(radioStep%8===0){rnote(T+B*1.1,96,.03,.3,'sine');rnote(T+B*1.45,96,.03,.4,'sine')}}
+  for(let c=0;c<4;c++)if(Math.random()<.6){const t0=T+Math.random()*B*st.beats;try{const s=ac.createBufferSource();s.buffer=noiseBuf;const g=ac.createGain();g.gain.setValueAtTime(.06*Math.random(),t0);g.gain.exponentialRampToValueAtTime(.0001,t0+.012);s.connect(g).connect(radioBus);s.start(t0,Math.random());s.stop(t0+.02)}catch(e){}}}
+// 雨聲和蟲鳴：一直下的小雨＋幾滴大一點的雨滴，兩隻蟋蟀輪流叫，偶爾一隻青蛙
+function natureOut(){if(natBus)return natBus;const g=ac.createGain();g.gain.value=0;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=6500;g.connect(lp).connect(musG);natBus=g;
+  try{const s=ac.createBufferSource();s.buffer=pinkBuf||noiseBuf;s.loop=true;const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=380;const l2=ac.createBiquadFilter();l2.type='lowpass';l2.frequency.value=2400;const rg=ac.createGain();rg.gain.value=.2;s.connect(hp).connect(l2).connect(rg).connect(g);s.start()}catch(e){}
+  return g}
+function natureTick(){const T=ac.currentTime+.03;natN++;
+  try{for(let k=0;k<3;k++)if(Math.random()<.45){const t0=T+Math.random()*.25,s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=noiseBuf;f.type='bandpass';f.frequency.value=1600+Math.random()*2600;f.Q.value=2.5;g.gain.setValueAtTime(.012+Math.random()*.04,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+.035);s.connect(f).connect(g).connect(natBus);s.start(t0,Math.random()*1.5);s.stop(t0+.05)}
+    const chirp=(t0,fq)=>{for(let i=0;i<3;i++){const t=t0+i*.048,o=ac.createOscillator(),g=ac.createGain();o.frequency.value=fq;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.016,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+.03);o.connect(g).connect(natBus);o.start(t);o.stop(t+.04)}};
+    if(natN%3===0&&Math.random()<.85)chirp(T,4300);if(natN%5===2&&Math.random()<.8)chirp(T+.1,3750);
+    if(Math.random()<.018)for(let i=0;i<2;i++){const t=T+i*.17,o=ac.createOscillator(),lp=ac.createBiquadFilter(),g=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(190,t);o.frequency.linearRampToValueAtTime(140,t+.1);lp.type='lowpass';lp.frequency.value=650;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(lp).connect(g).connect(natBus);o.start(t);o.stop(t+.14)}}catch(e){}}
+function updateRadio(dt){const ri=storyOK()?radioSt():0,st=RADIO_ST[ri],t=ri?nearTileAny('radio'):null;let k=0;
   if(t){const d=Math.hypot(pl.x-t.gx-.5,pl.z-t.gz-.5);k=Math.max(0,Math.min(1,1.3-d/13))}
-  radioNear=k;if(t&&t.dial)t.dial.emissiveIntensity=1.2;else for(const x of tiles.values())if(x.type==='radio'&&x.dial)x.dial.emissiveIntensity=storyOK()&&G.story.radio?1.2:0;
-  radioFloat(dt,t,k);
-  if(!ac||ac.state!=='running'||(SET.music??.35)<=0)return;if(!radioBus&&!t)return;const bus=radioOut();bus.gain.setTargetAtTime(k*k*1.1,ac.currentTime,.3);
+  radioNear=k;for(const x of tiles.values())if(x.type==='radio'&&x.dial){x.dial.emissiveIntensity=ri?1.2:0;const c=st&&st.nature?0x60b8ff:0xffb040;if(x.dialC!==c){x.dialC=c;x.dial.emissive.setHex(c).convertSRGBToLinear()}}
+  radioFloat(dt,st&&!st.nature?t:null,k);
+  if(!ac||ac.state!=='running'||(SET.music??.35)<=0)return;if(!radioBus&&!natBus&&!t)return;
+  const T=ac.currentTime;radioOut().gain.setTargetAtTime(st&&!st.nature?k*k*1.1:0,T,.3);if(st&&st.nature)natureOut();if(natBus)natBus.gain.setTargetAtTime(st&&st.nature?k*k*1.3:0,T,.3);
   if(!t||k<=0)return;radioT-=dt;if(radioT>0)return;
-  const B=.72,T=ac.currentTime+.05,[mel,ch]=RADIO_SONG[radioStep%RADIO_SONG.length],[bass,tri]=RADIO_CH[ch];radioStep++;radioT=B*3;
-  let b=0;for(const[m,n]of mel){rnote(T+b*B,m,.075,n*B*.95);b+=n}
-  rnote(T,bass,.07,B*1.6,'sine');for(const q of[1,2])tri.forEach(m=>rnote(T+q*B,m,.022,B*.55,'sine'));
-  for(let c=0;c<4;c++)if(Math.random()<.6){const t0=T+Math.random()*B*3;try{const s=ac.createBufferSource();s.buffer=noiseBuf;const g=ac.createGain();g.gain.setValueAtTime(.06*Math.random(),t0);g.gain.exponentialRampToValueAtTime(.0001,t0+.012);s.connect(g).connect(radioBus);s.start(t0,Math.random());s.stop(t0+.02)}catch(e){}}}
+  if(st.nature){radioT=.25;natureTick();return}
+  radioBar(st)}
 const nearTileAny=tp=>{for(const t of tiles.values())if(t.type===tp)return t;return null};
 // 收音機開著的時候飄出音符
 function radioFloat(dt,t,k){noteT-=dt;
@@ -226,10 +254,10 @@ function honk(){if(SET.vol<=0||!audio())return;for(const k of[0,.32])for(const f
 
 // ---------- 每一幀 ----------
 function storyWorld(dt,now){if(!G)return;
-  if(!storyOK()){if(folk.length)folk.forEach(p=>p.gone=1);updateFolk(dt,now);if(fest||lights){festLights(false);launchMark(false);if(fest){fest.lan.forEach(l=>{scene.remove(l.g);disposeObj(l.g)});fest=null}}radioNear=0;if(radioBus)radioBus.gain.value=0;return}
+  if(!storyOK()){if(folk.length)folk.forEach(p=>p.gone=1);updateFolk(dt,now);if(fest||lights){festLights(false);launchMark(false);if(fest){fest.lan.forEach(l=>{scene.remove(l.g);disposeObj(l.g)});fest=null}}radioNear=0;if(radioBus)radioBus.gain.value=0;if(natBus)natBus.gain.value=0;return}
   const S=G.story;if(S.fest&&!fest&&!S.festDone&&mode==='play')festStart();
   if(mode==='play'||mode==='photo'){updateElders();festTick(dt,now)}
-  updateFolk(dt,now);updateRadio(dt)}
+  updateFolk(dt,now);museumVisit(dt,now);updateRadio(dt)}
 // 回主選單或換存檔：把劇情的東西清掉
-function storyReset(){folk.slice().forEach(removeFolk);elderSeat=null;festLights(false);launchMark(false);if(fest){fest.lan.forEach(l=>{scene.remove(l.g);disposeObj(l.g)});fest=null}memoClear();
-  credTok=null;radioNotes.forEach(n=>scene.remove(n.s));radioNotes.length=0;radioNear=0;if(radioBus)radioBus.gain.value=0;$('storyCred').classList.add('hidden');$('memoView').classList.add('hidden');memoMode=null}
+function storyReset(){folk.slice().forEach(removeFolk);elderSeat=null;museumReset();seasonReset();festLights(false);launchMark(false);if(fest){fest.lan.forEach(l=>{scene.remove(l.g);disposeObj(l.g)});fest=null}memoClear();
+  credTok=null;radioNotes.forEach(n=>scene.remove(n.s));radioNotes.length=0;radioNear=0;if(radioBus)radioBus.gain.value=0;if(natBus)natBus.gain.value=0;$('storyCred').classList.add('hidden');$('memoView').classList.add('hidden');memoMode=null}

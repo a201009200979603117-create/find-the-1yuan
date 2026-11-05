@@ -17,7 +17,7 @@ function renderCab(){const st=storyOK();if(!st)cabTab='one';G.cabSeen=G.cabSeen|
   else{const fr=storyDug();
     $('cabTop').innerHTML='<div class="ctxt"><span>從硬幣山裡找到的東西</span><span>硬幣山挖掉了 <b>'+Math.floor(fr*100)+'%</b></span></div><div class="cbar"><i style="width:'+(fr*100).toFixed(1)+'%"></i></div>';
     $('cabList').className='memos';
-    $('cabList').innerHTML=MEMOS.map(m=>{const got=G.story.items[m.id];
+    $('cabList').innerHTML=MEMOS.filter(m=>!m.season||G.story.items[m.id]).map(m=>{const got=G.story.items[m.id];
       return '<div class="memo'+(got?'':' none')+'" data-memo="'+m.id+'">'+(got&&!G.cabSeen['m_'+m.id]?'<span class="nw">NEW</span>':'')+'<div class="mi">'+(got?'<img src="'+memoArt(m.id,true)+'">':'<span>？</span>')+'</div><div class="lab">'+(got?m.name:'？？？')+'</div><div class="meta">'+(got?'':m.at==null?'還不知道在哪裡':m.at>=1?'在整座山的最底下':EN_ON?'When '+Math.round(m.at*100)+'% is dug':'挖掉 %s% 的時候'.replace('%s',Math.round(m.at*100)))+'</div></div>'}).join('')}
   renderCabView()}
 function renderCabView(){const v=$('cabView');if(!cabSel){v.classList.add('hidden');v.innerHTML='';cvStop();return}v.classList.remove('hidden');

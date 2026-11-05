@@ -65,8 +65,10 @@ const PHOTO_FX=[{n:'原色',f:[]},{n:'暖色',f:[['sepia',.25],['saturate',1.25]
 const PHOTO_TOD=[{n:'現在'},{n:'早上',h:8.5},{n:'中午',h:12.5},{n:'黃昏',h:18.1},{n:'晚上',h:22}];
 let photoFx=0,photoTod=0;
 const photoCss=i=>PHOTO_FX[i].f.map(([k,v])=>k+'('+(k==='hue-rotate'?v+'deg':v)+')').join(' ');
-function photoMat(i){let A=[1,0,0,0,1,0,0,0,1],o=[0,0,0];
-  for(const[k,v]of PHOTO_FX[i].f){let F,b=[0,0,0];const a=1-v;
+const photoMat=i=>fxMat(PHOTO_FX[i].f);
+// 一串 CSS 濾鏡（[名稱, 數值]）合成一個 3×3 顏色矩陣＋位移（一元博物館的硬幣也用這個）
+function fxMat(list){let A=[1,0,0,0,1,0,0,0,1],o=[0,0,0];
+  for(const[k,v]of list){let F,b=[0,0,0];const a=1-v;
     if(k==='grayscale')F=[.2126+.7874*a,.7152-.7152*a,.0722-.0722*a,.2126-.2126*a,.7152+.2848*a,.0722-.0722*a,.2126-.2126*a,.7152-.7152*a,.0722+.9278*a];
     else if(k==='sepia')F=[.393+.607*a,.769-.769*a,.189-.189*a,.349-.349*a,.686+.314*a,.168-.168*a,.272-.272*a,.534-.534*a,.131+.869*a];
     else if(k==='saturate')F=[.213+.787*v,.715-.715*v,.072-.072*v,.213-.213*v,.715+.285*v,.072-.072*v,.213-.213*v,.715-.715*v,.072+.928*v];
@@ -95,7 +97,9 @@ function updatePhoto(dt){const sp=(keys.has('ShiftLeft')?12:4)*dt,cp=Math.cos(pl
   if(keys.has('KeyW')){photo.x+=fx*sp;photo.y+=fy*sp;photo.z+=fz*sp}if(keys.has('KeyS')){photo.x-=fx*sp;photo.y-=fy*sp;photo.z-=fz*sp}
   if(keys.has('KeyD')){photo.x+=rx*sp;photo.z+=rz*sp}if(keys.has('KeyA')){photo.x-=rx*sp;photo.z-=rz*sp}if(keys.has('Space'))photo.y+=sp;if(keys.has('KeyC'))photo.y=Math.max(.3,photo.y-sp);
   camera.position.set(photo.x,photo.y,photo.z);camera.rotation.set(pl.pitch,pl.yaw,0)}
-function savePhoto(){G.flags.photo=true;const d=new Date(),z=n=>String(n).padStart(2,'0'),bin=atob(photoURL().split(',')[1]),b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);tone(1500,.05);
-  giveFile(new File([b],'大海撈一元_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+z(d.getSeconds())+'.png',{type:'image/png'}),'照片存好了')}
+function savePhoto(){G.flags.photo=true;const url=photoURL(),bin=atob(url.split(',')[1]),b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);tone(1500,.05);shutterFx();
+  giveFile(new File([b],'大海撈一元_'+albStamp(Date.now())+'.png',{type:'image/png'}),'照片存好了');
+  // 遊戲裡的相簿也收一份（第一次會提醒在哪裡看）
+  albAdd(url,{fx:PHOTO_FX[photoFx].n,name:G.name||''}).then(r=>{if(r==='full')toast('相簿滿了（'+ALB_MAX+' 張），這張只存到裝置裡');else if(r===true&&G&&!G.flags.album){G.flags.album=true;toast('📷 這張也收進相簿了，主選單和暫停選單都看得到','gold')}})}
 
 
