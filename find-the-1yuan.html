@@ -1684,18 +1684,19 @@ const CHORDS=[[48,55,59,64],[45,52,55,60],[41,48,52,57],[43,50,55,59]],PENTA=[60
 let musT=0,musI=0;
 const mtof=m=>440*Math.pow(2,(m-69)/12);
 // 撥弦（像月琴、古箏）、木魚、鑼
-function pluck(t0,m,v,len){const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain(),lf=ac.createOscillator(),lg=ac.createGain();o.type='triangle';o2.type='sine';o.frequency.value=mtof(m);o2.frequency.value=mtof(m)*2;
+function pluck(t0,m,v,len){t0=Math.max(t0,ac.currentTime);const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain(),lf=ac.createOscillator(),lg=ac.createGain();o.type='triangle';o2.type='sine';o.frequency.value=mtof(m);o2.frequency.value=mtof(m)*2;
   lf.frequency.value=5.5;lg.gain.value=mtof(m)*.006;lf.connect(lg);lg.connect(o.frequency);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.008);g.gain.exponentialRampToValueAtTime(.0001,t0+(len||1.1));
   o.connect(g);o2.connect(g);g.connect(musG);[o,o2,lf].forEach(x=>{x.start(t0);x.stop(t0+(len||1.1)+.05)})}
-function woodblock(t0,v){const s=ac.createBufferSource();s.buffer=noiseBuf;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1250;f.Q.value=12;const g=ac.createGain();g.gain.setValueAtTime(v,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+.12);s.connect(f).connect(g).connect(musG);s.start(t0,Math.random());s.stop(t0+.15)}
-function gong(t0,v){const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(140,t0);o.frequency.exponentialRampToValueAtTime(118,t0+3);g.gain.setValueAtTime(v,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+4);o.connect(g).connect(musG);o.start(t0);o.stop(t0+4.1)}
+function woodblock(t0,v){t0=Math.max(t0,ac.currentTime);const s=ac.createBufferSource();s.buffer=noiseBuf;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1250;f.Q.value=12;const g=ac.createGain();g.gain.setValueAtTime(v,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+.12);s.connect(f).connect(g).connect(musG);s.start(t0,Math.random());s.stop(t0+.15)}
+function gong(t0,v){t0=Math.max(t0,ac.currentTime);const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(140,t0);o.frequency.exponentialRampToValueAtTime(118,t0+3);g.gain.setValueAtTime(v,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+4);o.connect(g).connect(musG);o.start(t0);o.stop(t0+4.1)}
 const TW_SCALE=[55,57,60,62,64,67,69,72,74,76],TW_PHR=[[0,2,4,2,1,0],[4,5,7,5,4,2],[2,4,5,4,2,1],[7,5,4,2,4,0]];let musPh=0;
 function updateMusic(dt){
   if(!ac||ac.state!=='running'||(SET.music??.35)<=0)return;
   if(radioNear>.2)return; // 走到阿公的收音機旁邊，背景音樂先停一下
   const style=SET.musicStyle||'soft';
   if(style!=='soft'){musT-=dt;if(musT>0)return;
-    const T=ac.currentTime,fast=style==='market',beat=fast?.32:.62,ph=TW_PHR[musPh++%TW_PHR.length];musT=beat*8;
+    // 稍微往後排一點：撥弦音會隨機早一點點，剛打開遊戲時聲音的時鐘還在 0 附近，不能排到負的時間
+    const T=ac.currentTime+.05,fast=style==='market',beat=fast?.32:.62,ph=TW_PHR[musPh++%TW_PHR.length];musT=beat*8;
     ph.forEach((n,k)=>{if(Math.random()<.9)pluck(T+k*beat*(fast?1:1.3)+(Math.random()-.5)*.02,TW_SCALE[n]+(fast?12:0),fast?.05:.045,fast?.6:1.4)});
     for(let k=0;k<8;k++){if(fast||k%2===0)woodblock(T+k*beat,fast?(k%2?.02:.035):.03);if(fast&&k%4===0)pluck(T+k*beat,TW_SCALE[[0,4,2,0][musPh%4]]-12,.05,.4)}
     if(!fast&&musPh%4===1)gong(T,.05);
