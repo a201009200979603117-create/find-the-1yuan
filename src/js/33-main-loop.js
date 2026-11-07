@@ -13,7 +13,7 @@ function tick(dt,now){
   clickPlayEl.classList.toggle('hidden',!(G&&mode==='play'&&!locked&&!panel&&!topV&&!TOUCH));
   updateMusic(dt);pollPad(dt);updateTouchUI();
   if(mode==='menu'){
-    const a=now/16000;camera.position.set(Math.sin(a)*(H-3),2.4+Math.sin(a*.7)*.6,Math.cos(a)*(H-3)*.8+2);camera.lookAt(0,Rp*.45,0);
+    const a=now/16000;camera.position.set(Math.sin(a)*(H-5),2.4+Math.sin(a*.7)*.6,Math.cos(a)*(H-3)*.8+2);camera.lookAt(0,Rp*.45,0);
   }else if(mode==='intro'){
     // The Mountain：硬幣要倒一分鐘，鏡頭跟著慢慢繞
     const L=HFm?60:5;introT+=dt;const k=Math.min(1,introT/L),a=-2.3+k*1.6,r=H-3;

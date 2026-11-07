@@ -71,7 +71,9 @@ function generate(seed,sizeKey,mask){
   Rp=ds.length?ds[Math.floor(ds.length*.98)]+.3:4;
   meshes=CT.map((t,k)=>{const cap=Math.max(1,cnt[k]),m=new THREE.InstancedMesh(coinGeo,COINMAT[k],cap);m.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(cap*3).fill(1),3);m.count=0;m.frustumCulled=false;m.castShadow=true;m.receiveShadow=true;scene.add(m);return m});
   owner=cnt.map(n=>new Int32Array(Math.max(1,n)));mcount=CT.map(()=>0);vis=new Uint8Array(M);
-  for(let i=0;i<M;i++)if(st[i]===1&&!buried(i))show(i);
+  // 埋在裡面的不畫；但硬幣山側面常有小台階，台階立面上的硬幣從旁邊看得到，不能當成埋住（不然會破洞看穿整座山）
+  const open=i=>{const x=px[i],z=pz[i],y=py[i]+.25;for(let k=0;k<8;k++){const a=k*.785;if(fpMax(x+Math.cos(a)*.42,z+Math.sin(a)*.42,.06)<y)return true}return false};
+  for(let i=0;i<M;i++)if(st[i]===1&&(open(i)||!buried(i)))show(i);
   slideInit();
 }
 
