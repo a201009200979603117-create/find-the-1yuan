@@ -55,7 +55,7 @@ function mergeStatic(grp){
 // ---------- 分流器、合流器：上面畫著藍色箭頭（從這裡進）、橘色箭頭（從這裡出），中間的擋板指著下一個東西要往哪走 ----------
 // 方向代號：F 前、R 右、B 後、L 左（相對機器的箭頭方向）
 const SIDE={F:[0,-1],R:[1,0],B:[0,1],L:[-1,0]},SIDE_ROT={F:0,R:-Math.PI/2,B:Math.PI,L:Math.PI/2},SIDE_REL={F:0,R:1,B:2,L:3};
-const IO={split:{i:'B',o:'LR'},splitU:{i:'B',o:'FR'},splitL:{i:'B',o:'FL'},split3:{i:'B',o:'LFR'},smart:{i:'B',o:'LFR'},merge:{i:'LR',o:'F'},mergeU:{i:'BR',o:'F'},mergeC:{i:'LRB',o:'F'},tjunc:{i:'',o:''}};
+const IO={split:{i:'B',o:'LR'},splitU:{i:'B',o:'FR'},splitL:{i:'B',o:'FL'},split3:{i:'B',o:'LFR'},smart:{i:'B',o:'LFR'},merge:{i:'LR',o:'F'},mergeU:{i:'BR',o:'F'},mergeL:{i:'BL',o:'F'},mergeC:{i:'LRB',o:'F'},tjunc:{i:'',o:''}};
 function junction(S,D,t,T){
   const io=IO[T],col=T==='smart'?0x2f7fc4:T==='split3'?0xd8732a:T.startsWith('merge')?0x3f8f5a:T==='tjunc'?0x6d737a:0xe2a51c;
   // 底座和中間的轉盤
@@ -128,7 +128,7 @@ const MODELS={
     const bm=[dk,dk,dk,dk,new THREE.MeshStandardMaterial({map:coSignTex,roughness:.8}),new THREE.MeshStandardMaterial({map:coSignTex,roughness:.8})];
     const b=new THREE.Mesh(boxGeo(1.9,.56,.07),bm);b.position.set(0,1.6,0);b.castShadow=true;D.add(b)},
   split:(S,D,t)=>junction(S,D,t,'split'),splitU:(S,D,t)=>junction(S,D,t,'splitU'),splitL:(S,D,t)=>junction(S,D,t,'splitL'),split3:(S,D,t)=>junction(S,D,t,'split3'),smart:(S,D,t)=>junction(S,D,t,'smart'),
-  merge:(S,D,t)=>junction(S,D,t,'merge'),mergeU:(S,D,t)=>junction(S,D,t,'mergeU'),mergeC:(S,D,t)=>junction(S,D,t,'mergeC'),tjunc:(S,D,t)=>junction(S,D,t,'tjunc'),
+  merge:(S,D,t)=>junction(S,D,t,'merge'),mergeU:(S,D,t)=>junction(S,D,t,'mergeU'),mergeL:(S,D,t)=>junction(S,D,t,'mergeL'),mergeC:(S,D,t)=>junction(S,D,t,'mergeC'),tjunc:(S,D,t)=>junction(S,D,t,'tjunc'),
 
   rake(S,D,t){ // 活塞耙（1×2）：綠色蒸汽機身，後面的耙子伸進硬幣堆，前面的出料口把硬幣倒上輸送帶
     const gr=paint(0x3f6b34,.35,.5),gr2=paint(0x2f5228,.35,.55);

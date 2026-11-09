@@ -2035,4 +2035,8 @@ V3.2：硬幣會滑落了：挖得太陡（像懸崖）的地方，邊上的硬�
 U型分流器（往右）	U-splitter (right)
 U型分流器（往左）	U-splitter (left)
 輪流往前、往左送。	Sends items forward and left in turn.
-V3.3：建造目錄多了「U型分流器（往左）」：東西進來之後輪流往前、往左送；原本那台改名叫「U型分流器（往右）」。兩台都能在設定裡改成某一邊優先。	V3.3: The build catalog now has a “U-splitter (left)” that sends items forward and left in turn; the original one is now called “U-splitter (right)”. Either one can be set to prefer one side.
+V3.3：建造目錄多了「U型分流器（往左）」：東西進來之後輪流往前、往左送，原本那台改名叫「U型分流器（往右）」，兩台都能在設定裡改成某一邊優先；也多了「U型合流器（左邊進）」：後面和左邊的輸送帶合成一條往前送，原本那台改名叫「U型合流器（右邊進）」。	V3.3: The build catalog now has a “U-splitter (left)” that sends items forward and left in turn; the original one is now called “U-splitter (right)”, and either one can be set to prefer one side. There is also a “U-merger (left in)” that joins belts from behind and the left into one going forward; the original one is now called “U-merger (right in)”.
+U型合流器（右邊進）	U-merger (right in)
+U型合流器（左邊進）	U-merger (left in)
+讓後面和右邊的輸送帶接進來，合成一條往前送。	Belts join from behind and the right and merge into one going forward.
+讓後面和左邊的輸送帶接進來，合成一條往前送。	Belts join from behind and the left and merge into one going forward.

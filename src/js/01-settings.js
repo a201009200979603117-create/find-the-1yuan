@@ -168,7 +168,8 @@ const BUILD=[
   {id:'split3', cat:'運輸',name:'小型分流器',icon:'⑃',price:450,req:'split3BP',desc:'一條分成三條：直走、左、右輪流送。'},
   {id:'smart',  cat:'運輸',name:'智慧分流器',icon:'🧠',price:1200,req:'smartBP',desc:'有 1 元的往右、加工品往左、硬幣直走。'},
   {id:'merge',  cat:'運輸',name:'合流器',icon:'⑂',price:120,req:'joinBP',desc:'讓兩旁的輸送帶接進來，合成一條往箭頭方向走。'},
-  {id:'mergeU', cat:'運輸',name:'U型合流器',icon:'⑂',price:120,req:'joinBP',desc:'讓後面和旁邊的輸送帶接進來，合成一條。'},
+  {id:'mergeU', cat:'運輸',name:'U型合流器（右邊進）',icon:'⑂',price:120,req:'joinBP',desc:'讓後面和右邊的輸送帶接進來，合成一條往前送。'},
+  {id:'mergeL', cat:'運輸',name:'U型合流器（左邊進）',icon:'⑂',price:120,req:'joinBP',desc:'讓後面和左邊的輸送帶接進來，合成一條往前送。'},
   {id:'tjunc',  cat:'運輸',name:'T 型接頭',icon:'⊥',price:120,req:'tjBP',desc:'會看接上的輸送帶自己設定：一條進來就輪流分給其他接著的輸送帶，兩條進來就合成一條。'},
   {id:'gate',   cat:'運輸',name:'皮帶閘門',icon:'🚧',price:60,req:'gateBP',desc:'夾在輸送帶上。看著它按 E 拉桿：擋住硬幣，再拉一次放行。'},
   {id:'beltC',  cat:'運輸',name:'封閉式輸送帶',icon:'▬',price:12,per:true,req:'beltCBP',desc:'每公尺 $12。東西藏在裡面看不到，水桶和工具伸不進去。'},
@@ -220,7 +221,7 @@ const BUILD=[
   {id:'dish',   cat:'探勘',name:'衛星天線',icon:'📡',price:1200,req:'dishBP',power:3,max:1,desc:'一個院子一個。掃描 45 公尺內的硬幣堆，把埋在裡面的 1 元用紅色記號標出來。Mk 等級越高標得越快。'},
   {id:'detector',cat:'探勘',name:'一元偵測機',icon:'🟧',price:1500,req:'detBP',power:4,desc:'大型偵測機，每分鐘掃 6,000 枚，挑出的 1 元收在機器裡，按 E 拿出來。'}
 ];
-const BELTLIKE=new Set(['belt','beltC','tjunc','gate','mergeC','hstairs','split','splitU','splitL','split3','smart','merge','mergeU','chute','scanner','scanner2','detector','tube','lift']);
+const BELTLIKE=new Set(['belt','beltC','tjunc','gate','mergeC','hstairs','split','splitU','splitL','split3','smart','merge','mergeU','mergeL','chute','scanner','scanner2','detector','tube','lift']);
 const SCANS=new Set(['scanner','scanner2','detector']);
 const SOLID=new Set(['plant','flowers','bench','lantern','luckycat','radio','cosign','museum','rake','arm','arm2','arm3','gen','gas','pole','cbox','switch','dish','lamp','paint','cabinet','roller','unroll','wrap','pellet','disc','pulp','paper','silo','pump','pusher','drone']);
 // 發電：硬幣發電機燒散硬幣（燃料算枚數），燃氣發電廠燒環保磚＋要水（燃料算滿載秒數）

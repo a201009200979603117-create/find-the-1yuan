@@ -179,7 +179,7 @@ function buildClick0(){
   if(b.max===1)exitBuild();
 }
 // 吸附：蓋在輸送帶出口的機器會自動轉成順著輸送帶的方向（按 F 關掉就照 R 轉的方向）
-const AUTO=new Set(['roller','wrap','pellet','disc','pulp','paper','unroll','silo','scanner','scanner2','detector','split','splitU','splitL','split3','smart','tube','lift','gate','tjunc','merge','mergeU','mergeC']);
+const AUTO=new Set(['roller','wrap','pellet','disc','pulp','paper','unroll','silo','scanner','scanner2','detector','split','splitU','splitL','split3','smart','tube','lift','gate','tjunc','merge','mergeU','mergeL','mergeC']);
 function autoDir(gx,gz,id,L){if(G.build.free||!AUTO.has(id))return null;const D=fpSize(id)[1];for(let d=0;d<4;d++){const[dx,dz]=DIRS[d],an=fpAnchor(id,gx,gz,d),nb=cellAt(tkey(an.gx-dx*D,an.gz-dz*D,L));if(nb&&BELTLIKE.has(nb.type)&&nb.dir===d)return d}return null}
 // 從快捷欄選建築，直接進建造模式
 function selectBuild(id){const b=BIT[id];if(b.req&&!lv(b.req)){toast(b.name+'還沒解鎖');return}G.build={item:id,dir:G.build?G.build.dir:0,remove:false,lvl:G.lastLvl||0};beltStart=null;$('buildHint').classList.remove('hidden');renderHotbar()}

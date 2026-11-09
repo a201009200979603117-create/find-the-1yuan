@@ -33,7 +33,7 @@ function makeTileMesh0(t){
   // 輸送帶：連續的側板＋黃色護邊，接在一起看起來是一整條
   const belt=()=>{const b=new THREE.Mesh(beltGeo,M_.belt);b.position.y=.34;g.add(b);g.add(new THREE.Mesh(beltFrameGeo(),M_beltFrame))};
   const mat=matC;
-  if(T==='belt'||T==='merge'||T==='mergeU'||T==='mergeC'||T==='tjunc'||T==='gate'||T==='beltC')belt();
+  if(T==='belt'||T==='merge'||T==='mergeU'||T==='mergeL'||T==='mergeC'||T==='tjunc'||T==='gate'||T==='beltC')belt();
   if(T==='mergeC'){partBox(g,.06,.2,.4,mat(0xd8732a),-.5,.46,.25);partBox(g,.06,.2,.4,mat(0xd8732a),.5,.46,.25);partBox(g,.4,.2,.06,mat(0xd8732a),0,.46,.5)}
   if(T==='tjunc'){partBox(g,.5,.05,.12,M_.yellow,0,.42,0);partBox(g,.12,.05,.3,M_.yellow,0,.42,.18)}
   if(T==='gate'){for(const x of[-.52,.52])partBox(g,.07,.75,.07,M_.dark,x,.55,0);partBox(g,1.1,.07,.1,M_.dark,0,.92,0);
@@ -41,6 +41,7 @@ function makeTileMesh0(t){
   if(T==='beltC'){const c=partBox(g,1,.34,.98,new THREE.MeshStandardMaterial({color:0x6c7378,metalness:.6,roughness:.45}),0,.5,0);partBox(g,1.02,.04,.2,M_.dark,0,.68,.39)}
   if(T==='merge'){partBox(g,.06,.2,.5,M_.yellow,-.5,.46,.2);partBox(g,.06,.2,.5,M_.yellow,.5,.46,.2)}
   if(T==='mergeU')partBox(g,.06,.2,.5,M_.yellow,.5,.46,.2);
+  if(T==='mergeL')partBox(g,.06,.2,.5,M_.yellow,-.5,.46,.2);
   if(T==='split'||T==='splitU'||T==='splitL'||T==='split3'||T==='smart'){
     belt();partBox(g,.12,.28,.5,mat(T==='smart'?0x3a8fd0:T==='split3'?0xd8732a:0xe2a51c),0,.52,.15);
     if(T==='smart'){const s=new THREE.Mesh(new THREE.SphereGeometry(.08,10,8),new THREE.MeshBasicMaterial({color:0x66ccff}));s.position.set(0,.74,.15);g.add(s)}
