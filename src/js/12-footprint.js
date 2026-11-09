@@ -41,7 +41,7 @@ function makeTileMesh0(t){
   if(T==='beltC'){const c=partBox(g,1,.34,.98,new THREE.MeshStandardMaterial({color:0x6c7378,metalness:.6,roughness:.45}),0,.5,0);partBox(g,1.02,.04,.2,M_.dark,0,.68,.39)}
   if(T==='merge'){partBox(g,.06,.2,.5,M_.yellow,-.5,.46,.2);partBox(g,.06,.2,.5,M_.yellow,.5,.46,.2)}
   if(T==='mergeU')partBox(g,.06,.2,.5,M_.yellow,.5,.46,.2);
-  if(T==='split'||T==='splitU'||T==='split3'||T==='smart'){
+  if(T==='split'||T==='splitU'||T==='splitL'||T==='split3'||T==='smart'){
     belt();partBox(g,.12,.28,.5,mat(T==='smart'?0x3a8fd0:T==='split3'?0xd8732a:0xe2a51c),0,.52,.15);
     if(T==='smart'){const s=new THREE.Mesh(new THREE.SphereGeometry(.08,10,8),new THREE.MeshBasicMaterial({color:0x66ccff}));s.position.set(0,.74,.15);g.add(s)}
   }

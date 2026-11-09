@@ -1601,7 +1601,7 @@ V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績�
 暱稱改好了，下次上傳會用新的	Nickname changed — your next upload will use it
 連不上線上排行榜，等一下再看看。	Can't reach the online leaderboard — check back later.
 沒有網路，連上之後才看得到線上排行榜。	No connection — the online leaderboard needs internet.
-Find The 1元 Demo V3.2	Find The 1元 Demo V3.2
+Find The 1元 Demo V3.3	Find The 1元 Demo V3.3
 📷 存圖	📷 Save
 減少晃動（走路時畫面不上下晃）	Reduce motion (no head bob while walking)
 V2.9：拍照模式多了濾鏡（暖色、黑白、復古、清新）和時間（早上、中午、黃昏、晚上），存下來的照片也套用；線上排行榜可以看昨天的，沒進前 20 名也看得到自己的名次；設定多了「減少晃動」；多一個上榜的成就。	V2.9: Photo mode gets filters (warm, black & white, vintage, fresh) and time of day (morning, noon, dusk, night), applied to saved photos too. The online leaderboard shows yesterday's board, and your own rank even outside the top 20. New "Reduce motion" setting and a leaderboard achievement.
@@ -2031,3 +2031,8 @@ SUPPLY CO. 五金行　阿德	Ah-De, SUPPLY CO. hardware store
 V3.1：一元展之後，黃理事長會送你「一元博物館」：找到的每一種 1 元都會擺進玻璃展示櫃，晚上偶爾有鎮上的人來看；照真實的日期，過年院子會貼春聯、放煙火、收到紅包，中秋有大月亮、烤肉架和柚子；阿公的收音機可以換台（三首老歌、雨聲和蟲鳴）；拍的照片會收進新的「相簿」，主選單和暫停選單都打得開。	V3.1: After the NT$1 Show, Chairman Huang gives you the “NT$1 Museum”: every kind of NT$1 you find goes into a glass display case, and townsfolk sometimes come by at night to see it. Following the real calendar, Lunar New Year brings spring couplets, fireworks and a red envelope, and Mid-Autumn brings a big moon, a barbecue grill and pomelos. Grandpa's radio now has stations (three old songs, plus rain and crickets). Your photos also go into a new Album, which you can open from the main menu or the pause menu.
 # V3.2 硬幣滑落
 V3.2：硬幣會滑落了：挖得太陡（像懸崖）的地方，邊上的硬幣會沿著坡滑下來、叮叮噹噹地補進洞裡，滑到不陡就停，整座山的形狀不會變；The Mountain 挖出來的斷崖也會慢慢塌下來，不再一下子削平。	V3.2: Coins now slide. Where you dig too steeply, like a cliff, the coins at the edge slide down and clink into the hole, stopping once it is no longer steep, so the pile keeps its overall shape. On The Mountain, cliffs you dig now crumble gradually instead of flattening all at once.
+# V3.3 往左的 U 型分流器
+U型分流器（往右）	U-splitter (right)
+U型分流器（往左）	U-splitter (left)
+輪流往前、往左送。	Sends items forward and left in turn.
+V3.3：建造目錄多了「U型分流器（往左）」：東西進來之後輪流往前、往左送；原本那台改名叫「U型分流器（往右）」。兩台都能在設定裡改成某一邊優先。	V3.3: The build catalog now has a “U-splitter (left)” that sends items forward and left in turn; the original one is now called “U-splitter (right)”. Either one can be set to prefer one side.

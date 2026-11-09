@@ -7,7 +7,7 @@ function cfgDef(t){
     S.push({title:'從輸送帶拿哪些種類（都沒勾就全部拿）',key:'kinds',multi:true,opts:KINDS.map(k=>[k,kindName(k),lk('links','手臂連輸送帶')])});
     S.push({title:'先拿什麼（有 1 元的一定先拿）',key:'order',def:'loose',opts:[['loose','散硬幣'],['big','最大的'],['near','最近的']].map(o=>[...o,lk('pickOrder','拿取順序')])});
   }
-  if(T==='split'||T==='splitU'||T==='split3'){const nm=T==='split'?['左邊','右邊']:T==='splitU'?['前面','右邊']:['左邊','前面','右邊'];
+  if(T==='split'||T==='splitU'||T==='splitL'||T==='split3'){const nm=T==='split'?['左邊','右邊']:T==='splitU'?['前面','右邊']:T==='splitL'?['前面','左邊']:['左邊','前面','右邊'];
     S.push({title:'分流方式',key:'prio',def:0,opts:[[0,'輪流分'],...nm.map((n,k)=>[k+1,n+'優先',lk('prio','分流器優先')])]})}
   if(T==='smart'){smartKinds(t);['往左','直走','往右'].forEach((n,k)=>S.push({title:n+'的出口收哪些東西',key:'kinds',idx:k,multi:true,opts:KINDS.map(x=>[x,kindName(x)])}))}
   if(T==='rake')S.push({title:'把硬幣丟多遠（往後幾公尺）：讓硬幣落在輸送帶上，或落進地上的水桶、手推車裡',key:'throwD',def:1,opts:[[1,'1 公尺'],[2,'2 公尺'],[3,'3 公尺'],[4,'4 公尺']]});

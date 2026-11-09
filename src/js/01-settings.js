@@ -163,7 +163,8 @@ const BUILD=[
   {id:'drone',  cat:'挖掘',name:'運幣無人機',icon:'🚁',price:200,req:'droneBP',grow:1.45,max:12,desc:'放在硬幣堆旁邊當停機坪，再點一下設定 12 公尺內的放料點（輸送帶、卸料口或收購站），無人機會自己來回搬。每多一架貴 1.45 倍，最多 12 架。'},
   {id:'belt',   cat:'運輸',name:'輸送帶',icon:'➖',price:8,per:true,req:'beltBP',desc:'每公尺 $8。點一下定起點，再點一下定終點。'},
   {id:'split',  cat:'運輸',name:'T型分流器',icon:'⑂',price:120,req:'splitBP',desc:'東西進來之後輪流往左、往右送。'},
-  {id:'splitU', cat:'運輸',name:'U型分流器',icon:'⑂',price:120,req:'splitBP',desc:'輪流往前、往右送。'},
+  {id:'splitU', cat:'運輸',name:'U型分流器（往右）',icon:'⑂',price:120,req:'splitBP',desc:'輪流往前、往右送。'},
+  {id:'splitL', cat:'運輸',name:'U型分流器（往左）',icon:'⑂',price:120,req:'splitBP',desc:'輪流往前、往左送。'},
   {id:'split3', cat:'運輸',name:'小型分流器',icon:'⑃',price:450,req:'split3BP',desc:'一條分成三條：直走、左、右輪流送。'},
   {id:'smart',  cat:'運輸',name:'智慧分流器',icon:'🧠',price:1200,req:'smartBP',desc:'有 1 元的往右、加工品往左、硬幣直走。'},
   {id:'merge',  cat:'運輸',name:'合流器',icon:'⑂',price:120,req:'joinBP',desc:'讓兩旁的輸送帶接進來，合成一條往箭頭方向走。'},
@@ -219,7 +220,7 @@ const BUILD=[
   {id:'dish',   cat:'探勘',name:'衛星天線',icon:'📡',price:1200,req:'dishBP',power:3,max:1,desc:'一個院子一個。掃描 45 公尺內的硬幣堆，把埋在裡面的 1 元用紅色記號標出來。Mk 等級越高標得越快。'},
   {id:'detector',cat:'探勘',name:'一元偵測機',icon:'🟧',price:1500,req:'detBP',power:4,desc:'大型偵測機，每分鐘掃 6,000 枚，挑出的 1 元收在機器裡，按 E 拿出來。'}
 ];
-const BELTLIKE=new Set(['belt','beltC','tjunc','gate','mergeC','hstairs','split','splitU','split3','smart','merge','mergeU','chute','scanner','scanner2','detector','tube','lift']);
+const BELTLIKE=new Set(['belt','beltC','tjunc','gate','mergeC','hstairs','split','splitU','splitL','split3','smart','merge','mergeU','chute','scanner','scanner2','detector','tube','lift']);
 const SCANS=new Set(['scanner','scanner2','detector']);
 const SOLID=new Set(['plant','flowers','bench','lantern','luckycat','radio','cosign','museum','rake','arm','arm2','arm3','gen','gas','pole','cbox','switch','dish','lamp','paint','cabinet','roller','unroll','wrap','pellet','disc','pulp','paper','silo','pump','pusher','drone']);
 // 發電：硬幣發電機燒散硬幣（燃料算枚數），燃氣發電廠燒環保磚＋要水（燃料算滿載秒數）

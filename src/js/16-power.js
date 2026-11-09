@@ -273,6 +273,7 @@ function enterTile(it,nt){
   it.sd=null;
   if(T==='split')it.sd=pickOut(nt,[(nt.dir+3)%4,(nt.dir+1)%4],it);
   if(T==='splitU')it.sd=pickOut(nt,[nt.dir,(nt.dir+1)%4],it);
+  if(T==='splitL')it.sd=pickOut(nt,[nt.dir,(nt.dir+3)%4],it); // 往前、往左
   if(T==='split3')it.sd=pickOut(nt,[(nt.dir+3)%4,nt.dir,(nt.dir+1)%4],it);
   if(T==='tjunc'){const o=tjOuts(nt,it);if(o.length){nt.tog=(nt.tog+1)%o.length;it.sd=o[nt.tog]}}
   if(T==='smart'){ // 智慧分流器：三個出口各自設定收哪些種類

@@ -128,7 +128,7 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   await run('同一個種子，硬幣堆一樣',()=>{const a=[...anchors].join();generate(12345,'small',null);return[...anchors].join()===a});
   await run('存檔',()=>{saveGame(true);const s=loadSlots()[0];return!!(s&&s.G&&s.name==='自我檢查')});
   await run('回主選單再讀檔',async()=>{toMenu();await w(800);startGame(0,loadSlots()[0]);return await until(()=>playing()&&G&&G.name==='自我檢查',30000)||'讀檔失敗'});
-  if(TTON)await run('觸控按鍵',async()=>await until(()=>!$('touchUI').classList.contains('hidden'),3000)&&document.querySelectorAll('#touchUI [data-t]').length>=15||'觸控按鍵沒出現');
+  if(TTON)await run('觸控按鍵',async()=>await until(()=>{updateTouchUI();return!$('touchUI').classList.contains('hidden')},3000)&&document.querySelectorAll('#touchUI [data-t]').length>=15||'觸控按鍵沒出現');
   await run('打開每個面板',async()=>{for(const p of['techPanel','buildPanel','shopPanel','boardPanel','cabPanel','statPanel']){openPanel(p);await w(150);if($(p).classList.contains('hidden'))return p+' 沒打開';closePanel();await w(80)}return true});
   await run('買科技',()=>{G.money=1e7;const t=Object.values(TECHD).find(t=>{const x=techState(t);return!t.shop&&!t.auto&&x.cls!=='lock'&&x.price!=null});if(!t)return'找不到能買的';const l=lv(t.id);techBuy(t);return lv(t.id)===l+1});
   await run('裝飾品和長椅',()=>{const made=[];let gx=Math.floor(-H+2);const gz=Math.floor(H-3);
