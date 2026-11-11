@@ -1601,7 +1601,7 @@ V2.8：線上排行榜——每日挑戰完成後可以取個暱稱上傳成績�
 暱稱改好了，下次上傳會用新的	Nickname changed — your next upload will use it
 連不上線上排行榜，等一下再看看。	Can't reach the online leaderboard — check back later.
 沒有網路，連上之後才看得到線上排行榜。	No connection — the online leaderboard needs internet.
-Find The 1元 Demo V3.3	Find The 1元 Demo V3.3
+Find The 1元 Demo V3.4	Find The 1元 Demo V3.4
 📷 存圖	📷 Save
 減少晃動（走路時畫面不上下晃）	Reduce motion (no head bob while walking)
 V2.9：拍照模式多了濾鏡（暖色、黑白、復古、清新）和時間（早上、中午、黃昏、晚上），存下來的照片也套用；線上排行榜可以看昨天的，沒進前 20 名也看得到自己的名次；設定多了「減少晃動」；多一個上榜的成就。	V2.9: Photo mode gets filters (warm, black & white, vintage, fresh) and time of day (morning, noon, dusk, night), applied to saved photos too. The online leaderboard shows yesterday's board, and your own rank even outside the top 20. New "Reduce motion" setting and a leaderboard achievement.
@@ -2040,3 +2040,51 @@ U型合流器（右邊進）	U-merger (right in)
 U型合流器（左邊進）	U-merger (left in)
 讓後面和右邊的輸送帶接進來，合成一條往前送。	Belts join from behind and the right and merge into one going forward.
 讓後面和左邊的輸送帶接進來，合成一條往前送。	Belts join from behind and the left and merge into one going forward.
+# V3.4 雲端存檔（Google 帳號）
+雲端存檔（Google 帳號）	Cloud saves (Google account)
+雲端存檔還沒開放	Cloud saves aren't available yet
+Google 登入還沒設定好，等設定好再試試看。存檔一樣會留在這台裝置。	Google sign-in isn't set up yet. Please try again later. Your saves stay on this device as usual.
+這個網址沒辦法登入，請用網頁版	You can't sign in from this address. Please use the web version.
+連不上登入服務，等一下再試	Can't reach the sign-in service. Please try again later.
+沒有網路，連上之後再登入	You're offline. Sign in once you're connected.
+瀏覽器不允許儲存，沒辦法登入	This browser doesn't allow saving data, so you can't sign in.
+登入沒有成功	Sign-in didn't work
+雲端存檔還沒開放，等設定好再試試看。	Cloud saves aren't available yet. Please try again later.
+Google 登入沒有完成，等一下再試一次。	Google sign-in didn't finish. Please try again in a moment.
+iPhone 主畫面 App 回不到登入的地方。請用 Safari 打開網頁版登入，或用「匯出存檔」的存檔碼把進度搬過來。	The iPhone Home Screen app couldn't finish signing in. Sign in on the web version in Safari, or move your progress with a save code from “Export save”.
+請再按一次「用 Google 登入」。	Please tap “Sign in with Google” again.
+☁ 登入好了（	☁ Signed in (
+），存檔會自動同步到雲端	). Your saves will sync to the cloud automatically.
+登入失敗	Sign-in failed
+已經登出，存檔還留在這台裝置	Signed out. Your saves are still on this device.
+雲端存檔上傳失敗，下次存檔再補傳	Cloud upload failed; it will retry on the next save
+下載中…	Downloading…
+下載失敗，等一下再試	Download failed. Please try again later.
+沒有網路，連上之後再下載	You're offline. Download once you're connected.
+雲端的存檔壞掉了	That cloud save is damaged
+☁ 下載好了，放在第	☁ Downloaded into slot
+這台的存檔比較新	This device's save is newer
+個欄位的「	 (“
+」比雲端的還新。要換成雲端的嗎？	”) is newer than the cloud one. Replace it with the cloud one?
+換成雲端的	Use the cloud one
+留著這台的	Keep this device's
+雲端的存檔刪掉了	Cloud save deleted
+刪除失敗，等一下再試	Couldn't delete it. Please try again later.
+剛剛	just now
+分鐘前	 min ago
+小時前	 h ago
+天前	 d ago
+☁ 雲端存檔	☁ Cloud saves
+用 Google 帳號登入，存檔會自動同步，換手機或電腦也能接著玩。	Sign in with your Google account and your saves sync automatically, so you can keep playing on another phone or computer.
+iPhone 主畫面 App 如果登不進去，請用 Safari 開網頁版登入。	If the iPhone Home Screen app can't sign in, sign in on the web version in Safari.
+用 Google 登入	Sign in with Google
+同步中…	Syncing…
+上次沒傳成功，下次存檔會再補傳	The last upload didn't go through; it will retry on the next save
+上次同步：	Last synced:
+已連上雲端	Connected to the cloud
+・登入後每次存檔都會自動上傳	・Every save uploads automatically while you're signed in
+登出	Sign out
+雲端的比較新	The cloud one is newer
+這台還沒有	Not on this device yet
+下載到這台	Download to this device
+V3.4：雲端存檔：在「讀取存檔」或設定裡用 Google 帳號登入，每次存檔都會自動上傳；換手機或電腦登入同一個帳號，就能把存檔下載下來接著玩。不登入的話跟以前一樣，存檔只在這台裝置。	V3.4: Cloud saves. Sign in with your Google account from “Load game” or Settings, and every save uploads automatically; sign in with the same account on another phone or computer to download it and keep playing. If you don't sign in, saves stay on this device as before.

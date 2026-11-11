@@ -1,5 +1,5 @@
 // ================= 開局 / 讀檔 =================
-function newG(name,size,seed){const S=SIZES[size||'small'];return{name,size,seed,money:0,earned:0,onesFound:0,onesHand:0,onesLost:0,dug:0,left:S.coins,removed:0,carry:0,autoSold:0,coinsSold:0,rollsSold:0,lostCoins:0,tool:'hand',tools:{},ups:{},coll:{},flags:{},step:0,doorOpen:false,freeRake:false,gotFreeRake:false,combo:0,comboT:0,bestCombo:1,rate:0,rateAcc:0,beltAcc:0,order:0,ordProg:0,pinned:false,play:0,thrown:0,held:[],tags:defTags(),marked:[]}}
+function newG(name,size,seed){const S=SIZES[size||'small'];return{name,size,seed,sid:newSid(),money:0,earned:0,onesFound:0,onesHand:0,onesLost:0,dug:0,left:S.coins,removed:0,carry:0,autoSold:0,coinsSold:0,rollsSold:0,lostCoins:0,tool:'hand',tools:{},ups:{},coll:{},flags:{},step:0,doorOpen:false,freeRake:false,gotFreeRake:false,combo:0,comboT:0,bestCombo:1,rate:0,rateAcc:0,beltAcc:0,order:0,ordProg:0,pinned:false,play:0,thrown:0,held:[],tags:defTags(),marked:[]}}
 const defTags=()=>[...'ABCDEFGH'].map(c=>({name:c,on:true,high:false}));
 function setupLevel(seed,size,mask){
   generate(seed,size,mask);
@@ -42,7 +42,7 @@ function startGame(slot,data){
 }
 function beginPlay(){if(HFm&&pourK<1){pourK=1;hf.set(hfT);hfSync(true)}['lbT','lbB','skip'].forEach(i=>$(i).classList.add('hidden'));$('hud').classList.remove('hidden');mode='play';renderHotbar();tipT=0;if(!locked)lock()}
 function toMenu(){
-  if(G)saveGame(true);
+  if(G){saveGame(true);cloudSoon(slotIdx,true)}
   mode='menu';panel=null;G=null;unlock();storyReset();
   ['shopPanel','techPanel','buildPanel','boardPanel','cabPanel','cfgPanel','statPanel','ovPanel','mailPanel','appraise','pausePanel','setPanel','endPanel','card'].forEach(p=>$(p).classList.add('hidden'));
   $('hud').classList.add('hidden');$('menu').classList.remove('hidden');showMenu('main');menuScene();

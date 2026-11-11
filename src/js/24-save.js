@@ -13,7 +13,7 @@ function snapshot(){
   return{name:G.name,size:G.size,seed:G.seed,date:Date.now(),mask:HFm?hfEncode():btoa(s),anch:HFm?[...anchors]:undefined,G:g,tiles:[...tiles.values()].filter(t=>t.type!=='sell'&&t.type!=='dock').map(tileData),
     pipes:[...pipes.values()].map(p=>[p.type,p.gx,p.gz,p.dir,p.paid||0]),structs:structs.map(x=>{const o={...x};delete o.mesh;return o})};
 }
-function saveGame(quiet){if(!G||slotIdx<0)return;const a=loadSlots(),old=a[slotIdx];a[slotIdx]=snapshot();if(old&&old.locked)a[slotIdx].locked=true;if(writeSlots(a)&&!quiet)toast('已存檔')}
+function saveGame(quiet){if(!G||slotIdx<0)return;const a=loadSlots(),old=a[slotIdx];a[slotIdx]=snapshot();if(old&&old.locked)a[slotIdx].locked=true;if(writeSlots(a)&&!quiet)toast('已存檔');cloudSoon(slotIdx,!quiet)}
 setInterval(()=>{if(mode==='play')saveGame(true)},30000);
 addEventListener('beforeunload',()=>{if(G&&(mode==='play'||mode==='pause'))saveGame(true)});
 

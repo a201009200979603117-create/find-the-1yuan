@@ -1,9 +1,12 @@
 // ================= 音效和音樂 =================
-let ac=null,sfxG=null,musG=null,ambG=null,noiseBuf=null,pinkBuf=null;
+let ac=null,sfxG=null,musG=null,ambG=null,noiseBuf=null,pinkBuf=null,mastG=null;
+// 總靜音：自我檢查和網址加 ?mute 的時候，所有聲音都不出來（測試時不吵）
+let muteAll=/[?&](mute|selftest)/.test(location.search);
+function setMute(on){muteAll=!!on;if(mastG)mastG.gain.value=muteAll?0:1}
 function audio(){
   if(ac)return ac;
   try{ac=new (window.AudioContext||window.webkitAudioContext)();
-    const lim=ac.createDynamicsCompressor();lim.threshold.value=-8;lim.knee.value=6;lim.ratio.value=12;lim.attack.value=.003;lim.release.value=.2;lim.connect(ac.destination);
+    const lim=ac.createDynamicsCompressor();lim.threshold.value=-8;lim.knee.value=6;lim.ratio.value=12;lim.attack.value=.003;lim.release.value=.2;mastG=ac.createGain();mastG.gain.value=muteAll?0:1;lim.connect(mastG).connect(ac.destination);
     sfxG=ac.createGain();sfxG.connect(lim);musG=ac.createGain();musG.connect(lim);ambG=ac.createGain();ambG.connect(sfxG);
     noiseBuf=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
     pinkBuf=ac.createBuffer(1,ac.sampleRate*4,ac.sampleRate);const q=pinkBuf.getChannelData(0);let b0=0,b1=0,b2=0;for(let i=0;i<q.length;i++){const w=Math.random()*2-1;b0=.99765*b0+w*.099;b1=.963*b1+w*.2965;b2=.57*b2+w*1.0526;q[i]=(b0+b1+b2+w*.1848)*.11}

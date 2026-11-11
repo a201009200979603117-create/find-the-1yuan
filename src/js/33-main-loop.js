@@ -109,7 +109,7 @@ checkVer();setInterval(checkVer,20*60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&performance.now()-verT>60000)checkVer()});
 $('upd').onclick=()=>{if(G&&slotIdx>=0)saveGame(true);location.reload()};
 // 自我檢查（開發用）：網址加 ?selftest 會自動跑一遍主要功能，跑完把存檔還原
-async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk[k]=localStorage.getItem(k));const t0=performance.now(),out=[];ALB_DB='fty1-album-selftest';albDB=null;
+async function selfTest(){setMute(true);const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk[k]=localStorage.getItem(k));const t0=performance.now(),out=[];ALB_DB='fty1-album-selftest';albDB=null;
   const box=document.createElement('pre');box.id='selftest';box.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-height:90vh;overflow:auto;background:#000d;color:#ccc;font:12px/1.5 monospace;padding:10px;margin:0;pointer-events:none;white-space:pre-wrap;max-width:60vw';document.body.appendChild(box);
   const w=ms=>new Promise(r=>setTimeout(r,ms)),until=async(f,ms)=>{const e=performance.now()+ms;while(performance.now()<e){if(f())return true;await w(100)}return false},
     show=()=>box.textContent='自我檢查 '+(out.every(x=>x.ok)?'':'（有失敗）')+'\n'+out.map(x=>(x.ok?'✓ ':'✗ ')+x.n+(x.info?'　'+x.info:'')).join('\n'),
@@ -154,6 +154,30 @@ async function selfTest(){const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk.forEach(k=>bk
   await run('相簿',async()=>{let n=0;for(let i=0;i<30&&n<2;i++){await w(200);try{n=await albCount()}catch(e){return'打不開相簿：'+e}}await openAlbum();const g=document.querySelectorAll('#alGrid .al-it').length;albSel=0;albShow();const big=!!$('alView').querySelector('img');closeAlbum();return n>=2&&g===n&&big||'相簿 '+n+' 張、畫面 '+g+' 張、大圖 '+big});
   giveFile=gf;
   await run('匯入存檔',()=>{importData(JSON.parse(JSON.stringify(loadSlots()[0])));return!!loadSlots()[1]});
+  // 雲端存檔：用假的雲端測（不用真的登入 Google）
+  await run('雲端存檔（假的雲端）',async()=>{const ch=await pkceChallenge('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');if(ch!=='E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM')return'PKCE 算錯：'+ch;
+    const a0=localStorage.getItem(AUTH_KEY),f0=cloudFetch,rows={},js=x=>new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}});let down=false;
+    cloudFetch=async(url,o={})=>{if(down)return new Response('boom',{status:500});const u=new URL(url),m=o.method||'GET',sid=(u.searchParams.get('sid')||'').replace(/^eq\./,'');
+      if(!/cloud_saves/.test(u.pathname))return new Response('{}',{status:404});
+      if(m==='POST'){const b=JSON.parse(o.body);rows[b.sid]=b;return new Response(null,{status:201})}
+      if(m==='DELETE'){delete rows[sid];return new Response(null,{status:204})}
+      if(u.searchParams.get('select')==='data')return js(rows[sid]?[{data:rows[sid].data}]:[]);
+      return js(Object.values(rows).map(r=>({sid:r.sid,name:r.name,size:r.size,saved_at:r.saved_at})).sort((x,y)=>y.saved_at-x.saved_at))};
+    const keep=loadSlots();
+    try{authSave({access_token:'t',refresh_token:'r',expires_at:Date.now()+3600e3,user:{id:'u',email:'test@example.com'}});cloudList=null;cloudLast=0;cloudErr='';
+      const k=keep.findIndex(Boolean);if(k<0)return'沒有存檔可以測';
+      await cloudSyncAll();const sid=loadSlots()[k].G.sid;if(!sid||!rows[sid])return'這台的存檔沒有上傳';
+      const back=await unpackCode(rows[sid].data);if(back.G.sid!==sid||back.name!==loadSlots()[k].name)return'上傳的內容不對';
+      // 換一台裝置：這台沒有存檔，讀取存檔看得到雲端的，下載回來是同一個存檔
+      writeSlots([null,null,null]);await cloudFetchList();slotMode='load';renderSlots();
+      if(!($('cloudBox')&&$('cloudBox').querySelector('[data-cloud="get"]')))return'讀取存檔裡沒有雲端的存檔';
+      await cloudDownload(sid);const b=loadSlots(),j=b.findIndex(x=>x&&x.G&&x.G.sid===sid);if(j<0)return'沒有下載下來';
+      // 這台的比較新：要先問
+      b[j].date=Date.now()+60000;writeSlots(b);await cloudDownload(sid);const asked=!$('dialog').classList.contains('hidden')&&$('dlgT').textContent===L('這台的存檔比較新');$('dialog').classList.add('hidden');
+      // 上傳失敗：不跳錯誤，留著下次補傳
+      down=true;cloudSoon(j,true);await w(400);const quiet=$('dialog').classList.contains('hidden')&&cloudDirty.has(j);down=false;
+      return asked&&quiet||'這台比較新會先問 '+asked+'、上傳失敗不吵 '+quiet}
+    finally{cloudFetch=f0;writeSlots(keep);a0==null?localStorage.removeItem(AUTH_KEY):localStorage.setItem(AUTH_KEY,a0);cloudList=null;cloudErr='';cloudDirty.clear();refreshCloudUI()}});
   await run('挑戰完成',()=>{anchors.clear();G.onesHand=0;checkChallenge();const ok=$('dlgT').textContent===L('挑戰成功！')&&G.chalDone;$('dialog').classList.add('hidden');return ok});
   // 用假的時間跑主迴圈：60Hz 和 120Hz 的螢幕，省電模式都應該剛好每秒 30 格
   await run('省電模式每秒 30 格',()=>{const raf=window.requestAnimationFrame,tk=tick,e0=SET.eco;let n=0,t=last;window.requestAnimationFrame=()=>0;tick=()=>{n++};

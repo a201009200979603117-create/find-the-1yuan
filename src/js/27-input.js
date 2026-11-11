@@ -5,7 +5,7 @@ function lockFailed(){if(!lockReq)return;lockReq=false;if(performance.now()-unlo
 function enableFallback(){if(!fallback){fallback=true;toast('這個瀏覽器不能鎖定滑鼠：按住滑鼠中鍵或 Alt＋拖曳轉視角')}locked=true;$('pausePanel').classList.add('hidden')}
 function lock(force){if(!force&&mode!=='play')return;if(topV&&!force)return;if(TOUCH){locked=true;$('pausePanel').classList.add('hidden');goFull();return}if(fallback){locked=true;$('pausePanel').classList.add('hidden');return}lockReq=true;try{const p=cv.requestPointerLock();if(p&&p.catch)p.catch(lockFailed)}catch(e){lockFailed()}}
 function unlock(){lmb=rmb=false;if(fallback||TOUCH)locked=false;else if(document.pointerLockElement&&document.exitPointerLock)document.exitPointerLock()}
-function openPause(){if(mode!=='play')return;mode='pause';unlock();$('pMail').style.display=storyOK()?'':'none';$('pausePanel').classList.remove('hidden')}
+function openPause(){if(mode!=='play')return;if(authGet()&&slotIdx>=0){saveGame(true);cloudSoon(slotIdx,true)}mode='pause';unlock();$('pMail').style.display=storyOK()?'':'none';$('pausePanel').classList.remove('hidden')}
 function resume(){$('pausePanel').classList.add('hidden');mode='play';lock()}
 document.addEventListener('pointerlockerror',lockFailed);
 document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement===cv){fallback=false;lockFails=0;lockReq=false}else unlockT=performance.now();if(fallback)return;locked=document.pointerLockElement===cv;if(!locked&&mode==='play'&&!panel&&!topV)openPause()});
