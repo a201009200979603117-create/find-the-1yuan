@@ -2088,3 +2088,13 @@ iPhone 主畫面 App 如果登不進去，請用 Safari 開網頁版登入。	If
 這台還沒有	Not on this device yet
 下載到這台	Download to this device
 V3.4：雲端存檔：在「讀取存檔」或設定裡用 Google 帳號登入，每次存檔都會自動上傳；換手機或電腦登入同一個帳號，就能把存檔下載下來接著玩。不登入的話跟以前一樣，存檔只在這台裝置。	V3.4: Cloud saves. Sign in with your Google account from “Load game” or Settings, and every save uploads automatically; sign in with the same account on another phone or computer to download it and keep playing. If you don't sign in, saves stay on this device as before.
+# V3.4 主選單的雲端存檔頁
+⬇ 下載雲端存檔（	⬇ Download cloud saves (
+☁ 用 Google 帳號登入	☁ Sign in with your Google account
+登入以後，每次存檔都會自動上傳。換手機或電腦登入同一個帳號，就能在這裡下載接著玩。	Once you sign in, every save uploads automatically. Sign in with the same account on another phone or computer to download it here and keep playing.
+連不上雲端，等一下再試	Can't reach the cloud. Please try again later.
+沒有網路，連上之後才看得到雲端的存檔	You're offline. Cloud saves will show up once you're connected.
+雲端還沒有存檔。在別台裝置登入同一個帳號、存一次檔，就會出現在這裡。	No cloud saves yet. Sign in with the same account on another device and save once, and it will show up here.
+這台已經是最新的	Up to date on this device
+⬇ 下載到這台	⬇ Download to this device
+✓ 已同步	✓ Synced

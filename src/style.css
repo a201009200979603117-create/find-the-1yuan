@@ -605,3 +605,10 @@
   .slot.cloud{border-color:#3d6fa8;background:linear-gradient(90deg,#16263acc,var(--ui));cursor:default}.slot.cloud.sub{margin-left:18px;background:#121c28cc}
   .slot.cloud .cmail{font-size:12px;color:#9fc4ee;font-weight:400}#cloudSet{display:flex;gap:8px;align-items:center;font-size:12px;color:#9fc4ee}
   [data-m="load"].cnew::after{content:' ☁';color:#7fc4ff}
+  /* 主選單的雲端存檔：有比較新的存檔時是金色大按鈕；雲端頁的下載按鈕也做大 */
+  #cloudPanel:not(.hidden){animation:slideUp .22s ease-out}#cloudPage{zoom:var(--fz);max-height:min(62vh,540px);overflow-y:auto;overscroll-behavior:contain}
+  .mi.cnewbig{background:var(--gold);color:#111;text-shadow:none;border-radius:6px;padding:5px 14px;margin-left:0;font-weight:800;opacity:1;border-left:0;animation:cpulse 1.8s ease-in-out infinite}
+  @keyframes cpulse{0%,100%{box-shadow:0 0 0 0 #e8b93199}50%{box-shadow:0 0 0 9px #e8b93100}}
+  .btn.cbig{font-size:16px;padding:10px 18px;min-height:44px;white-space:nowrap}#cloudPage>.btn.cbig{display:block;width:100%;margin:2px 0 8px}
+  .slot.cloud.cnewrow{border-color:var(--gold)}.slot.cloud .ops{display:flex;gap:8px;align-items:center}.cok{font-size:13px;color:#8fd18f;white-space:nowrap}
+  @media (max-height:520px){.mi.cnewbig{padding:3px 12px}#cloudPage{max-height:none}.btn.cbig{padding:9px 14px}}

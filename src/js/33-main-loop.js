@@ -117,7 +117,7 @@ async function selfTest(){setMute(true);const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk
     run=async(n,f)=>{let r;try{r=await f()}catch(e){r=String(e&&e.message||e)||'出錯了'}out.push({n,ok:r===true||!!(r&&r.skip),info:typeof r==='string'?r:r&&r.skip||''});show()},
     gf=giveFile,playing=()=>{if(mode==='intro')for(let i=0;i<20;i++)tick(.05,performance.now());return mode==='play'};let file=null;
   await run('一開始沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m).join('；'):true);
-  await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi').length===7);
+  await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi:not([data-m="cloud"])').length===7);
   await run('存檔碼壓縮再解開',async()=>{const o={G:{a:1,b:'一元'},size:'small',seed:1};return JSON.stringify(await unpackCode(await packCode(JSON.stringify(o))))===JSON.stringify(o)});
   await run('挑戰朋友連結',()=>{const v=vsParse('?x=1&vs=std.123456.754');return!!v&&v.size==='std'&&v.seed===123456&&v.t===754&&!vsParse('?vs=nope.1.2')});
   await run('連續天數',()=>{const d={},day=new Date();for(let i=1;i<=3;i++){day.setDate(day.getDate()-1);d[dailyKey(day)]=100}localStorage.setItem(DKEY,JSON.stringify(d));const a=dailyStreak();d[dailyKey()]=90;localStorage.setItem(DKEY,JSON.stringify(d));const b=dailyStreak();localStorage.removeItem(DKEY);return a===3&&b===4&&dailyStreak()===0||a+'、'+b});
@@ -171,7 +171,9 @@ async function selfTest(){setMute(true);const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk
       // 換一台裝置：這台沒有存檔，讀取存檔看得到雲端的，下載回來是同一個存檔
       writeSlots([null,null,null]);await cloudFetchList();slotMode='load';renderSlots();
       if(!($('cloudBox')&&$('cloudBox').querySelector('[data-cloud="get"]')))return'讀取存檔裡沒有雲端的存檔';
-      await cloudDownload(sid);const b=loadSlots(),j=b.findIndex(x=>x&&x.G&&x.G.sid===sid);if(j<0)return'沒有下載下來';
+      refreshCloudUI();const mc=$('miCloud');if(!mc||mc.classList.contains('hidden')||!mc.classList.contains('cnewbig'))return'主選單沒有金色的下載雲端存檔';
+      showMenu('cloud');if(!document.querySelector('#cloudPage [data-cloud="get"].cbig'))return'雲端頁沒有大的下載按鈕';
+      await cloudDownload(sid);const b=loadSlots(),j=b.findIndex(x=>x&&x.G&&x.G.sid===sid);if(j<0)return'沒有下載下來';if($('slotPanel').classList.contains('hidden'))return'下載完沒有打開讀取存檔';refreshCloudUI();if(mc.classList.contains('cnewbig'))return'下載完主選單的按鈕還是金色';
       // 這台的比較新：要先問
       b[j].date=Date.now()+60000;writeSlots(b);await cloudDownload(sid);const asked=!$('dialog').classList.contains('hidden')&&$('dlgT').textContent===L('這台的存檔比較新');$('dialog').classList.add('hidden');
       // 上傳失敗：不跳錯誤，留著下次補傳

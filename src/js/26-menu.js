@@ -2,7 +2,7 @@
 let slotMode='new';
 function showMenu(w){
   $('mainList').classList.toggle('hidden',w!=='main');$('social').classList.toggle('hidden',w!=='main');
-  $('slotPanel').classList.toggle('hidden',w!=='slots');$('sizePanel').classList.toggle('hidden',w!=='size');$('rankPanel').classList.toggle('hidden',w!=='rank');
+  $('slotPanel').classList.toggle('hidden',w!=='slots');$('sizePanel').classList.toggle('hidden',w!=='size');$('rankPanel').classList.toggle('hidden',w!=='rank');$('cloudPanel').classList.toggle('hidden',w!=='cloud');if(w==='cloud')renderCloudPage();
   if(w==='slots')renderSlots();
   if(w==='size')$('sizeList').innerHTML=Object.entries(SIZES).map(([k,s])=>'<div class="size" data-size="'+k+'"><div class="n">'+s.name+'</div><div class="d">'+s.d+'　'+s.info+'</div></div>').join('');
   if(w==='rank'){setTimeout(()=>{const b=chalBest(),rows=Object.keys(SIZES).filter(k=>b[k]&&b[k].length).map(k=>'<div class="slot"><div><b>⏱ 挑戰・'+SIZES[k].name+'</b><div class="meta">最佳紀錄：'+b[k].map(fmtT).join('、')+'</div></div></div>').join('');const dr=dailyRow();if(rows||dr)$('rankList').insertAdjacentHTML('afterbegin',dr+rows);renderOnline()},0);const a=loadSlots().filter(Boolean).sort((x,y)=>(y.G.onesFound-x.G.onesFound)||(y.G.dug-x.G.dug));$('rankList').innerHTML=a.length?a.map((s,k)=>'<div class="slot"><div><b>#'+(k+1)+'　'+(s.name||'')+'</b><div class="meta">'+s.G.onesFound+' 枚 1 元　挖了 '+fmtS(s.G.dug)+' 枚　賺了 '+money(s.G.earned)+'　'+SIZES[s.size].name+'　玩了 '+Math.floor(s.G.play/60)+' 分鐘</div></div></div>').join(''):'<div class="slot"><div class="meta">還沒有紀錄</div></div>'}
@@ -45,6 +45,7 @@ $('menu').addEventListener('click',e=>{
   else if(m==='main')showMenu('main');
   else if(m==='slots')showMenu('slots');
   else if(m==='rank')showMenu('rank');
+  else if(m==='cloud')showMenu('cloud');
   else if(m==='album')openAlbum();
   else if(m==='set')openSettings();
   else if(m==='quit')dialog('離開遊戲','<p>網頁版沒辦法自己關掉視窗，直接關掉這個分頁就可以了。存檔都已經存好。</p>',[['好','gold']]);
