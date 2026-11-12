@@ -96,8 +96,8 @@ function refreshCloudUI(){const box=$('cloudBox');if(box){box.innerHTML=cloudBox
   const set=$('cloudSet');if(set){const s=authGet();set.innerHTML=!onlineOn()?'':s?'<span class="cmail"></span> <button class="sbtn" data-cloud="logout">登出</button>':'<button class="sbtn gold" data-cloud="login">用 Google 登入</button>';fillCloudNames(set)}
   const row=$('cloudRow');if(row)row.classList.toggle('hidden',!onlineOn()||(!cloudReady&&!authGet()));
   const ld=document.querySelector('[data-m="load"]');if(ld){const n=cloudNewer().length;ld.classList.toggle('cnew',n>0);if(n)ld.disabled=false}
-  // 主選單「☁ 雲端存檔」：雲端有比較新的存檔時變成金色的大按鈕
-  const mc=$('miCloud');if(mc){const n=authGet()?cloudNewer().length:0;mc.classList.toggle('hidden',!onlineOn()||(!cloudReady&&!authGet()));mc.classList.toggle('cnewbig',n>0);
+  // 主選單「⬇ 下載雲端存檔」：登入後雲端有比這台新的存檔時，才出現金色的大按鈕
+  const mc=$('miCloud');if(mc){const n=authGet()?cloudNewer().length:0;mc.classList.toggle('hidden',!onlineOn()||!n);mc.classList.toggle('cnewbig',n>0); // 只有雲端真的有新的存檔可以下載時才出現，平常不佔主選單的位置
     const t=n?(EN_ON?'⬇ Download cloud saves ('+n+')':'⬇ 下載雲端存檔（'+n+'）'):L('☁ 雲端存檔');if(mc.textContent!==t)mc.textContent=t}
   const cp=$('cloudPanel');if(cp&&!cp.classList.contains('hidden'))renderCloudPage()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-cloud]');if(!b)return;e.stopPropagation();tone(900,.04,'triangle',.03);const k=b.dataset.cloud,sid=b.dataset.sid;

@@ -97,7 +97,7 @@ function updateMovers(dt){
   }
   slideTick();
 }
-menuScene();showMenu('main');touchInit();if(TOUCH)applySet();
+menuScene();showMenu('main');touchInit();updInstallBtn();if(TOUCH)applySet();
 // 離線玩：存下遊戲和 three.js（只有網址是 http/https 才能用）
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 // 新版本提示：網頁版更新了就在上面跳一條，點一下先存檔再重新整理（主畫面 App 放在背景很久不會自己更新）
@@ -118,6 +118,8 @@ async function selfTest(){setMute(true);const sk=[SKEY,DKEY,BKEY,CHKEY],bk={};sk
     gf=giveFile,playing=()=>{if(mode==='intro')for(let i=0;i<20;i++)tick(.05,performance.now());return mode==='play'};let file=null;
   await run('一開始沒有錯誤',()=>ERRS.length?ERRS.map(e=>e.m).join('；'):true);
   await run('主選單',()=>!$('menu').classList.contains('hidden')&&document.querySelectorAll('#mainList .mi:not([data-m="cloud"])').length===7);
+  await run('安裝成 App 的按鈕',()=>{const b=$('installBtn');if(!b)return'沒有按鈕';updInstallBtn();if(b.classList.contains('hidden')!==isStandalone())return'該出現的時候沒出現';
+    const e0=installEvt;installEvt=null;installApp();installEvt=e0;const ok=!$('dialog').classList.contains('hidden')&&$('dlgT').textContent===L('📲 安裝成 App');$('dialog').classList.add('hidden');return ok||'沒有跳出安裝說明'});
   await run('存檔碼壓縮再解開',async()=>{const o={G:{a:1,b:'一元'},size:'small',seed:1};return JSON.stringify(await unpackCode(await packCode(JSON.stringify(o))))===JSON.stringify(o)});
   await run('挑戰朋友連結',()=>{const v=vsParse('?x=1&vs=std.123456.754');return!!v&&v.size==='std'&&v.seed===123456&&v.t===754&&!vsParse('?vs=nope.1.2')});
   await run('連續天數',()=>{const d={},day=new Date();for(let i=1;i<=3;i++){day.setDate(day.getDate()-1);d[dailyKey(day)]=100}localStorage.setItem(DKEY,JSON.stringify(d));const a=dailyStreak();d[dailyKey()]=90;localStorage.setItem(DKEY,JSON.stringify(d));const b=dailyStreak();localStorage.removeItem(DKEY);return a===3&&b===4&&dailyStreak()===0||a+'、'+b});

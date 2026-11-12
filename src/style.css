@@ -612,3 +612,8 @@
   .btn.cbig{font-size:16px;padding:10px 18px;min-height:44px;white-space:nowrap}#cloudPage>.btn.cbig{display:block;width:100%;margin:2px 0 8px}
   .slot.cloud.cnewrow{border-color:var(--gold)}.slot.cloud .ops{display:flex;gap:8px;align-items:center}.cok{font-size:13px;color:#8fd18f;white-space:nowrap}
   @media (max-height:520px){.mi.cnewbig{padding:3px 12px}#cloudPage{max-height:none}.btn.cbig{padding:9px 14px}}
+  /* 主選單右下：安裝成 App（綠色、大一點、輕輕發亮，手機上也不會漏看） */
+  #installBtn{background:#2e9e5b;font-size:16px!important;padding:11px 12px!important;line-height:1.25;animation:ipulse 2.2s ease-in-out infinite}
+  #installBtn small{display:block;font-size:11px;font-weight:400;opacity:.85;margin-top:2px}
+  @keyframes ipulse{0%,100%{box-shadow:0 0 0 0 #2e9e5b99}50%{box-shadow:0 0 0 8px #2e9e5b00}}
+  @media (max-height:520px){#installBtn{font-size:15px!important;padding:9px 10px!important}}

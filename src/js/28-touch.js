@@ -45,6 +45,23 @@ function goFull(){
 // 手機震動：找到 1 元、完成訂單、買到科技、拿到成就（iPhone 的網頁不能震動）
 function buzz(p){const ua=navigator.userActivation;if(TTON&&SET.vib!==false&&navigator.vibrate&&!(ua&&!ua.hasBeenActive))try{navigator.vibrate(p)}catch(_){}}
 function lockLand(){try{const o=screen.orientation;if(o&&o.lock)o.lock('landscape').catch(()=>{})}catch(_){}}
+// ---------- 安裝成 App：主選單右下的綠色按鈕（從 App 打開的時候不顯示） ----------
+// Chrome／Edge／Android 直接跳出瀏覽器的安裝視窗；iPhone／iPad 和其他瀏覽器沒有安裝視窗，就一步一步教
+let installEvt=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;updInstallBtn()});
+addEventListener('appinstalled',()=>{installEvt=null;updInstallBtn();toast('📲 安裝好了！之後從桌面或主畫面的「大海撈一元」圖示打開','gold')});
+function updInstallBtn(){const b=$('installBtn');if(b)b.classList.toggle('hidden',isStandalone())}
+function installApp(){
+  if(installEvt){const e=installEvt;installEvt=null;try{e.prompt();e.userChoice.then(c=>{if(c&&c.outcome==='accepted')toast('📲 安裝中…','gold')}).catch(()=>{})}catch(_){installHelp()}return}
+  installHelp()}
+function installHelp(){const ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),inApp=/Line\/|FBAN|FBAV|Instagram|MicroMessenger/i.test(ua),android=/Android/.test(ua);
+  const save='<br><span style="color:#aaa">App 和瀏覽器裡的存檔是分開的：用「☁ 雲端存檔」登入同一個 Google 帳號，就能把進度帶過去。</span>';
+  let h;
+  if(inApp)h='現在是在 LINE、Facebook 之類的 App 裡面打開的，這裡沒辦法安裝。<br>點右上角（或右下角）的選單，選「用瀏覽器開啟」（iPhone 選 Safari、Android 選 Chrome），再按一次「📲 安裝成 App」。';
+  else if(ios)h='1. 點 Safari 的「分享」按鈕（方框加一個往上的箭頭；iPhone 在下面、iPad 在右上角）<br>2. 往下滑，點「加入主畫面」<br>3. 點右上角的「加入」<br>4. 之後從主畫面的「大海撈一元」圖示打開，就是全螢幕，沒網路也能玩'+save;
+  else if(android)h='這個瀏覽器沒有跳出安裝視窗。<br>點瀏覽器右上角的 ⋮ 選單，選「安裝應用程式」或「加到主畫面」。<br>如果已經安裝過，直接從主畫面的「大海撈一元」圖示打開就好。'+save;
+  else h='用 Chrome 或 Edge 打開的話，網址列右邊有一個安裝圖示（螢幕加一個往下的箭頭），點它再按「安裝」。<br>也可以從瀏覽器的 ⋮ 選單找「安裝大海撈一元」。<br>如果已經安裝過，直接從桌面或開始選單的圖示打開就好。'+save;
+  dialog('📲 安裝成 App','<p style="text-align:left;line-height:2">'+h+'</p>',[['知道了','gold']])}
 // iPhone 的 Safari 不能讓網頁全螢幕：第一次打開時教玩家加入主畫面
 function iosHint(){
   const d=document.documentElement;if(!TOUCH||isStandalone()||d.requestFullscreen||d.webkitRequestFullscreen||!/iPhone|iPod/.test(navigator.userAgent))return;
